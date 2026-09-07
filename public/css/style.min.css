@@ -1,0 +1,249 @@
+/* Global css */
+body{font-family:'Kanit',sans-serif;}h1,h2,h3,h4,h5,h6{font-family:'Kanit',sans-serif}h1{font-size:2.5rem}h2{font-size:2.2rem}h3{font-size:1.9rem}h4{font-size:1.7rem}h5{font-size:1.5rem}h6{font-size:1.3rem}p{font-size:1.2rem}.button,.tagline{font-family:'Mitr',sans-serif}.mi-footer{background:radial-gradient(1200px 400px at 10% -20%,rgb(0 179 167 / .18),transparent 45%),linear-gradient(90deg,#ffffff 0%,#f3f8ff 100%);color:#384c95}.mi-footer-logo{border-radius:12px;background:rgb(255 255 255 / .1);padding:4px}.mi-footer-title{font-family:'Kanit',sans-serif;font-weight:600;color:#384c95}.mi-footer-heading{font-family:'Kanit',sans-serif;font-size:1rem;font-weight:600;margin-bottom:.9rem;color:#384c95}.mi-footer-text,.mi-footer-list span{color:#384c95;font-size:.95rem}.mi-footer-list li{margin-bottom:.5rem;overflow-wrap: break-word;word-wrap: break-word;}.mi-footer-list a{color:#384c95!important;text-decoration:none;transition:color 0.2s ease}.mi-footer-list a:hover{color:#0a58ca!important}.mi-footer-bottom{background:#384c95;color:#fff;border-top:1px solid rgb(255 255 255 / .15)}.defaultBtn{width:100%;border-radius:14px;border:0;font-size:1.08rem;font-weight:600;padding:.8rem 1rem}.primaryBg{background-color:#384c95!important}.primaryText{color:#384c95!important}.primaryBtn{background:#384c95;color:#fff}.primaryBtn:hover{background:#4c5cbd;color:#fff;filter:brightness(1.05)}.bg-primary-saha{background:#384c95}.successBtn{background:#198754;color:#fff}.defaultBtn:hover{color:#fff;filter:brightness(1.05)}.secondaryBtn{background:#fff;color:#384c95;border:1px solid #384c95}.secondaryBtn:hover{background:#384c95;color:#fff;filter:brightness(1.05)}.not-clickable{pointer-events:none}.btn-close{color:red}.font-weight-bold{font-weight:700}#cookieLogo{width:30px;height:30px;margin-right:8px;vertical-align:middle}.cookie-box{position:fixed;bottom:20px;right:20px;max-width:500px;background:#fff;border-radius:12px;padding:16px;z-index:9999;border:1px solid #eee;animation:slideIn 0.4s ease}@keyframes slideIn{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+/* Modern motor-insurance header (Bootstrap 5 friendly) */
+.mi-header {
+  background:
+    radial-gradient(1200px 400px at 10% -20%, rgba(0, 179, 167, 0.18), transparent 45%),
+    linear-gradient(90deg, #ffffff 0%, #f3f8ff 100%);
+  border-bottom: 5px solid #384c95;
+  backdrop-filter: blur(6px);
+}
+
+.mi-logo {
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.mi-brand-text {
+  font-family: 'Kanit', sans-serif;
+  font-weight: 600;
+  color: #384c95;
+  font-size: 1.05rem;
+  line-height: 1.2;
+}
+
+.mi-brand-subtext {
+  font-family: 'Sarabun', sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.1;
+  color: #4f6ba7;
+}
+
+.mi-link {
+    color: #1c3658 !important;
+    font-weight: 500;
+    border-radius: 999px;
+    padding: 0.5rem 0.9rem !important;
+    transition: all 0.22s ease;
+}
+
+.mi-link:hover,
+.mi-link.active {
+    color: #384c95 !important;
+    background-color: rgba(10, 88, 202, 0.08);
+}
+
+.mi-agent {
+    color: #fff !important;
+    background-color: #384c95;
+    box-shadow: 0 12px 26px rgba(22, 43, 69, 0.34);
+}
+
+.mi-agent:hover {
+    color: #384c95 !important;
+    border: 1px solid #384c95;
+    filter: brightness(0.96);
+    transform: translateY(-1px);
+}
+
+.mi-pay-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.45rem 0.95rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1.02rem;
+    text-decoration: none;
+    color: #ffffff;
+    background: linear-gradient(135deg, #384c95 0%, #2d3f84 100%);
+    border: 1px solid #2d3f84;
+    box-shadow: 0 8px 18px rgba(56, 76, 149, 0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.mi-pay-link:hover {
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 12px 22px rgba(56, 76, 149, 0.32);
+    filter: brightness(1.05);
+}
+
+.mi-pay-link:focus-visible {
+    outline: 3px solid rgba(56, 76, 149, 0.3);
+    outline-offset: 2px;
+}
+
+.mi-pay-link:active {
+    transform: translateY(0);
+    box-shadow: 0 6px 14px rgba(56, 76, 149, 0.22);
+}
+
+.mi-contact {
+    color: #384c95;
+    font-size: 0.9rem;
+    text-decoration: none;
+    background: #fff;
+    border: 1px solid rgba(15, 77, 135, 0.18);
+    border-radius: 999px;
+    padding: 0.35rem 0.75rem;
+    white-space: nowrap;
+}
+
+.mi-contact:hover {
+    color: #0a58ca;
+    border-color: rgba(10, 88, 202, 0.35);
+}
+
+.mi-hero-banner {
+    background-size: cover;
+    background-position: top;
+    background-repeat: no-repeat;
+    min-height: 500px;
+    border-radius: 5px;
+}
+
+/* Product flow progress bar */
+.mi-progress {
+    --mi-primary: #384c95;
+    --mi-muted: #e7e9ee;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0 0 1.25rem;
+    padding: 0;
+    list-style: none;
+}
+
+.mi-progress-step {
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+    position: relative;
+}
+
+.mi-progress-step::before,
+.mi-progress-step::after {
+    content: "";
+    position: absolute;
+    top: 0.6rem;
+    width: calc(50% - 1rem);
+    height: 0.35rem;
+    border-radius: 999px;
+    background: var(--mi-muted);
+}
+
+.mi-progress-step::before {
+    left: 0;
+}
+
+.mi-progress-step::after {
+    right: 0;
+}
+
+.mi-progress-step:first-child::before,
+.mi-progress-step:last-child::after {
+    display: none;
+}
+
+.mi-progress-marker {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    margin: 0 auto 0.45rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--mi-muted);
+    color: #8b95a7;
+    font-size: 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+.mi-progress-label {
+    display: block;
+    color: #1f2c3d;
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.2;
+}
+
+.mi-progress-step.is-active .mi-progress-marker,
+.mi-progress-step.is-done .mi-progress-marker {
+    background: var(--mi-primary);
+    color: #fff;
+}
+
+.mi-progress-step.is-active::before,
+.mi-progress-step.is-active::after,
+.mi-progress-step.is-done::before,
+.mi-progress-step.is-done::after {
+    background: var(--mi-primary);
+}
+
+.pay-button {
+    min-width: 100%!important;
+    height: 48px!important;
+    border-radius: 8px!important;
+}
+
+@media (max-width: 1200px) {
+    #navContact {
+        flex-direction: column!important;
+        align-items: flex-start!important;
+    }
+}
+
+/* Media query section */
+@media (max-width: 991.98px) {
+    .mi-brand-text {
+        font-size: 0.98rem;
+    }
+
+    .mi-brand-subtext {
+        font-size: 0.7rem;
+    }
+
+    .mi-contact {
+        width: 100%;
+        text-align: center;
+    }
+
+    .mi-hero-banner,
+    .mi-hero-overlay {
+        min-height: 300px;
+    }
+
+    .mi-hero-content p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .mi-progress {
+        gap: 0.5rem;
+    }
+
+    .mi-progress-step::before,
+    .mi-progress-step::after {
+        width: calc(50% - 0.7rem);
+        height: 0.28rem;
+    }
+
+    .mi-progress-label {
+        font-size: 0.9rem;
+    }
+}
