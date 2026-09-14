@@ -500,7 +500,7 @@ body{font-family:'Kanit',sans-serif;}h1,h2,h3,h4,h5,h6{font-family:'Kanit',sans-
 .otp-shell h1 {
     color: var(--theme-primary-color);
     font-size: 2rem;
-    font-weight: 700;
+    font-weight: 500;
     margin-bottom: 0.45rem;
     text-align: center;
 }
@@ -604,6 +604,123 @@ body{font-family:'Kanit',sans-serif;}h1,h2,h3,h4,h5,h6{font-family:'Kanit',sans-
     color: #6b7280 !important;
     font-size: 0.9rem !important;
     margin: 0.9rem 0 0 !important;
+}
+
+.health-question-card h1 {
+    margin-bottom: 1.4rem;
+}
+
+.health-plan-section {
+    margin-bottom: 1.4rem;
+}
+
+.health-plan-section h2 {
+    color: var(--theme-primary-color);
+    font-size: 1.35rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.health-plan-card {
+    border: 1px solid #e2e7ef;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1rem;
+}
+
+.health-plan-card h3 {
+    color: var(--theme-primary-color);
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+}
+
+.health-plan-card strong {
+    color: var(--theme-secondary-color);
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.health-plan-card ul {
+    color: var(--theme-secondary-color);
+    flex: 1;
+    font-size: 0.92rem;
+    line-height: 1.45;
+    margin-bottom: 1rem;
+    padding-left: 1.1rem;
+}
+
+.health-plan-button {
+    border: 1px solid var(--theme-primary-color);
+    border-radius: 8px;
+    color: var(--theme-primary-color);
+    cursor: pointer;
+    display: block;
+    font-weight: 600;
+    min-height: 44px;
+    padding: 0.65rem 1rem;
+    text-align: center;
+}
+
+.health-plan-card:has(.btn-check:checked) {
+    border-color: var(--theme-primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(56, 76, 149, 0.12);
+}
+
+.health-plan-card .btn-check:checked + .health-plan-button {
+    background: var(--theme-primary-color);
+    color: #ffffff;
+}
+
+.health-question-list {
+    display: grid;
+    gap: 0.9rem;
+}
+
+.health-question-item {
+    border: 1px solid #e2e7ef;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.health-question-item p {
+    color: var(--theme-secondary-color);
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+}
+
+.health-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.health-question-card .form-check-label {
+    color: var(--theme-secondary-color);
+}
+
+.health-question-card .form-check-input:checked {
+    background-color: var(--theme-primary-color);
+    border-color: var(--theme-primary-color);
+}
+
+.health-question-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-top: 1.4rem;
+}
+
+.health-question-actions .otp-btn,
+.health-question-actions .check-premium-submit {
+    flex: 0 0 160px;
+    min-height: 48px;
+    padding: 0.75rem 1.5rem;
 }
 
 /* Product flow progress bar */
@@ -765,6 +882,10 @@ body{font-family:'Kanit',sans-serif;}h1,h2,h3,h4,h5,h6{font-family:'Kanit',sans-
 
     .check-premium-submit {
         width: 100%;
+    }
+
+    .health-question-actions {
+        flex-direction: column-reverse;
     }
 }
 

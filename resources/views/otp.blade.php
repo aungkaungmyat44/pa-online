@@ -65,7 +65,7 @@
                 {{ $email !== '' ? $email : '-' }}
             </div>
 
-            <form id="otpForm" action="{{ route('otp-confirmation') }}" method="POST" autocomplete="one-time-code">
+            <form id="otpForm" action="{{ route('health-questions') }}" method="POST" autocomplete="one-time-code">
                 @csrf
                 <input type="hidden" name="name" value="{{ $name }}">
                 <input type="hidden" name="occupation" value="{{ $occupation }}">

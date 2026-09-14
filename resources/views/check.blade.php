@@ -202,12 +202,7 @@
                                 <input type="text" class="form-control" id="date_of_birth" name="date_of_birth" placeholder="Select your date of birth" autocomplete="off" required>
                             </div>
                             <div class="col-md-12">
-                                <div class="form-check check-premium-terms">
-                                    <input class="form-check-input" type="checkbox" value="1" id="terms" name="terms" required>
-                                    <label class="form-check-label" for="terms">
-                                        I understand the <button type="button" class="terms-link" data-bs-toggle="modal" data-bs-target="#underwritingModal">terms and conditions</button> by Sahamongkhon.
-                                    </label>
-                                </div>
+                                Read <button type="button" class="terms-link" data-bs-toggle="modal" data-bs-target="#underwritingModal">terms and conditions</button> by Sahamongkhon.
                             </div>
                             <div class="col-md-12">
                                 <button type="submit" class="check-premium-submit">Continue</button>

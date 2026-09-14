@@ -28,15 +28,21 @@ class PageController extends Controller
         ]);
     }
 
-    public function gg(Request $request)
+    public function healthQuestion(Request $request)
     {
-        return view('otp', [
+        return view('health-questions', [
             'customer' => [
                 'name' => $request->input('name'),
                 'occupation' => $request->input('occupation'),
                 'email' => $request->input('email'),
                 'date_of_birth' => $request->input('date_of_birth'),
+                'otp_code' => $request->input('otp_code'),
             ],
         ]);
+    }
+
+    public function informationForm()
+    {
+        dd("information form");
     }
 }
