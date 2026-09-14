@@ -55,10 +55,6 @@
                         @csrf
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label for="name" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
-                            </div>
-                            <div class="col-md-6">
                                 <label for="occupation" class="form-label">Occupation</label>
                                 <select class="form-control" id="occupation" name="occupation" required>
                                     <option value="">Select your occupation</option>
@@ -194,12 +190,12 @@
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <label for="email" class="form-label">Email Address</label>
-                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email address" required>
-                            </div>
-                            <div class="col-md-6">
                                 <label for="date_of_birth" class="form-label">Date of Birth</label>
                                 <input type="text" class="form-control" id="date_of_birth" name="date_of_birth" placeholder="Select your date of birth" autocomplete="off" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email address" required>
                             </div>
                             <div class="col-md-12">
                                 Read <button type="button" class="terms-link" data-bs-toggle="modal" data-bs-target="#underwritingModal">terms and conditions</button> by Sahamongkhon.

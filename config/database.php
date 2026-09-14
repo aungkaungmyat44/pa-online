@@ -64,6 +64,26 @@ return [
             ]) : [],
         ],
 
+        'helperDB' => [
+            'driver' => 'mysql',
+            'url' => env('DB_URL'),
+            'host' => env('DB_HELPER_HOST', '192.6.1.199'),
+            'port' => env('DB_HELPER_PORT', '3306'),
+            'database' => env('DB_HELPER_DATABASE', 'CPLOnline'),
+            'username' => env('DB_HELPER_USERNAME', 'cpl02'),
+            'password' => env('DB_HELPER_PASSWORD', 'Cpl02@passwd'),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => env('DB_CHARSET', 'utf8mb4'),
+            'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                (PHP_VERSION_ID >= 80500 ? Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA) => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),

@@ -6,7 +6,6 @@
 @php
     $customer = $customer ?? [];
     $email = trim((string) ($customer['email'] ?? ''));
-    $name = trim((string) ($customer['name'] ?? ''));
     $occupation = trim((string) ($customer['occupation'] ?? ''));
     $dateOfBirth = trim((string) ($customer['date_of_birth'] ?? ''));
 @endphp
@@ -67,7 +66,6 @@
 
             <form id="otpForm" action="{{ route('health-questions') }}" method="POST" autocomplete="one-time-code">
                 @csrf
-                <input type="hidden" name="name" value="{{ $name }}">
                 <input type="hidden" name="occupation" value="{{ $occupation }}">
                 <input type="hidden" name="email" value="{{ $email }}">
                 <input type="hidden" name="date_of_birth" value="{{ $dateOfBirth }}">

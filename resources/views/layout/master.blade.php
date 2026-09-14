@@ -159,7 +159,7 @@
 								<a class="nav-link mi-link" href="#">Contact</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link mi-link mi-agent" href="#">Saha Company Site</a>
+								<a class="nav-link mi-link mi-agent" href="{{ route('check-policy-form') }}">Check Policy</a>
 							</li>
 						</ul>
 

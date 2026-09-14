@@ -66,7 +66,6 @@
                     <h1>Health Questionnaire</h1>
                     <form action="{{ route('information-form') }}" method="POST">
                         @csrf
-                        <input type="hidden" name="name" value="{{ $customer['name'] ?? '' }}">
                         <input type="hidden" name="occupation" value="{{ $customer['occupation'] ?? '' }}">
                         <input type="hidden" name="email" value="{{ $customer['email'] ?? '' }}">
                         <input type="hidden" name="date_of_birth" value="{{ $customer['date_of_birth'] ?? '' }}">
