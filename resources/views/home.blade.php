@@ -111,7 +111,9 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="plan-table-block">
-                    <h2>Coverage Plan</h2>
+                    <div class="section-heading">
+                        <h2>Coverage Plan</h2>
+                    </div>
                     <div class="plan-table-wrap">
                         <table class="plan-table">
                             <thead>
@@ -257,4 +259,51 @@
         </div>
     </div>
 </section>
+<section id="faq-section" class="faq-section mt-4">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <div class="faq-heading">
+                    <h2>Frequently Asked Questions</h2>
+                </div>
+
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <h3>What is Personal Accident Insurance?</h3>
+                        <p>It provides financial protection if an accident causes injury, disability, or death.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Who can apply?</h3>
+                        <p>Coverage is available for eligible applicants aged 1 to 75 years, subject to underwriting conditions.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Does it cover medical expenses?</h3>
+                        <p>Yes. Medical expenses are covered according to the selected plan and policy conditions.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Is motorcycle riding covered?</h3>
+                        <p>Motorcycle-related coverage depends on the selected plan and policy extension conditions.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Can I buy more than one policy?</h3>
+                        <p>Each insured person may hold a maximum of one policy under this insurance scheme.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>How long is the policy period?</h3>
+                        <p>This is an annual Personal Accident Insurance policy.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>How do I receive my policy?</h3>
+                        <p>You can receive the policy by email or request delivery by mail within 15 days.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>How can I check my policy?</h3>
+                        <p>Use the Check Policy menu and enter your policy number with the last 6 digits of your ID card.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 @endsection
