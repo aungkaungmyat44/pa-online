@@ -26,11 +26,6 @@
                         <strong>Policy No. {{ $policyNumber }}</strong>
                     </div>
                     <div class="check-policy-body">
-                        <p>Dear valued customer,</p>
-                        <p>
-                            Thank you for trusting Sahamongkhon Insurance Public Company Limited.
-                            Your insurance policy has been successfully issued and is effective according to the coverage period shown below.
-                        </p>
                         <div class="check-policy-table-wrap">
                             <table class="table check-policy-table mb-0">
                                 <tbody>
@@ -67,10 +62,6 @@
                         <p>
                             If you have any questions, please contact Customer Service at 02-68-77777
                             or email <a href="mailto:example@gmail.com">example@gmail.com</a>.
-                        </p>
-                        <p class="check-policy-signoff">
-                            Sincerely,<br>
-                            Sahamongkhon Insurance Public Company Limited
                         </p>
                     </div>
                     <div class="check-policy-actions">
