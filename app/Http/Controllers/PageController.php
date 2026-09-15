@@ -9,7 +9,44 @@ class PageController extends Controller
 {
     public function home()
     {
-        return view('home');
+        $coveragePlans = [
+            [
+                'title' => 'อาชีพชั้น 1',
+                'subtitle' => 'Class1',
+            ],
+            [
+                'title' => 'อาชีพชั้น 2',
+                'subtitle' => 'Class2',
+            ],
+            [
+                'title' => 'อาชีพชั้น 3',
+                'subtitle' => 'Class3',
+            ],
+        ];
+
+        $coverageRows = [
+            [
+                'label' => 'เสียชีวิตจากอุบัติเหตุ',
+                'amounts' => ['300000.-', '200000.-', '100,000.-'],
+            ],
+            [
+                'label' => 'ถูกฆ่าหรือทำร้ายร่างกาย',
+                'amounts' => ['300000.-', '200000.-', '100,000.-'],
+            ],
+            [
+                'label' => 'ขับขี่/โดยสารรถจักรยานยนต์',
+                'amounts' => ['150,000.-', '100,000.-', '50,000.-'],
+            ],
+            [
+                'label' => 'ค่ารักษาพยาบาล',
+                'amounts' => ['30,000.-', '30,000.-', '10,000.-'],
+            ],
+        ];
+
+        return view('home', [
+            'coveragePlans' => $coveragePlans,
+            'coverageRows' => $coverageRows,
+        ]);
     }
 
     public function checkPremium()

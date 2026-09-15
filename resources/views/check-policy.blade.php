@@ -19,7 +19,7 @@
                     <div class="check-policy-header">
                         <img src="{{ asset('assets/images/saha_logo.png') }}" alt="Sahamongkhon Insurance" class="check-policy-logo">
                         <h1>Sahamongkhon Insurance Public Company Limited</h1>
-                        <p>บริษัท สหมงคลประกันภัย จำกัด (มหาชน)</p>
+                        <p>Sahamongkhon Public Company Limited</p>
                     </div>
                     <div class="check-policy-title-bar">
                         <span>Electronic Policy (E-Policy)</span>

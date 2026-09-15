@@ -139,7 +139,7 @@
 					</a>
 
 					<button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
-						aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+						aria-controls="mainNav" aria-expanded="false" aria-label="เปิด/ปิดเมนูนำทาง">
 						<span class="navbar-toggler-icon"></span>
 					</button>
 
@@ -147,26 +147,26 @@
 						<!-- Center links -->
 						<ul class="navbar-nav mx-auto mb-2 mb-lg-0 align-items-lg-center gap-lg-1">
 							<li class="nav-item">
-								<a class="nav-link mi-link active" href="{{ route('home') }}">Home</a>
+								<a class="nav-link mi-link active" href="{{ route('home') }}">หน้าแรก</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link mi-link" href="#">About</a>
+								<a class="nav-link mi-link" href="#">เกี่ยวกับ</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link mi-link" href="#">Products</a>
+								<a class="nav-link mi-link" href="#">แผน</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link mi-link" href="#">Contact</a>
+								<a class="nav-link mi-link" href="#">ติดต่อเรา</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link mi-link mi-agent" href="{{ route('check-policy-form') }}">Check Policy</a>
+								<a class="nav-link mi-link mi-agent" href="{{ route('check-policy-form') }}">เช็คกรมธรรม์</a>
 							</li>
 						</ul>
 
 						<!-- Right contact -->
 						<div class="d-flex flex-column flex-lg-row flex-md-column align-items-lg-center gap-2 mt-3 mt-lg-0" id="navContact">
-							<a href="tel:+026877777" class="mi-contact">Phone: 02-68-77777</a>
-							<a href="mailto:example@gmail.com" class="mi-contact">Email: example@gmail.com</a>
+							<a href="tel:+026877777" class="mi-contact">โทร: 02-68-77777</a>
+							<a href="mailto:example@gmail.com" class="mi-contact">อีเมล: example@gmail.com</a>
 						</div>
 					</div>
 				</div>
@@ -183,7 +183,7 @@
 			<div class="mt-2 small text-muted">Loading...</div>
 		</div>
 
-		<footer class="mi-footer mt-4">
+		<footer class="mi-footer mt-5">
 			<div class="container py-5">
 				<div class="row g-4">
 					<div class="col-md-5 col-sm-12">
@@ -195,31 +195,31 @@
 							</div>
 						</div>
 						<p class="mi-footer-text mb-0">
-							Reliable insurance, fast service, and coverage you can count on for every journey.
+							ประกันภัยที่เชื่อถือได้ บริการรวดเร็ว และความคุ้มครองที่คุณมั่นใจได้ในทุกการเดินทาง
 						</p>
 					</div>
 					<div class="col-md-3">
-						<h5 class="mi-footer-heading">Quick Links</h5>
+						<h5 class="mi-footer-heading">เมนูลัด</h5>
 						<ul class="list-unstyled mi-footer-list mb-0">
-							<li><a href="#">Home</a></li>
-							<li><a href="#">About</a></li>
-							<li><a href="#">Products</a></li>
+							<li><a href="#">หน้าแรก</a></li>
+							<li><a href="#">เกี่ยวกับ</a></li>
+							<li><a href="#">ผลิตภัณฑ์</a></li>
 						</ul>
 					</div>
 					<div class="col-md-4">
-						<h5 class="mi-footer-heading">Contact</h5>
+						<h5 class="mi-footer-heading">ติดต่อเรา</h5>
 						<ul class="list-unstyled mi-footer-list mb-0">
 							<li><a href="tel:+66026877777" target="_blank"><i class="bi bi-telephone me-2"></i>02-68-77777</a></li>
 							<li><a href="mailto:example@gmail.com" target="_blank"><i class="bi bi-envelope me-2"></i>example@gmail.com</a></li>
-							<li><a href="https://goo.gl/maps/1TgaPx9b9wNwqot67" target="_blank"><i class="bi bi-geo-alt me-2"></i>Bangkok, Thailand</a></li>
+							<li><a href="https://goo.gl/maps/1TgaPx9b9wNwqot67" target="_blank"><i class="bi bi-geo-alt me-2"></i>กรุงเทพมหานคร ประเทศไทย</a></li>
 						</ul>
 					</div>
 				</div>
 			</div>
 			<div class="mi-footer-bottom">
 				<div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2 py-3">
-					<p class="mb-0">&copy; <?php echo date('Y'); ?> Sahamongkhon Public Company Limited. All rights reserved.</p>
-					<p class="mb-0">Developed by IT Team UPP.CO.TH</p>
+					<p class="mb-0">&copy; <?php echo date('Y'); ?> Sahamongkhon Public Company Limited. สงวนลิขสิทธิ์</p>
+					<p class="mb-0">Developed By IT Team UPP.CO.TH</p>
 				</div>
 			</div>
 		</footer>
