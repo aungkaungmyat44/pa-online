@@ -51,7 +51,14 @@ class PageController extends Controller
 
     public function checkPremium()
     {
-        return view('check');
+        $occupation1 = config('occupations.occupationForPlan1');
+        $occupation2 = config('occupations.occupationForPlan2');
+        $occupation3 = config('occupations.occupationForPlan3');
+        $occupations = array_merge($occupation1, $occupation2, $occupation3);
+
+        return view('check', [
+            'occupations' => $occupations
+        ]);
     }
 
     public function otpConfirmation(Request $request)

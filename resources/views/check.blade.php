@@ -1,48 +1,48 @@
 @extends('layout.master')
 
-@section('title', 'Check Premium')
+@section('title', 'คำนวณเบี้ยประกัน')
 
 @section('content')
 <section id="check-premium-section">
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <ol class="mi-progress mi-progress-six" aria-label="Check premium progress">
+                <ol class="mi-progress mi-progress-six" aria-label="ขั้นตอนการคำนวณเบี้ยประกัน">
                     <li class="mi-progress-step is-active">
                         <span class="mi-progress-marker">
                             <i class="bi bi-pencil-square"></i>
                         </span>
-                        <span class="mi-progress-label">Inquire</span>
+                        <span class="mi-progress-label">สอบถามข้อมูล</span>
                     </li>
                     <li class="mi-progress-step">
                         <span class="mi-progress-marker">
                             <i class="bi bi-mailbox-flag"></i>
                         </span>
-                        <span class="mi-progress-label">OTP Verification</span>
+                        <span class="mi-progress-label">ยืนยัน OTP</span>
                     </li>
                     <li class="mi-progress-step">
                         <span class="mi-progress-marker">
                             <i class="bi bi-ui-checks-grid"></i>
                         </span>
-                        <span class="mi-progress-label">Questionnaire</span>
+                        <span class="mi-progress-label">แบบสอบถาม</span>
                     </li>
                     <li class="mi-progress-step">
                         <span class="mi-progress-marker">
                             <i class="bi bi-person-vcard"></i>
                         </span>
-                        <span class="mi-progress-label">Personal Information</span>
+                        <span class="mi-progress-label">ข้อมูลส่วนตัว</span>
                     </li>
                     <li class="mi-progress-step">
                         <span class="mi-progress-marker">
                             <i class="bi bi-file-earmark-check"></i>
                         </span>
-                        <span class="mi-progress-label">Review</span>
+                        <span class="mi-progress-label">ตรวจสอบ</span>
                     </li>
                     <li class="mi-progress-step">
                         <span class="mi-progress-marker">
                             <i class="bi bi-credit-card"></i>
                         </span>
-                        <span class="mi-progress-label">Payment</span>
+                        <span class="mi-progress-label">ชำระเงิน</span>
                     </li>
                 </ol>
             </div>
@@ -50,158 +50,32 @@
         <div class="row">
             <div class="col-lg-8 mx-auto">
                 <div class="check-premium-card">
-                    <h1>Please enter the following information to proceed</h1>
+                    <h1>กรุณากรอกข้อมูลต่อไปนี้เพื่อดำเนินการต่อ</h1>
                     <form action="{{ route('otp-confirmation') }}" method="POST">
                         @csrf
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label for="occupation" class="form-label">Occupation</label>
+                                <label for="occupation" class="form-label">อาชีพ</label>
                                 <select class="form-control" id="occupation" name="occupation" required>
-                                    <option value="">Select your occupation</option>
-                                    <option value="Chief Executive Officer">Chief Executive Officer</option>
-                                    <option value="Executive Vice President">Executive Vice President</option>
-                                    <option value="President">President</option>
-                                    <option value="Managing Director">Managing Director</option>
-                                    <option value="Deputy Managing Director">Deputy Managing Director</option>
-                                    <option value="Assistant Managing Director">Assistant Managing Director</option>
-                                    <option value="Director">Director</option>
-                                    <option value="Deputy Director">Deputy Director</option>
-                                    <option value="Assistant Director">Assistant Director</option>
-                                    <option value="Manager">Manager</option>
-                                    <option value="Deputy Manager">Deputy Manager</option>
-                                    <option value="Assistant Manager">Assistant Manager</option>
-                                    <option value="General Officer">General Officer</option>
-                                    <option value="Sale/Marketing Officer">Sale/Marketing Officer</option>
-                                    <option value="Accounting Officer">Accounting Officer</option>
-                                    <option value="Typist">Typist</option>
-                                    <option value="Secretary">Secretary</option>
-                                    <option value="Businessman">Businessman</option>
-                                    <option value="Employee">Employee</option>
-                                    <option value="Consultant">Consultant</option>
-                                    <option value="Department Chief">Department Chief</option>
-                                    <option value="Assistant Department Chief">Assistant Department Chief</option>
-                                    <option value="Unit Chief">Unit Chief</option>
-                                    <option value="Committee">Committee</option>
-                                    <option value="Division Manager">Division Manager</option>
-                                    <option value="Department Manager">Department Manager</option>
-                                    <option value="Judge">Judge</option>
-                                    <option value="Lawyer/Attorney">Lawyer/Attorney</option>
-                                    <option value="Prosecutor">Prosecutor</option>
-                                    <option value="Legal Consultant">Legal Consultant</option>
-                                    <option value="Paralegal">Paralegal</option>
-                                    <option value="Editor">Editor</option>
-                                    <option value="Author">Author</option>
-                                    <option value="Commentator">Commentator</option>
-                                    <option value="Newscaster">Newscaster</option>
-                                    <option value="Musician">Musician</option>
-                                    <option value="Singer">Singer</option>
-                                    <option value="Composer">Composer</option>
-                                    <option value="Astronomer">Astronomer</option>
-                                    <option value="Accountant">Accountant</option>
-                                    <option value="Social worker">Social worker</option>
-                                    <option value="Librarian">Librarian</option>
-                                    <option value="Economist">Economist</option>
-                                    <option value="Psychologist">Psychologist</option>
-                                    <option value="Statistician">Statistician</option>
-                                    <option value="Anthropologist">Anthropologist</option>
-                                    <option value="Director-General">Director-General</option>
-                                    <option value="Deputy Director-General">Deputy Director-General</option>
-                                    <option value="Assistant Director-General">Assistant Director-General</option>
-                                    <option value="Division Director">Division Director</option>
-                                    <option value="Executive Government Officer">Executive Government Officer</option>
-                                    <option value="Division Chief">Division Chief</option>
-                                    <option value="Government Officer/State Enterprise">Government Officer/State Enterprise</option>
-                                    <option value="Chief Executive">Chief Executive</option>
-                                    <option value="Section Chief">Section Chief</option>
-                                    <option value="Teacher">Teacher</option>
-                                    <option value="Assistant Section Chief">Assistant Section Chief</option>
-                                    <option value="Agricultural Cooperative Manager">Agricultural Cooperative Manager</option>
-                                    <option value="Agricultural Cooperative Officer">Agricultural Cooperative Officer</option>
-                                    <option value="Telephone/Telegraph Operator">Telephone/Telegraph Operator</option>
-                                    <option value="Business Owner">Business Owner</option>
-                                    <option value="Insurance Agent">Insurance Agent</option>
-                                    <option value="Housekeeper">Housekeeper</option>
-                                    <option value="Student">Student</option>
-                                    <option value="Engineer">Engineer</option>
-                                    <option value="Architect">Architect</option>
-                                    <option value="Interior Designer">Interior Designer</option>
-                                    <option value="Designer">Designer</option>
-                                    <option value="Draftsman">Draftsman</option>
-                                    <option value="Reporter">Reporter</option>
-                                    <option value="Actor/Movie Star">Actor/Movie Star</option>
-                                    <option value="Social Dancer">Social Dancer</option>
-                                    <option value="Meteorologist">Meteorologist</option>
-                                    <option value="Scientist">Scientist</option>
-                                    <option value="Biologist">Biologist</option>
-                                    <option value="Agronomist/Forester">Agronomist/Forester</option>
-                                    <option value="Educator">Educator</option>
-                                    <option value="Orchardist">Orchardist</option>
-                                    <option value="Agriculturist">Agriculturist</option>
-                                    <option value="Farmer">Farmer</option>
-                                    <option value="Intelligence Officer">Intelligence Officer</option>
-                                    <option value="Tailor">Tailor</option>
-                                    <option value="Hairdresser">Hairdresser</option>
-                                    <option value="Survent">Survent</option>
-                                    <option value="Lanndryman">Lanndryman</option>
-                                    <option value="Waiter">Waiter</option>
-                                    <option value="Trader">Trader</option>
-                                    <option value="Self employed">Self employed</option>
-                                    <option value="Pedlar">Pedlar</option>
-                                    <option value="Politician">Politician</option>
-                                    <option value="Electrical Engineer">Electrical Engineer</option>
-                                    <option value="Mechanical Engineer">Mechanical Engineer</option>
-                                    <option value="Industrial Engineer">Industrial Engineer</option>
-                                    <option value="Chemical Engineer">Chemical Engineer</option>
-                                    <option value="Baker">Baker</option>
-                                    <option value="Watchmaker">Watchmaker</option>
-                                    <option value="Watch Repairer">Watch Repairer</option>
-                                    <option value="Doctor/Physician">Doctor/Physician</option>
-                                    <option value="Dentist">Dentist</option>
-                                    <option value="Oculist">Oculist</option>
-                                    <option value="Surgeon">Surgeon</option>
-                                    <option value="Pharmacist">Pharmacist</option>
-                                    <option value="Nurse">Nurse</option>
-                                    <option value="Practical Nurse">Practical Nurse</option>
-                                    <option value="Physical Therapist">Physical Therapist</option>
-                                    <option value="X-Ray worker">X-Ray worker</option>
-                                    <option value="Hospital worker">Hospital worker</option>
-                                    <option value="Chemist">Chemist</option>
-                                    <option value="Physicist">Physicist</option>
-                                    <option value="Geologist">Geologist</option>
-                                    <option value="Veterinarian">Veterinarian</option>
-                                    <option value="Electrical Appliance Technician">Electrical Appliance Technician</option>
-                                    <option value="Music Instrument Technician">Music Instrument Technician</option>
-                                    <option value="Painter">Painter</option>
-                                    <option value="Carpenter">Carpenter</option>
-                                    <option value="Political Scientist">Political Scientist</option>
-                                    <option value="Philosopher">Philosopher</option>
-                                    <option value="Air Traffic Controller">Air Traffic Controller</option>
-                                    <option value="Programmer">Programmer</option>
-                                    <option value="System Analyst">System Analyst</option>
-                                    <option value="Computer Engineer">Computer Engineer</option>
-                                    <option value="Travel Consultant and Manager">Travel Consultant and Manager</option>
-                                    <option value="Guide">Guide</option>
-                                    <option value="Cook">Cook</option>
-                                    <option value="Chef">Chef</option>
-                                    <option value="Nutritionist">Nutritionist</option>
-                                    <option value="Monk">Monk</option>
-                                    <option value="Priest">Priest</option>
-                                    <option value="Religious Occupations">Religious Occupations</option>
+                                    <option value="">เลือกอาชีพของคุณ</option>
+                                    @foreach ($occupations as $occupation)
+                                        <option value="{{ $occupation }}">{{ $occupation }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="col-md-6">
-                                <label for="date_of_birth" class="form-label">Date of Birth</label>
-                                <input type="text" class="form-control" id="date_of_birth" name="date_of_birth" placeholder="Select your date of birth" autocomplete="off" required>
+                                <label for="date_of_birth" class="form-label">วันเดือนปีเกิด</label>
+                                <input type="text" class="form-control" id="date_of_birth" name="date_of_birth" placeholder="เลือกวันเดือนปีเกิด" autocomplete="off" required>
                             </div>
                             <div class="col-md-6">
-                                <label for="email" class="form-label">Email Address</label>
-                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email address" required>
+                                <label for="email" class="form-label">อีเมล</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="กรอกอีเมลของคุณ" required>
                             </div>
                             <div class="col-md-12">
-                                Read <button type="button" class="terms-link" data-bs-toggle="modal" data-bs-target="#underwritingModal">terms and conditions</button> by Sahamongkhon.
+                                อ่าน <button type="button" class="terms-link" data-bs-toggle="modal" data-bs-target="#underwritingModal">ข้อกำหนดและเงื่อนไข</button> โดยสหมงคลประกันภัย
                             </div>
                             <div class="col-md-12">
-                                <button type="submit" class="check-premium-submit">Continue</button>
+                                <button type="submit" class="check-premium-submit">ดำเนินการต่อ</button>
                             </div>
                         </div>
                     </form>
@@ -271,7 +145,7 @@
 <script>
     $(function () {
         $('#occupation').select2({
-            placeholder: 'Select your occupation',
+            placeholder: 'เลือกอาชีพของคุณ',
             width: '100%'
         });
 
