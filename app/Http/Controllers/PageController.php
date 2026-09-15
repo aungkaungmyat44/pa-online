@@ -106,6 +106,7 @@ class PageController extends Controller
     {
         return view('receipt', [
             'policyNumber' => 'PA-0000001',
+            'email' => $request->input('email'),
         ]);
     }
 

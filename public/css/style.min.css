@@ -2,9 +2,18 @@
 :root {
     --theme-primary-color: #384c95;
     --theme-secondary-color: #334155;
+    --font-size-h1: 2.5rem;
+    --font-size-h2: 2.2rem;
+    --font-size-h3: 1.9rem;
+    --font-size-h4: 1.7rem;
+    --font-size-h5: 1.5rem;
+    --font-size-h6: 1.05rem;
+    --font-size-p: 1rem;
+    --font-size-li: 1rem;
+    --font-size-a: 1rem;
 }
 
-body{font-family:'Kanit',sans-serif;}h1,h2,h3,h4,h5,h6{font-family:'Kanit',sans-serif}h1{font-size:2.5rem}h2{font-size:2.2rem}h3{font-size:1.9rem}h4{font-size:1.7rem}h5{font-size:1.5rem}h6{font-size:1.3rem}p{font-size:1.2rem}.button,.tagline{font-family:'Kanit',sans-serif}.mi-footer{background:radial-gradient(1200px 400px at 10% -20%,rgb(0 179 167 / .18),transparent 45%),linear-gradient(90deg,#ffffff 0%,#f3f8ff 100%);color:var(--theme-primary-color)}.mi-footer-logo{border-radius:12px;background:rgb(255 255 255 / .1);padding:4px}.mi-footer-title{font-family:'Kanit',sans-serif;font-weight:600;color:var(--theme-primary-color)}.mi-footer-heading{font-family:'Kanit',sans-serif;font-size:1rem;font-weight:600;margin-bottom:.9rem;color:var(--theme-primary-color)}.mi-footer-text,.mi-footer-list span{color:var(--theme-primary-color);font-size:.95rem}.mi-footer-list li{margin-bottom:.5rem;overflow-wrap: break-word;word-wrap: break-word;}.mi-footer-list a{color:var(--theme-primary-color)!important;text-decoration:none;transition:color 0.2s ease}.mi-footer-list a:hover{color:#0a58ca!important}.mi-footer-bottom{background:var(--theme-primary-color);color:#fff;border-top:1px solid rgb(255 255 255 / .15)}.defaultBtn{width:100%;border-radius:14px;border:0;font-size:1.08rem;font-weight:600;padding:.8rem 1rem}.primaryBg{background-color:var(--theme-primary-color)!important}.primaryText{color:var(--theme-primary-color)!important}.primaryBtn{background:var(--theme-primary-color);color:#fff}.primaryBtn:hover{background:#4c5cbd;color:#fff;filter:brightness(1.05)}.bg-primary-saha{background:var(--theme-primary-color)}.successBtn{background:#198754;color:#fff}.defaultBtn:hover{color:#fff;filter:brightness(1.05)}.secondaryBtn{background:#fff;color:var(--theme-primary-color);border:1px solid var(--theme-primary-color)}.secondaryBtn:hover{background:var(--theme-primary-color);color:#fff;filter:brightness(1.05)}.not-clickable{pointer-events:none}.btn-close{color:red}.font-weight-bold{font-weight:500}#cookieLogo{width:30px;height:30px;margin-right:8px;vertical-align:middle}.cookie-box{position:fixed;bottom:20px;right:20px;max-width:500px;background:#fff;border-radius:12px;padding:16px;z-index:9999;border:1px solid #eee;animation:slideIn 0.4s ease}@keyframes slideIn{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+body{font-family:'Kanit',sans-serif;}h1,h2,h3,h4,h5,h6{font-family:'Kanit',sans-serif}h1{font-size:var(--font-size-h1)!important}h2{font-size:var(--font-size-h2)!important}h3{font-size:var(--font-size-h3)!important}h4{font-size:var(--font-size-h4)!important}h5{font-size:var(--font-size-h5)!important}h6{font-size:var(--font-size-h6)!important}p{font-size:var(--font-size-p)!important}li{font-size:var(--font-size-li)!important}a{font-size:var(--font-size-a)!important}.button,.tagline{font-family:'Kanit',sans-serif}.mi-footer{background:radial-gradient(1200px 400px at 10% -20%,rgb(0 179 167 / .18),transparent 45%),linear-gradient(90deg,#ffffff 0%,#f3f8ff 100%);color:var(--theme-primary-color)}.mi-footer-logo{border-radius:12px;background:rgb(255 255 255 / .1);padding:4px}.mi-footer-title{font-family:'Kanit',sans-serif;font-weight:600;color:var(--theme-primary-color)}.mi-footer-heading{font-family:'Kanit',sans-serif;font-size:1rem;font-weight:600;margin-bottom:.9rem;color:var(--theme-primary-color)}.mi-footer-text,.mi-footer-list span{color:var(--theme-primary-color);font-size:.95rem}.mi-footer-list li{margin-bottom:.5rem;overflow-wrap: break-word;word-wrap: break-word;}.mi-footer-list a{color:var(--theme-primary-color)!important;text-decoration:none;transition:color 0.2s ease}.mi-footer-list a:hover{color:#0a58ca!important}.mi-footer-bottom{background:var(--theme-primary-color);color:#fff;border-top:1px solid rgb(255 255 255 / .15)}.defaultBtn{width:100%;border-radius:14px;border:0;font-size:1.08rem;font-weight:600;padding:.8rem 1rem}.primaryBg{background-color:var(--theme-primary-color)!important}.primaryText{color:var(--theme-primary-color)!important}.primaryBtn{background:var(--theme-primary-color);color:#fff}.primaryBtn:hover{background:#4c5cbd;color:#fff;filter:brightness(1.05)}.bg-primary-saha{background:var(--theme-primary-color)}.successBtn{background:#198754;color:#fff}.defaultBtn:hover{color:#fff;filter:brightness(1.05)}.secondaryBtn{background:#fff;color:var(--theme-primary-color);border:1px solid var(--theme-primary-color)}.secondaryBtn:hover{background:var(--theme-primary-color);color:#fff;filter:brightness(1.05)}.not-clickable{pointer-events:none}.btn-close{color:red}.font-weight-bold{font-weight:500}#cookieLogo{width:30px;height:30px;margin-right:8px;vertical-align:middle}.cookie-box{position:fixed;bottom:20px;right:20px;max-width:500px;background:#fff;border-radius:12px;padding:16px;z-index:9999;border:1px solid #eee;animation:slideIn 0.4s ease}@keyframes slideIn{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
 
 /* Modern motor-insurance header (Bootstrap 5 friendly) */
 .mi-header {
@@ -172,9 +181,10 @@ body{font-family:'Kanit',sans-serif;}h1,h2,h3,h4,h5,h6{font-family:'Kanit',sans-
     border-radius: 8px;
     box-shadow: 0 12px 28px rgba(31, 44, 61, 0.07);
     display: flex;
-    gap: 1rem;
+    align-items: center;
+    gap: 0.5rem;
     height: 100%;
-    padding: 1.4rem;
+    padding: 1rem;
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
@@ -1822,7 +1832,7 @@ body{font-family:'Kanit',sans-serif;}h1,h2,h3,h4,h5,h6{font-family:'Kanit',sans-
     padding: 1rem;
 }
 
-.faq-item h3 {
+.faq-item h6 {
     color: var(--theme-primary-color);
     font-size: 1.05rem;
     font-weight: 600;
@@ -1873,7 +1883,7 @@ body{font-family:'Kanit',sans-serif;}h1,h2,h3,h4,h5,h6{font-family:'Kanit',sans-
     color: #ffffff;
     display: inline-flex;
     font-size: 1rem;
-    font-weight: 700;
+    font-weight: 500;
     height: 58px;
     justify-content: center;
     margin-bottom: 0.8rem;

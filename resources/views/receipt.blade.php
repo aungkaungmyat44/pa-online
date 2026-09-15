@@ -5,6 +5,7 @@
 @section('content')
 @php
     $policyNumber = $policyNumber ?? 'PA-0000001';
+    $email = $email ?? '';
 @endphp
 
 <section id="receipt-section" class="receipt-section">
@@ -25,7 +26,7 @@
                     </div>
 
                     <div class="alert alert-success receipt-alert" role="alert">
-                        ระบบได้ส่งกรมธรรม์ไปยังอีเมลของท่านแล้ว
+                        ระบบได้ส่งกรมธรรม์ไปยังอีเมลของท่านแล้ว {{ $email }}
                     </div>
 
                     <p class="receipt-text">ท่านสามารถตรวจสอบกรมธรรม์ได้จากปุ่มด้านล่าง</p>

@@ -100,6 +100,7 @@
                             <input type="hidden" name="product_name" id="checkout_product_name" value="{{ $productName }}">
                             <input type="hidden" name="product_price" id="checkout_product_price" value="{{ $premiumAmount }}">
                             <input type="hidden" name="order_id" value="{{ $orderIdValue }}">
+                            <input type="hidden" name="email" value="{{ $payment['email'] ?? '' }}">
                             <script type="text/javascript" id="kpay-script"
                                 src="https://dev-kpaymentgateway.kasikornbank.com/ui/v2/kpayment.min.js"
                                 data-apikey="pkey_test_22500dOmwrzgdQXT7BZghVMHnHijHyJB9JN2J"

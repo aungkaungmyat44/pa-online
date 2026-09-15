@@ -133,7 +133,7 @@
 					<a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('home') }}">
 						<img src="{{ asset('assets/images/saha_logo.png') }}" alt="Sahamongkhon Compulsory Motor Insurance" width="48" height="48" class="mi-logo">
 						<div class="d-flex flex-column">
-							<h3 class="mi-brand-text mb-0">PA Online</h3>
+							<h6 class="mi-brand-text mb-0">PA Online</h6>
 							<span class="mi-brand-subtext">Sahamongkhon Public Company Limited</span>
 						</div>
 					</a>
