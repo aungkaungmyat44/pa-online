@@ -1,6 +1,6 @@
 @extends('layout.master')
 
-@section('title', 'OTP Verification')
+@section('title', 'ยืนยัน OTP')
 
 @section('content')
 @php
@@ -14,50 +14,13 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <ol class="mi-progress mi-progress-six" aria-label="Check premium progress">
-                    <li class="mi-progress-step is-done">
-                        <span class="mi-progress-marker">
-                            <i class="bi bi-pencil-square"></i>
-                        </span>
-                        <span class="mi-progress-label">Inquire</span>
-                    </li>
-                    <li class="mi-progress-step is-active">
-                        <span class="mi-progress-marker">
-                            <i class="bi bi-mailbox-flag"></i>
-                        </span>
-                        <span class="mi-progress-label">OTP Verification</span>
-                    </li>
-                    <li class="mi-progress-step">
-                        <span class="mi-progress-marker">
-                            <i class="bi bi-ui-checks-grid"></i>
-                        </span>
-                        <span class="mi-progress-label">Questionnaire</span>
-                    </li>
-                    <li class="mi-progress-step">
-                        <span class="mi-progress-marker">
-                            <i class="bi bi-person-vcard"></i>
-                        </span>
-                        <span class="mi-progress-label">Personal Information</span>
-                    </li>
-                    <li class="mi-progress-step">
-                        <span class="mi-progress-marker">
-                            <i class="bi bi-file-earmark-check"></i>
-                        </span>
-                        <span class="mi-progress-label">Review</span>
-                    </li>
-                    <li class="mi-progress-step">
-                        <span class="mi-progress-marker">
-                            <i class="bi bi-credit-card"></i>
-                        </span>
-                        <span class="mi-progress-label">Payment</span>
-                    </li>
-                </ol>
+                <x-progress-steps active="otp" />
             </div>
         </div>
 
         <div class="otp-shell">
-            <h1>Verify OTP</h1>
-            <p>Enter the 6-digit OTP code sent to your email address to continue.</p>
+            <h1>ยืนยัน OTP</h1>
+            <p>กรอกรหัส OTP 6 หลักที่ส่งไปยังอีเมลของคุณเพื่อดำเนินการต่อ</p>
 
             <div class="otp-email">
                 <i class="bi bi-envelope-at me-1"></i>
@@ -72,21 +35,21 @@
                 <input type="hidden" name="otp_code" id="otp_code" value="">
 
                 <div class="otp-inputs">
-                    <input class="form-control otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" aria-label="OTP digit 1">
-                    <input class="form-control otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" aria-label="OTP digit 2">
-                    <input class="form-control otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" aria-label="OTP digit 3">
-                    <input class="form-control otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" aria-label="OTP digit 4">
-                    <input class="form-control otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" aria-label="OTP digit 5">
-                    <input class="form-control otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" aria-label="OTP digit 6">
+                    <input class="form-control otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" aria-label="รหัส OTP หลักที่ 1">
+                    <input class="form-control otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" aria-label="รหัส OTP หลักที่ 2">
+                    <input class="form-control otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" aria-label="รหัส OTP หลักที่ 3">
+                    <input class="form-control otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" aria-label="รหัส OTP หลักที่ 4">
+                    <input class="form-control otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" aria-label="รหัส OTP หลักที่ 5">
+                    <input class="form-control otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" aria-label="รหัส OTP หลักที่ 6">
                 </div>
 
                 <div class="otp-actions">
-                    <button type="submit" id="otpSubmitBtn" class="otp-btn otp-btn-primary" disabled>Verify OTP</button>
-                    <button type="button" id="otpResendBtn" class="otp-btn otp-btn-secondary">Resend OTP</button>
-                    <a href="{{ route('check-premium') }}" class="otp-btn otp-btn-outline">Back</a>
+                    <button type="submit" id="otpSubmitBtn" class="otp-btn otp-btn-primary" disabled>ยืนยัน OTP</button>
+                    <button type="button" id="otpResendBtn" class="otp-btn otp-btn-secondary">ส่ง OTP อีกครั้ง</button>
+                    <a href="{{ route('check-premium') }}" class="otp-btn otp-btn-outline">ย้อนกลับ</a>
                 </div>
 
-                <p class="otp-note">If you did not receive the OTP, please check your Spam or Junk folder.</p>
+                <p class="otp-note">หากไม่ได้รับรหัส OTP กรุณาตรวจสอบโฟลเดอร์ Spam หรือ Junk</p>
             </form>
         </div>
     </div>

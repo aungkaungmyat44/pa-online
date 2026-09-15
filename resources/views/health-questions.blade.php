@@ -19,44 +19,7 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <ol class="mi-progress mi-progress-six" aria-label="Check premium progress">
-                    <li class="mi-progress-step is-done">
-                        <span class="mi-progress-marker">
-                            <i class="bi bi-pencil-square"></i>
-                        </span>
-                        <span class="mi-progress-label">Inquire</span>
-                    </li>
-                    <li class="mi-progress-step is-done">
-                        <span class="mi-progress-marker">
-                            <i class="bi bi-mailbox-flag"></i>
-                        </span>
-                        <span class="mi-progress-label">OTP Verification</span>
-                    </li>
-                    <li class="mi-progress-step is-active">
-                        <span class="mi-progress-marker">
-                            <i class="bi bi-ui-checks-grid"></i>
-                        </span>
-                        <span class="mi-progress-label">Questionnaire</span>
-                    </li>
-                    <li class="mi-progress-step">
-                        <span class="mi-progress-marker">
-                            <i class="bi bi-person-vcard"></i>
-                        </span>
-                        <span class="mi-progress-label">Personal Information</span>
-                    </li>
-                    <li class="mi-progress-step">
-                        <span class="mi-progress-marker">
-                            <i class="bi bi-file-earmark-check"></i>
-                        </span>
-                        <span class="mi-progress-label">Review</span>
-                    </li>
-                    <li class="mi-progress-step">
-                        <span class="mi-progress-marker">
-                            <i class="bi bi-credit-card"></i>
-                        </span>
-                        <span class="mi-progress-label">Payment</span>
-                    </li>
-                </ol>
+                <x-progress-steps active="questionnaire" />
             </div>
         </div>
 

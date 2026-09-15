@@ -7,44 +7,7 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <ol class="mi-progress mi-progress-six" aria-label="ขั้นตอนการคำนวณเบี้ยประกัน">
-                    <li class="mi-progress-step is-active">
-                        <span class="mi-progress-marker">
-                            <i class="bi bi-pencil-square"></i>
-                        </span>
-                        <span class="mi-progress-label">สอบถามข้อมูล</span>
-                    </li>
-                    <li class="mi-progress-step">
-                        <span class="mi-progress-marker">
-                            <i class="bi bi-mailbox-flag"></i>
-                        </span>
-                        <span class="mi-progress-label">ยืนยัน OTP</span>
-                    </li>
-                    <li class="mi-progress-step">
-                        <span class="mi-progress-marker">
-                            <i class="bi bi-ui-checks-grid"></i>
-                        </span>
-                        <span class="mi-progress-label">แบบสอบถาม</span>
-                    </li>
-                    <li class="mi-progress-step">
-                        <span class="mi-progress-marker">
-                            <i class="bi bi-person-vcard"></i>
-                        </span>
-                        <span class="mi-progress-label">ข้อมูลส่วนตัว</span>
-                    </li>
-                    <li class="mi-progress-step">
-                        <span class="mi-progress-marker">
-                            <i class="bi bi-file-earmark-check"></i>
-                        </span>
-                        <span class="mi-progress-label">ตรวจสอบ</span>
-                    </li>
-                    <li class="mi-progress-step">
-                        <span class="mi-progress-marker">
-                            <i class="bi bi-credit-card"></i>
-                        </span>
-                        <span class="mi-progress-label">ชำระเงิน</span>
-                    </li>
-                </ol>
+                <x-progress-steps active="inquire" />
             </div>
         </div>
         <div class="row">
