@@ -42,7 +42,7 @@
                             <h2>ข้อมูลส่วนตัว</h2>
                             <div class="row g-3">
                                 <div class="col-md-4">
-	                                    <label for="prefix" class="form-label">คำนำหน้า</label>
+	                                    <label for="prefix" class="form-label">คำนำหน้า<span class="text-danger"> *</span></label>
 	                                    <select class="form-control" id="prefix" name="prefix" required>
 	                                        <option value="">เลือกคำนำหน้า</option>
 	                                        @foreach (($nameTitles ?? []) as $nameTitle)
@@ -51,15 +51,15 @@
 	                                    </select>
 	                                </div>
                                 <div class="col-md-4">
-                                    <label for="first_name" class="form-label">ชื่อ</label>
+                                    <label for="first_name" class="form-label">ชื่อ<span class="text-danger"> *</span></label>
                                     <input type="text" class="form-control" id="first_name" name="first_name" placeholder="กรอกชื่อ" required>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="last_name" class="form-label">นามสกุล</label>
+                                    <label for="last_name" class="form-label">นามสกุล<span class="text-danger"> *</span></label>
                                     <input type="text" class="form-control" id="last_name" name="last_name" placeholder="กรอกนามสกุล" required>
                                 </div>
 	                                <div class="col-md-4">
-	                                    <label for="nationality" class="form-label">สัญชาติ</label>
+	                                    <label for="nationality" class="form-label">สัญชาติ<span class="text-danger"> *</span></label>
 	                                    <select class="form-control" id="nationality" name="nationality" required>
 	                                        <option value="">เลือกสัญชาติ</option>
 	                                        @foreach (($countries ?? []) as $country)
@@ -68,7 +68,7 @@
 	                                    </select>
 	                                </div>
                                 <div class="col-md-4">
-                                    <label for="identity_type" class="form-label">ประเภทเอกสารยืนยันตัวตน</label>
+                                    <label for="identity_type" class="form-label">ประเภทเอกสารยืนยันตัวตน<span class="text-danger"> *</span></label>
                                     <select class="form-control" id="identity_type" name="identity_type" required>
                                         <option value="">เลือกประเภทเอกสาร</option>
                                         @foreach (($cardTypes ?? []) as $cardType)
@@ -77,11 +77,11 @@
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="identity_number" class="form-label">เลขที่เอกสารยืนยันตัวตน</label>
+                                    <label for="identity_number" class="form-label">เลขที่เอกสารยืนยันตัวตน<span class="text-danger"> *</span></label>
                                     <input type="text" class="form-control" id="identity_number" name="identity_number" placeholder="กรอกเลขที่เอกสาร" required>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="date_of_birth" class="form-label">วันเกิด</label>
+                                    <label for="date_of_birth" class="form-label">วันเกิด<span class="text-danger"> *</span></label>
                                     <input type="text" class="form-control" id="date_of_birth" name="date_of_birth" value="{{ $customer['date_of_birth'] ?? '' }}" readonly>
                                 </div>
                             </div>
@@ -91,11 +91,11 @@
                             <h2>ข้อมูลติดต่อ</h2>
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label for="email" class="form-label">อีเมล</label>
+                                    <label for="email" class="form-label">อีเมล<span class="text-danger"> *</span></label>
                                     <input type="email" class="form-control" id="email" name="email" value="{{ $customer['email'] ?? '' }}" readonly>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="phone_number" class="form-label">หมายเลขโทรศัพท์</label>
+                                    <label for="phone_number" class="form-label">หมายเลขโทรศัพท์<span class="text-danger"> *</span></label>
                                     <input type="tel" class="form-control" id="phone_number" name="phone_number" placeholder="กรอกหมายเลขโทรศัพท์" required>
                                 </div>
                             </div>
@@ -105,11 +105,11 @@
                             <h2>ข้อมูลที่อยู่</h2>
                             <div class="row g-3">
                                 <div class="col-md-12">
-                                    <label for="full_address" class="form-label">ที่อยู่</label>
+                                    <label for="full_address" class="form-label">ที่อยู่<span class="text-danger"> *</span></label>
                                     <textarea class="form-control" id="full_address" name="full_address" rows="3" placeholder="กรอกที่อยู่" required></textarea>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="province" class="form-label">จังหวัด</label>
+                                    <label for="province" class="form-label">จังหวัด<span class="text-danger"> *</span></label>
                                     <select class="form-control" id="province" name="province" required>
                                         <option value="">เลือกจังหวัด</option>
                                         @foreach (($provinces ?? []) as $province)
@@ -118,19 +118,19 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="district" class="form-label">อำเภอ/เขต</label>
+                                    <label for="district" class="form-label">อำเภอ/เขต<span class="text-danger"> *</span></label>
                                     <select class="form-control" id="district" name="district" required disabled>
                                         <option value="">เลือกอำเภอ/เขต</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="subdistrict" class="form-label">ตำบล/แขวง</label>
+                                    <label for="subdistrict" class="form-label">ตำบล/แขวง<span class="text-danger"> *</span></label>
                                     <select class="form-control" id="subdistrict" name="subdistrict" required disabled>
                                         <option value="">เลือกตำบล/แขวง</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="zipcode" class="form-label">รหัสไปรษณีย์</label>
+                                    <label for="zipcode" class="form-label">รหัสไปรษณีย์<span class="text-danger"> *</span></label>
                                     <input type="text" class="form-control" id="zipcode" name="zipcode" placeholder="รหัสไปรษณีย์" required>
                                 </div>
                             </div>
@@ -138,7 +138,7 @@
 
                         <div class="information-section">
                             <h2>ผู้รับผลประโยชน์</h2>
-                            <input type="text" class="form-control" name="beneficiary" value="ทายาทโดยธรรม" readonly>
+                            <input type="text" class="form-control" name="beneficiary" value="ทายาทโดยธรรม">
                         </div>
 
                         <div class="information-section information-consent-section">
@@ -146,19 +146,19 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="1" id="personal_data_collection" name="personal_data_collection" required>
                                 <label class="form-check-label" for="personal_data_collection">
-                                    การเก็บรวบรวมข้อมูลส่วนบุคคล (ข้าพเจ้ายอมรับเงื่อนไขการประกันภัย และมีความประสงค์ขอเอาประกันภัยกับบริษัทฯ ตามเงื่อนไขของกรมธรรม์ประกันภัยที่บริษัทฯ ใช้สำหรับการประกันภัยนี้ โดยข้าพเจ้ารับรองว่า รายละเอียดและข้อความที่ข้าพเจ้าได้แถลงไว้ข้างต้นเป็นความจริง ถูกต้อง และครบถ้วนทุกประการ)
+                                    การเก็บรวบรวมข้อมูลส่วนบุคคล (ข้าพเจ้ายอมรับเงื่อนไขการประกันภัย และมีความประสงค์ขอเอาประกันภัยกับบริษัทฯ ตามเงื่อนไขของกรมธรรม์ประกันภัยที่บริษัทฯ ใช้สำหรับการประกันภัยนี้ โดยข้าพเจ้ารับรองว่า รายละเอียดและข้อความที่ข้าพเจ้าได้แถลงไว้ข้างต้นเป็นความจริง ถูกต้อง และครบถ้วนทุกประการ)<span class="text-danger"> *</span>
                                 </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="1" id="sensitive_personal_data" name="sensitive_personal_data" required>
                                 <label class="form-check-label" for="sensitive_personal_data">
-                                    ข้อมูลส่วนบุคคลที่มีความอ่อนไหว(ข้าพเจ้าตกลงให้คำขอเอาประกันภัยฉบับนี้เป็นมูลฐานแห่งสัญญาประกันภัยระหว่างข้าพเจ้ากับบริษัทฯ หากปรากฏว่าข้อมูลหรือรายละเอียดที่ข้าพเจ้าแถลงไว้เป็นเท็จ หรือมีการปกปิดไม่เปิดเผยข้อเท็จจริง ข้าพเจ้ายินยอมให้บริษัทฯ บอกเลิกสัญญาประกันภัยได้)
+                                    ข้อมูลส่วนบุคคลที่มีความอ่อนไหว(ข้าพเจ้าตกลงให้คำขอเอาประกันภัยฉบับนี้เป็นมูลฐานแห่งสัญญาประกันภัยระหว่างข้าพเจ้ากับบริษัทฯ หากปรากฏว่าข้อมูลหรือรายละเอียดที่ข้าพเจ้าแถลงไว้เป็นเท็จ หรือมีการปกปิดไม่เปิดเผยข้อเท็จจริง ข้าพเจ้ายินยอมให้บริษัทฯ บอกเลิกสัญญาประกันภัยได้)<span class="text-danger"> *</span>
                                 </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="1" id="marketing_consent" name="marketing_consent">
                                 <label class="form-check-label" for="marketing_consent">
-                                    ความยินยอมด้านการตลาด (<span class="text-danger">ไม่บังคับ</span> - ข้าพเจ้ายินยอมให้บริษัทฯ เก็บรวบรวม ใช้ และเปิดเผยข้อมูลเกี่ยวกับสุขภาพและข้อมูลส่วนบุคคลของข้าพเจ้าแก่สำนักงานคณะกรรมการกำกับและส่งเสริมการประกอบธุรกิจประกันภัย (คปภ.) เพื่อประโยชน์ในการกำกับดูแลธุรกิจประกันภัย)
+                                    ความยินยอมด้านการตลาด (ข้าพเจ้ายินยอมให้บริษัทฯ เก็บรวบรวม ใช้ และเปิดเผยข้อมูลเกี่ยวกับสุขภาพและข้อมูลส่วนบุคคลของข้าพเจ้าแก่สำนักงานคณะกรรมการกำกับและส่งเสริมการประกอบธุรกิจประกันภัย (คปภ.) เพื่อประโยชน์ในการกำกับดูแลธุรกิจประกันภัย)
                                 </label>
                             </div>
                         </div>

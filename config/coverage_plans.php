@@ -1,23 +1,23 @@
 <?php
 
 return [
-    'default_plan' => 'อาชีพชั้น 1 (Class1)',
+    'default_plan' => 'อาชีพชั้น 1',
 
     'plans' => [
         [
             'title' => 'อาชีพชั้น 1',
             'subtitle' => 'Class1',
-            'value' => 'อาชีพชั้น 1 (Class1)',
+            'value' => 'อาชีพชั้น 1',
         ],
         [
             'title' => 'อาชีพชั้น 2',
             'subtitle' => 'Class2',
-            'value' => 'อาชีพชั้น 2 (Class2)',
+            'value' => 'อาชีพชั้น 2',
         ],
         [
             'title' => 'อาชีพชั้น 3',
             'subtitle' => 'Class3',
-            'value' => 'อาชีพชั้น 3 (Class3)',
+            'value' => 'อาชีพชั้น 3',
         ],
     ],
 

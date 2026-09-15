@@ -147,16 +147,16 @@
 						<!-- Center links -->
 						<ul class="navbar-nav mx-auto mb-2 mb-lg-0 align-items-lg-center gap-lg-1">
 							<li class="nav-item">
-								<a class="nav-link mi-link active" href="{{ route('home') }}">หน้าแรก</a>
+								<a class="nav-link mi-link active" href="#banner-section">หน้าแรก</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link mi-link" href="#">เกี่ยวกับ</a>
+								<a class="nav-link mi-link" href="#coverage-section">เกี่ยวกับ</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link mi-link" href="#">แผน</a>
+								<a class="nav-link mi-link" href="#premium-section">แผน</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link mi-link" href="#">ติดต่อเรา</a>
+								<a class="nav-link mi-link" href="#footer-section">ติดต่อเรา</a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link mi-link mi-agent" href="{{ route('check-policy-form') }}">เช็คกรมธรรม์</a>
@@ -166,7 +166,7 @@
 						<!-- Right contact -->
 						<div class="d-flex flex-column flex-lg-row flex-md-column align-items-lg-center gap-2 mt-3 mt-lg-0" id="navContact">
 							<a href="tel:+026877777" class="mi-contact">โทร: 02-68-77777</a>
-							<a href="mailto:example@gmail.com" class="mi-contact">อีเมล: example@gmail.com</a>
+							<a href="mailto:info@sahainsurance.co.th" class="mi-contact">อีเมล: info@sahainsurance.co.th</a>
 						</div>
 					</div>
 				</div>
@@ -183,7 +183,7 @@
 			<div class="mt-2 small text-muted">Loading...</div>
 		</div>
 
-		<footer class="mi-footer">
+		<footer class="mi-footer" id="footer-section">
 			<div class="container py-5">
 				<div class="row g-4">
 					<div class="col-md-5 col-sm-12">
@@ -201,16 +201,16 @@
 					<div class="col-md-3">
 						<h5 class="mi-footer-heading">เมนูลัด</h5>
 						<ul class="list-unstyled mi-footer-list mb-0">
-							<li><a href="#">หน้าแรก</a></li>
-							<li><a href="#">เกี่ยวกับ</a></li>
-							<li><a href="#">ผลิตภัณฑ์</a></li>
+							<li><a href="{{ route('home') }}#banner-section">หน้าแรก</a></li>
+							<li><a href="{{ route('home') }}#coverage-section">เกี่ยวกับ</a></li>
+							<li><a href="{{ route('home') }}#premium-section">แผน</a></li>
 						</ul>
 					</div>
 					<div class="col-md-4">
 						<h5 class="mi-footer-heading">ติดต่อเรา</h5>
 						<ul class="list-unstyled mi-footer-list mb-0">
 							<li><a href="tel:+66026877777" target="_blank"><i class="bi bi-telephone me-2"></i>02-68-77777</a></li>
-							<li><a href="mailto:example@gmail.com" target="_blank"><i class="bi bi-envelope me-2"></i>example@gmail.com</a></li>
+							<li><a href="mailto:info@sahainsurance.co.th" target="_blank"><i class="bi bi-envelope me-2"></i>info@sahainsurance.co.th</a></li>
 							<li><a href="https://goo.gl/maps/1TgaPx9b9wNwqot67" target="_blank"><i class="bi bi-geo-alt me-2"></i>กรุงเทพมหานคร ประเทศไทย</a></li>
 						</ul>
 					</div>

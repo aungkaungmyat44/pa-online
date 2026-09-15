@@ -97,18 +97,18 @@
                             </label>
                         </div>
 
-                        <div class="alert alert-danger mt-3 mb-0" role="alert">
+                        {{-- <div class="alert alert-danger mt-3 mb-0" role="alert">
                             <strong>Warning from the Office of Insurance Commission (OIC)</strong>
                             <span>
                                 Concealing any facts or making any false statement may render this insurance contract voidable.
                                 This may cause the insurer to deny liability under the insurance contract or cancel the insurance contract
                                 in accordance with Section 865 of the Civil and Commercial Code.
                             </span>
-                        </div>
+                        </div> --}}
 
                         <div class="health-question-actions">
-                            <a href="{{ route('check-premium') }}" class="otp-btn otp-btn-outline">Back</a>
-                            <button type="submit" class="check-premium-submit">Continue</button>
+                            <a href="{{ route('check-premium') }}" class="otp-btn otp-btn-outline">ย้อนกลับ</a>
+                            <button type="submit" class="check-premium-submit">ดำเนินการต่อ</button>
                         </div>
                     </form>
                 </div>
@@ -120,46 +120,47 @@
     <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content underwriting-modal">
             <div class="modal-header">
-                <h2 class="modal-title" id="underwritingModalLabel">Terms and Conditions</h2>
+                <h2 class="modal-title" id="underwritingModalLabel">ข้อกำหนดและเงื่อนไข</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <section>
-                    <h3>Underwriting Conditions</h3>
+                    <h3>เงื่อนไขการรับประกัน</h3>
                     <ul>
-                        <li>Each Insured may hold a maximum of one (1) Policy under this insurance scheme.</li>
-                        <li>Coverage is available for persons aged 1 to 75 years, calculated as at the commencement date of the Period of Insurance.</li>
-                        <li>Coverage is available only to applicants classified as Occupation Class 1 or Class 2, in accordance with the Company's underwriting guidelines.</li>
-                        <li>The Insured must not be suffering from Total Permanent Disability prior to the commencement of the Period of Insurance.</li>
-                        <li>This Policy is issued as an Annual Personal Accident Insurance Policy.</li>
-                        <li>Medical Expenses must be incurred within 52 weeks from the date of the Accident.</li>
-                        <li>Where the Insured is entitled to reimbursement under any government welfare scheme, other welfare scheme, or other insurance, the Company shall be liable only for the balance of the eligible expenses remaining unpaid.</li>
-                        <li>Inpatient Room and Board benefits do not cover charges for private duty nursing, supporting appliances (except crutches), wheelchairs, external prosthetic devices, alternative medicine, or acupuncture.</li>
-                        <li>The Fractured Bones Benefit is payable up to a maximum of 100% of the Sum Insured and is subject to confirmation by X-ray examination.</li>
-                        <li>Admission as an Inpatient must be for a continuous period of not less than six (6) hours, unless the Insured dies during such hospitalization.</li>
-                        <li>Two (2) or more treatments arising from the same cause and received within the period specified by the Company shall be deemed to constitute a single course of treatment.</li>
+                        <li>ผู้เอาประกันภัย 1 ท่าน สามารถถือกรมธรรม์ภายใต้โครงการนี้ได้สูงสุด 1 ฉบับ</li>
+                        <li>รับประกันภัยสำหรับผู้มีอายุ 16-60 ปีบริบูรณ์ โดยนับอายุตามวันเริ่มมีผลคุ้มครองของกรมธรรม์</li>
+                        <li>กรมธรรม์จะเริ่มต้นความคุ้มครองในอีก 2 วัน นับถัดจากวันที่ชำระเบี้ยประกันภัยสำเร็จ</li>
+                        <li>รับเฉพาะผู้เอาประกันภัยที่มีอาชีพชั้น 1 และชั้น 2 ตามหลักเกณฑ์ของบริษัทฯ</li>
+                        <li>ผู้เอาประกันภัยต้องไม่เป็นผู้ทุพพลภาพถาวรก่อนวันเริ่มเอาประกันภัย</li>
+                        <li>กรมธรรม์นี้เป็นกรมธรรม์ประกันภัยอุบัติเหตุส่วนบุคคลแบบรายปี</li>
+                        <li>ค่ารักษาพยาบาลต้องเกิดขึ้นภายใน 52 สัปดาห์นับจากวันเกิดอุบัติเหตุ</li>
+                        <li>กรณีมีสวัสดิการของรัฐ สวัสดิการอื่น หรือประกันภัยอื่น บริษัทฯ จะรับผิดชอบเฉพาะส่วนที่ขาด</li>
+                        <li>ค่าห้องผู้ป่วยในไม่รวมกรณีค่าจ้างพยาบาลพิเศษ อุปกรณ์ค้ำยัน รถเข็นผู้ป่วย อวัยวะเทียมภายนอกร่างกาย แพทย์ทางเลือก และการฝังเข็ม</li>
+                        <li>ผลประโยชน์กระดูกแตกหัก จำกัดการจ่ายสูงสุดไม่เกิน 100% ของจำนวนเงินเอาประกันภัย และต้องได้รับการยืนยันโดยภาพถ่ายทางรังสี (X-ray)</li>
+                        <li>การเข้ารักษาตัวเป็นผู้ป่วยใน ต้องมีระยะเวลาติดต่อกันไม่น้อยกว่า 6 ชั่วโมง เว้นแต่เสียชีวิตระหว่างการรักษา</li>
+                        <li>การเข้ารับการรักษาตั้งแต่ 2 ครั้งขึ้นไปจากสาเหตุเดียวกันภายในระยะเวลาที่บริษัทฯ กำหนด ให้ถือเป็นการรักษาครั้งเดียวกัน</li>
                     </ul>
                 </section>
                 <section>
-                    <h3>Underwriting Exclusions</h3>
+                    <h3>ข้อยกเว้นการรับประกัน</h3>
                     <ul>
-                        <li>Any act committed whilst under the influence of alcohol, narcotic drugs, or addictive substances.</li>
-                        <li>Suicide, attempted suicide, or intentional self-inflicted injury.</li>
-                        <li>Infection, disease, parasites, or medical treatment not directly related to a covered Accidental Bodily Injury.</li>
-                        <li>Miscarriage, food poisoning, and dental treatment, unless such dental treatment is required as a direct result of an Accident.</li>
-                        <li>Back pain arising from disease or degenerative disorders of the spine.</li>
-                        <li>War, riot, terrorism, nuclear radiation, or radioactive contamination.</li>
-                        <li>Motor racing, hazardous sports, boxing, parachuting, bungee jumping, and scuba diving using breathing apparatus.</li>
-                        <li>Driving or riding as a passenger on a motorcycle, unless Extension of Coverage has been purchased.</li>
-                        <li>Travelling in any aircraft not licensed for the carriage of passengers or not operated by a commercial airline.</li>
-                        <li>Participation in a fight, commission of a serious criminal offence, arrest, or evasion of arrest.</li>
-                        <li>Military, police, or volunteer duties involving war or suppression operations.</li>
-                        <li>Osteoporosis, pathological fractures, or fractures resulting from congenital diseases or disorders.</li>
-                        <li>Any Pre-existing Injury or Pre-existing Illness prior to the commencement of the Period of Insurance.</li>
+                        <li>การกระทำขณะอยู่ภายใต้ฤทธิ์สุรา สารเสพติด หรือยาเสพติดให้โทษ</li>
+                        <li>การฆ่าตัวตาย พยายามฆ่าตัวตาย หรือทำร้ายร่างกายตนเอง</li>
+                        <li>การติดเชื้อ โรค ปรสิต หรือการรักษาที่ไม่เกี่ยวข้องกับอุบัติเหตุที่ได้รับความคุ้มครอง</li>
+                        <li>การแท้งลูก อาหารเป็นพิษ และการรักษาทันตกรรม เว้นแต่เป็นการรักษาจากอุบัติเหตุ</li>
+                        <li>การปวดหลังจากโรคหรือภาวะเสื่อมของกระดูกสันหลัง</li>
+                        <li>สงคราม การจลาจล การก่อการร้าย รังสีนิวเคลียร์ หรือกัมมันตภาพรังสี</li>
+                        <li>การแข่งรถ กีฬาอันตราย ชกมวย โดดร่ม บันจี้จัมพ์ และดำน้ำที่ใช้ถังอากาศ</li>
+                        <li>การขับขี่หรือโดยสารรถจักรยานยนต์ เว้นแต่มีการขยายความคุ้มครอง</li>
+                        <li>การโดยสารอากาศยานที่ไม่ได้จดทะเบียนเพื่อบรรทุกผู้โดยสาร หรือไม่ได้ดำเนินการโดยสายการบินพาณิชย์</li>
+                        <li>การทะเลาะวิวาท การก่ออาชญากรรม การถูกจับกุม หรือหลบหนีการจับกุม</li>
+                        <li>การปฏิบัติหน้าที่ทางทหาร ตำรวจ หรืออาสาสมัครในปฏิบัติการสงครามหรือปราบปราม</li>
+                        <li>โรคกระดูกพรุนบาง กระดูกหักจากพยาธิสภาพ หรือการแตกหักของกระดูกจากโรคที่เป็นมาโดยกำเนิด</li>
+                        <li>สภาพการบาดเจ็บ หรือเจ็บป่วยที่เป็นมาก่อนการเอาประกันภัย</li>
                     </ul>
                 </section>
                 <section>
-                    <h3>Occupations Exclusions</h3>
+                    <h3>รายละเอียดอาชีพที่ไม่คุ้มครอง</h3>
                     <p>
                         รับจ้างทั่วไป,ผู้ปฏิบัติงานระเบิด/วัตถุระเบิด,ชาวประมง,พนักงานทำความสะอาดกระจก รวมถึงอาคารสูง,นักแข่งรถจักรยานยนต์,ช่างไฟฟ้าแรงสูง,พนักงานดับเพลิง,นักแสดงผาดโผนหรือสตั๊นท์แมน,นักแข่งรถ,นักมวย,นักประดาน้ำ,นักกีฬาเอ็กซ์ตรีม,นักกีฬาอาชีพ,นักปีนเขา,ผู้ปฏิบัติงานแท่นขุดเจาะ/แท่นผลิตกลางทะเล,คนงานแท่นขุดเจาะน้ำมัน,คนงานเหมืองใต้ดิน,คนงานเหมืองหิน,คนขับเรือ,เจ้าหน้าที่กู้ภัย,อาสาสมัครกู้ภัย,พนักงานติดตั้งเสาอากาศหรือป้ายโฆษณา,นักกีฬาต่อสู้/ศิลปะการต่อสู้อาชีพ,ทหาร/เจ้าหน้าที่ทหาร,ตำรวจ,นักบินและลูกเรือ,พยาบาล,แพทย์,ทันตแพทย์,จักษุแพทย์,ศัลยแพทย์,นักการเมือง,อาชีพอิสระ,ธุรกิจส่วนตัว,เจ้าของกิจการ,ค้าขาย,พนักงานX-RAY,พนักงานในโรงพยาบาล,พนักงานกายภาพบำบัด,ผู้ช่วยพยาบาล,ว่างงาน,นักเทคนิคการแพทย์,นักรังสีเทคนิค,ผู้ปฏิบัติงานเกี่ยวกับวัตถุระเบิด,คนงานรื้อถอนอาคาร,คนงานก่อสร้างบนที่สูง,ผู้ควบคุมปั้นจั่นหอสูง,ผู้ควบคุมเครื่องจักร/ปั้นจั่นหนัก,ช่างปฏิบัติงานสายไฟฟ้าแรงสูง,ผู้ปฏิบัติงานระบบไฟฟ้าแรงสูง,คนงานโรงงานเคมีที่มีความเสี่ยงสูง,ผู้ปฏิบัติงานกำจัดของเสียอันตราย,ผู้ฉีดพ่นสารกำจัดศัตรูพืช,ผู้ปฏิบัติงานกำจัดแมลง/สัตว์พาหะ,นักแสดงกายกรรม/ละครสัตว์,นักกายกรรม,นักกระโดดร่ม,นักร่มร่อน,นักบินเครื่องร่อน,นักปีนหน้าผาอาชีพ,คนงานก่อสร้างอุโมงค์ใต้ดิน,ช่างทำ/ซ่อมหลังคาที่ทำงานบนที่สูง,คนงานติดตั้ง/รื้อถอนนั่งร้าน,คนงานอู่ต่อเรือ
                     </p>

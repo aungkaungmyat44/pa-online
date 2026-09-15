@@ -33,7 +33,7 @@
                         </div>
                         <p>
                             หากมีคำถามเพิ่มเติม กรุณาติดต่อฝ่ายบริการลูกค้าที่ 02-68-77777
-                            หรืออีเมล <a href="mailto:example@gmail.com">example@gmail.com</a>
+                            หรืออีเมล <a href="mailto:info@sahainsurance.co.th">info@sahainsurance.co.th</a>
                         </p>
                     </div>
                     <div class="check-policy-actions">

@@ -107,7 +107,7 @@
                     </a>
                     <a href="{{ asset('assets/files/policy.pdf') }}" class="check-premium-btn policy-download-btn" download>
                         <i class="bi bi-download"></i>
-                        <span>download our policy</span>
+                        <span>ดาวน์โหลดกรมธรรม์</span>
                     </a>
                 </div>
             </div>
@@ -115,7 +115,7 @@
         <div class="row mt-4">
             <div class="col-lg-12">
                 <div class="faq-item objectives-card">
-                    <h3>Objectives of PA</h3>
+                    <h3>วัตถุประสงค์แจ้งการขายประกันอุบัติเหตุส่วนบุคคล</h3>
                     <p>
                         กรมธรรม์อุบัติเหตุส่วนบุคคลนี้ให้คุ้มครองความเสี่ยงจากอุบัติเหตุ รวมถึงค่ารักษาพยาบาล
                         และค่าเบี้ยประกันภัยไม่แพงเมื่อเทียบกับวงเงินคุ้มครอง เหมาะสำหรับบุคคลปกติทั่วไป
@@ -136,13 +136,11 @@
                             <thead>
                                 <tr>
                                     <th>
-                                        <span>PA</span>
-                                        <strong>ความคุ้มครอง</strong>
+                                        <p>ความคุ้มครอง</p>
                                     </th>
                                     @foreach ($coveragePlans as $plan)
                                         <th>
-                                            <span>{{ $plan['title'] }}</span>
-                                            <strong>{{ $plan['subtitle'] }}</strong>
+                                            <p>{{ $plan['title'] }}</p>
                                         </th>
                                     @endforeach
                                 </tr>
