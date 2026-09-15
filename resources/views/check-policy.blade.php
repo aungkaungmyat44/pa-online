@@ -1,13 +1,13 @@
 @extends('layout.master')
 
-@section('title', 'Check Policy')
+@section('title', 'ตรวจสอบกรมธรรม์')
 
 @section('content')
 @php
     $policyNumber = 'MISC-PAI26-0417-09031';
     $orderReference = '#00001';
-    $customerName = 'Mr. William';
-    $productName = 'Personal Accident Insurance';
+    $customerName = 'คุณ William';
+    $productName = 'ประกันภัยอุบัติเหตุส่วนบุคคล';
     $coveragePeriod = $coveragePeriod ?? now()->format('d F Y') . ' - ' . now()->addYear()->format('d F Y');
 @endphp
 
@@ -17,28 +17,28 @@
             <div class="col-lg-9">
                 <div class="check-policy-card">
                     <div class="check-policy-header">
-                        <img src="{{ asset('assets/images/saha_logo.png') }}" alt="Sahamongkhon Insurance" class="check-policy-logo">
-                        <h1>Sahamongkhon Insurance Public Company Limited</h1>
-                        <p>Sahamongkhon Public Company Limited</p>
+                        <img src="{{ asset('assets/images/saha_logo.png') }}" alt="สหมงคลประกันภัย" class="check-policy-logo">
+                        <h1>บริษัท สหมงคลประกันภัย จำกัด (มหาชน)</h1>
+                        <p>สหมงคลประกันภัย</p>
                     </div>
                     <div class="check-policy-title-bar">
-                        <span>Electronic Policy (E-Policy)</span>
-                        <strong>Policy No. {{ $policyNumber }}</strong>
+                        <span>กรมธรรม์อิเล็กทรอนิกส์ (E-Policy)</span>
+                        <strong>เลขที่กรมธรรม์ {{ $policyNumber }}</strong>
                     </div>
                     <div class="check-policy-body">
                         <div class="check-policy-table-wrap">
                             <div id="policyPdfRender" class="check-policy-pdf-render" data-pdf-url="{{ asset('assets/files/sample.pdf') }}">
-                                <p class="check-policy-pdf-loading">Loading policy...</p>
+                                <p class="check-policy-pdf-loading">กำลังโหลดกรมธรรม์...</p>
                             </div>
                         </div>
                         <p>
-                            If you have any questions, please contact Customer Service at 02-68-77777
-                            or email <a href="mailto:example@gmail.com">example@gmail.com</a>.
+                            หากมีคำถามเพิ่มเติม กรุณาติดต่อฝ่ายบริการลูกค้าที่ 02-68-77777
+                            หรืออีเมล <a href="mailto:example@gmail.com">example@gmail.com</a>
                         </p>
                     </div>
                     <div class="check-policy-actions">
-                        <a href="{{ route('home') }}" class="otp-btn otp-btn-outline">Home</a>
-                        <a href="{{ asset('assets/files/sample.pdf') }}" class="check-premium-submit receipt-policy-btn" download>Download Policy</a>
+                        <a href="{{ route('home') }}" class="otp-btn otp-btn-outline">หน้าแรก</a>
+                        <a href="{{ asset('assets/files/sample.pdf') }}" class="check-premium-submit receipt-policy-btn" download>ดาวน์โหลดกรมธรรม์</a>
                     </div>
                 </div>
             </div>
@@ -84,7 +84,7 @@
                 }).promise;
             }
         } catch (error) {
-            container.innerHTML = '<p class="check-policy-pdf-fallback">Unable to render policy PDF. <a href="' + pdfUrl + '" target="_blank" rel="noopener">Open Policy PDF</a></p>';
+            container.innerHTML = '<p class="check-policy-pdf-fallback">ไม่สามารถแสดงไฟล์กรมธรรม์ได้ <a href="' + pdfUrl + '" target="_blank" rel="noopener">เปิดไฟล์กรมธรรม์ PDF</a></p>';
         }
     });
 </script>
