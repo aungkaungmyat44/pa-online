@@ -6,7 +6,7 @@
 <section id="policy-recheck-section" class="policy-recheck-section">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-7 mx-auto">
+            <div class="col-md-6 mx-auto">
                 <form action="{{ route('check-policy') }}" method="get" class="check-premium-card policy-recheck-form">
                     <h1>ตรวจสอบกรมธรรม์อีกครั้ง</h1>
                     <p class="policy-recheck-subtitle">กรุณากรอกข้อมูลของท่าน</p>

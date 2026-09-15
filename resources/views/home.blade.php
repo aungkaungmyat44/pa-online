@@ -105,6 +105,10 @@
                         <i class="bi bi-calculator"></i>
                         <span>คำนวณเบี้ย</span>
                     </a>
+                    <a href="{{ asset('assets/files/policy.pdf') }}" class="check-premium-btn policy-download-btn" download>
+                        <i class="bi bi-download"></i>
+                        <span>download our policy</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -160,7 +164,7 @@
         </div>
     </div>
 </section>
-<section id="faq-section" class="faq-section mt-5">
+<section id="faq-section" class="faq-section my-5">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-12">
