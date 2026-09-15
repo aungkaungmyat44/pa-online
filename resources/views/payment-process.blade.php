@@ -1,6 +1,6 @@
 @extends('layout.master')
 
-@section('title', 'Payment Process')
+@section('title', 'ดำเนินการชำระเงิน')
 
 @section('content')
 @php
@@ -11,7 +11,7 @@
     $coverageAmountLabel = $coverageAmountValue > 0 ? number_format($coverageAmountValue) . ' บาท' : '-';
     $premiumAmount = 2000;
     $premiumAmountLabel = number_format($premiumAmount) . ' บาท';
-    $productName = $selectedPlan ?? 'Personal Accident Insurance';
+    $productName = $selectedPlan ?? 'ประกันภัยอุบัติเหตุส่วนบุคคล';
     $orderIdValue = '1';
     $customerName = trim(implode(' ', array_filter([
         $payment['prefix'] ?? null,
@@ -45,35 +45,35 @@
 
                     <span class="payment-process-badge">
                         <i class="bi bi-credit-card-2-front"></i>
-                        Card Payment
+                        ชำระเงินด้วยบัตร
                     </span>
 
-                    <h1>Processing Payment</h1>
-                    <p>Please complete your card payment within <strong>3 minutes</strong>. The payment status will update automatically.</p>
+                    <h1>กำลังดำเนินการชำระเงิน</h1>
+                    <p>กรุณาชำระเงินด้วยบัตรให้เสร็จสิ้นภายใน <strong>3 นาที</strong> ระบบจะอัปเดตสถานะการชำระเงินโดยอัตโนมัติ</p>
 
                     <div class="payment-process-details">
                         <div>
-                            <span>Payment Method</span>
-                            <strong>Credit / Debit Card</strong>
+                            <span>วิธีชำระเงิน</span>
+                            <strong>บัตรเครดิต / บัตรเดบิต</strong>
                         </div>
                         <div>
-                            <span>Selected Plan</span>
+                            <span>แผนประกัน</span>
                             <strong>{{ $selectedPlan ?? '-' }}</strong>
                         </div>
                         <div>
-                            <span>Coverage Amount</span>
+                            <span>จำนวนเงินความคุ้มครอง</span>
                             <strong>{{ $coverageAmountLabel }}</strong>
                         </div>
                         <div>
-                            <span>Premium Amount</span>
+                            <span>จำนวนเบี้ยประกัน</span>
                             <strong>{{ $premiumAmountLabel }}</strong>
                         </div>
                         <div>
-                            <span>Customer Name</span>
+                            <span>ชื่อผู้เอาประกันภัย</span>
                             <strong>{{ $customerName !== '' ? $customerName : '-' }}</strong>
                         </div>
                         <div>
-                            <span>Submitted Date</span>
+                            <span>วันที่ทำรายการ</span>
                             <strong>{{ $submittedDate }}</strong>
                         </div>
                     </div>
@@ -91,7 +91,7 @@
                                     <input type="hidden" name="{{ $key }}" value="{{ $value }}">
                                 @endif
                             @endforeach
-                            <button type="submit" class="otp-btn otp-btn-outline">Back</button>
+                            <button type="submit" class="otp-btn otp-btn-outline">ย้อนกลับ</button>
                         </form>
 
                         <form method="POST" action="{{ route('checkout') }}" id="checkoutForm">
