@@ -4,10 +4,10 @@
 
 @section('content')
 @php
-    $policyNumber = $policyNumber ?? 'PA-0000001';
-    $orderReference = $orderReference ?? '1';
-    $customerName = $customerName ?? '-';
-    $productName = $productName ?? 'Personal Accident Insurance';
+    $policyNumber = 'MISC-PAI26-0417-09031';
+    $orderReference = '#00001';
+    $customerName = 'Mr. William';
+    $productName = 'Personal Accident Insurance';
     $coveragePeriod = $coveragePeriod ?? now()->format('d F Y') . ' - ' . now()->addYear()->format('d F Y');
 @endphp
 
@@ -27,37 +27,9 @@
                     </div>
                     <div class="check-policy-body">
                         <div class="check-policy-table-wrap">
-                            <table class="table check-policy-table mb-0">
-                                <tbody>
-                                    <tr>
-                                        <th colspan="2">Policy Details</th>
-                                    </tr>
-                                    <tr>
-                                        <td>Order Reference</td>
-                                        <td>{{ $orderReference }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Policy Number</td>
-                                        <td>{{ $policyNumber }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Insurance Type</td>
-                                        <td>Personal Accident Insurance</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Insured Person</td>
-                                        <td>{{ $customerName }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Product</td>
-                                        <td>{{ $productName }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Coverage Period</td>
-                                        <td>{{ $coveragePeriod }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div id="policyPdfRender" class="check-policy-pdf-render" data-pdf-url="{{ asset('assets/files/sample.pdf') }}">
+                                <p class="check-policy-pdf-loading">Loading policy...</p>
+                            </div>
                         </div>
                         <p>
                             If you have any questions, please contact Customer Service at 02-68-77777
@@ -66,11 +38,54 @@
                     </div>
                     <div class="check-policy-actions">
                         <a href="{{ route('home') }}" class="otp-btn otp-btn-outline">Home</a>
-                        <a href="#" class="check-premium-submit receipt-policy-btn" download>Download Policy</a>
+                        <a href="{{ asset('assets/files/sample.pdf') }}" class="check-premium-submit receipt-policy-btn" download>Download Policy</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', async function () {
+        const container = document.getElementById('policyPdfRender');
+
+        if (!container || !window.pdfjsLib) {
+            return;
+        }
+
+        const pdfUrl = container.dataset.pdfUrl;
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        try {
+            const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+            container.innerHTML = '';
+
+            for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+                const page = await pdf.getPage(pageNumber);
+                const baseViewport = page.getViewport({ scale: 1 });
+                const availableWidth = container.clientWidth || baseViewport.width;
+                const scale = availableWidth / baseViewport.width;
+                const viewport = page.getViewport({ scale: scale });
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+
+                canvas.className = 'check-policy-pdf-page';
+                canvas.width = Math.floor(viewport.width);
+                canvas.height = Math.floor(viewport.height);
+                canvas.style.width = viewport.width + 'px';
+                canvas.style.height = viewport.height + 'px';
+                container.appendChild(canvas);
+
+                await page.render({
+                    canvasContext: context,
+                    viewport: viewport,
+                }).promise;
+            }
+        } catch (error) {
+            container.innerHTML = '<p class="check-policy-pdf-fallback">Unable to render policy PDF. <a href="' + pdfUrl + '" target="_blank" rel="noopener">Open Policy PDF</a></p>';
+        }
+    });
+</script>
 @endsection
