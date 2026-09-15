@@ -5,13 +5,31 @@
 @section('content')
 @php
     $customer = $customer ?? [];
+    $selectedPlan = $customer['selected_plan'] ?? config('coverage_plans.default_plan');
+    $defaultPlanIndex = 0;
+    $defaultPlan = config('coverage_plans.plans.' . $defaultPlanIndex, []);
+    $coverageRows = config('coverage_plans.rows', []);
     $questions = [
-        'hospitalized' => 'Have you been hospitalized, had surgery, or received continuous medical treatment in the past 5 years?',
-        'chronic_condition' => 'Have you ever been diagnosed with a chronic illness such as diabetes, heart disease, high blood pressure, stroke, cancer, kidney disease, or liver disease?',
-        'disability' => 'Do you currently have any disability, loss of limb, paralysis, or physical impairment?',
-        'accident_history' => 'Have you had a serious accident or injury that still affects your daily activities?',
-        'dangerous_activity' => 'Do you regularly participate in hazardous sports or high-risk activities?',
-        'medical_advice' => 'Are you currently waiting for medical test results, further investigation, surgery, or specialist consultation?',
+        'other_insurance' => [
+            'text' => 'ท่านมีหรือได้ขอเอาประกันภัยอุบัติเหตุส่วนบุคคล หรือประกันชีวิตไว้กับบริษัทประกันภัยอื่นหรือไม่',
+            'options' => ['ไม่มี', 'มี'],
+        ],
+        'insurance_declined' => [
+            'text' => 'ท่านเคยถูกบริษัทประกันภัยปฏิเสธการรับประกันภัย ยกเลิกประกันภัย หรือเรียกเก็บเบี้ยประกันภัยเพิ่มสำหรับการประกันภัยดังกล่าวหรือไม่',
+            'options' => ['ไม่เคย', 'เคย'],
+        ],
+        'accident_hospitalized' => [
+            'text' => 'ในระยะเวลา 2 ปีที่ผ่านมา ท่านเคยได้รับบาดเจ็บจากอุบัติเหตุจนต้องเข้ารับการรักษาในโรงพยาบาลในฐานะผู้ป่วยในหรือไม่',
+            'options' => ['ไม่เคย', 'เคย'],
+        ],
+        'impairment_or_drug_history' => [
+            'text' => 'ท่านเคยมีหรือมีความผิดปกติของสายตา การได้ยิน หรือระบบประสาท เคยมีอวัยวะส่วนหนึ่งส่วนใดพิการ หรือเคยเสพสารเสพติดให้โทษร้ายแรง หรือเคยต้องโทษในคดีเกี่ยวกับยาเสพติดหรือไม่',
+            'options' => ['ไม่เคย', 'เคย'],
+        ],
+        'medical_condition_history' => [
+            'text' => 'ท่านเคยเป็น เคยได้รับการตรวจหรือรักษา กำลังรักษา หรือมีอาการหรือความผิดปกติที่เกี่ยวข้องกับโรคลมชัก โรคหัวใจ โรคความดันโลหิตสูง โรคเบาหวาน โรคกระดูกและ/หรือกล้ามเนื้อ โรคมะเร็ง โรคเอดส์ หรือมีเชื้อไวรัส HIV โรคหลอดเลือดสมอง หรือโรคพิษสุราเรื้อรังหรือไม่',
+            'options' => ['ไม่เคย', 'เคย'],
+        ],
     ];
 @endphp
 
@@ -26,72 +44,47 @@
         <div class="row">
             <div class="col-lg-9 mx-auto">
                 <div class="check-premium-card health-question-card">
-                    <h1>Health Questionnaire</h1>
+                    <h1>แบบสอบถามสุขภาพ</h1>
                     <form action="{{ route('information-form') }}" method="POST">
                         @csrf
                         <input type="hidden" name="occupation" value="{{ $customer['occupation'] ?? '' }}">
                         <input type="hidden" name="email" value="{{ $customer['email'] ?? '' }}">
                         <input type="hidden" name="date_of_birth" value="{{ $customer['date_of_birth'] ?? '' }}">
                         <input type="hidden" name="otp_code" value="{{ $customer['otp_code'] ?? '' }}">
+                        <input type="hidden" name="selected_plan" value="{{ $selectedPlan }}">
 
                         <div class="health-plan-section">
-                            <h2>Select Coverage Plan</h2>
-                            <div class="row g-3">
-                                <div class="col-md-4">
-                                    <div class="health-plan-card">
-                                        <h3>Plan 1</h3>
-                                        <strong>200,000 Baht</strong>
-                                        <ul>
-                                            <li>Medical expenses up to 10,000 Baht</li>
-                                            <li>Funeral expenses up to 10,000 Baht</li>
-                                            <li>Standard room 300 Baht per day</li>
-                                        </ul>
-                                        <input class="btn-check" type="radio" name="selected_plan" id="plan_1" value="Plan 1" required>
-                                        <label class="health-plan-button" for="plan_1">Choose Plan</label>
+                            <h2>แผนความคุ้มครอง</h2>
+                            <div class="health-plan-card health-plan-card-readonly">
+                                <div class="health-plan-summary">
+                                    <div>
+                                        <h3>{{ $defaultPlan['title'] ?? 'อาชีพชั้น 1' }}</h3>
+                                        <strong>{{ $defaultPlan['subtitle'] ?? 'Class1' }}</strong>
                                     </div>
+                                    <span>เลือกอัตโนมัติ</span>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="health-plan-card">
-                                        <h3>Plan 3</h3>
-                                        <strong>800,000 Baht</strong>
-                                        <ul>
-                                            <li>Medical expenses up to 40,000 Baht</li>
-                                            <li>Funeral expenses up to 15,000 Baht</li>
-                                            <li>Standard room 800 Baht per day</li>
-                                        </ul>
-                                        <input class="btn-check" type="radio" name="selected_plan" id="plan_3" value="Plan 3" required>
-                                        <label class="health-plan-button" for="plan_3">Choose Plan</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="health-plan-card">
-                                        <h3>Plan 5</h3>
-                                        <strong>1,500,000 Baht</strong>
-                                        <ul>
-                                            <li>Medical expenses up to 50,000 Baht</li>
-                                            <li>Funeral expenses up to 20,000 Baht</li>
-                                            <li>Standard room 1,000 Baht per day</li>
-                                        </ul>
-                                        <input class="btn-check" type="radio" name="selected_plan" id="plan_5" value="Plan 5" required>
-                                        <label class="health-plan-button" for="plan_5">Choose Plan</label>
-                                    </div>
-                                </div>
+                                <ul>
+                                    @foreach ($coverageRows as $row)
+                                        <li>{{ $row['label'] }}: {{ $row['amounts'][$defaultPlanIndex] ?? '-' }}</li>
+                                    @endforeach
+                                </ul>
                             </div>
                         </div>
 
                         <div class="health-question-list">
                             @foreach ($questions as $key => $question)
                                 <div class="health-question-item">
-                                    <p>{{ $loop->iteration }}. {{ $question }}</p>
-                                    <div class="health-radio-group" role="radiogroup" aria-label="{{ $question }}">
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="health_questions[{{ $key }}]" id="{{ $key }}_no" value="No" required>
-                                            <label class="form-check-label" for="{{ $key }}_no">No</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="health_questions[{{ $key }}]" id="{{ $key }}_yes" value="Yes" required>
-                                            <label class="form-check-label" for="{{ $key }}_yes">Yes</label>
-                                        </div>
+                                    <p>{{ $loop->iteration }}. {{ $question['text'] }}</p>
+                                    <div class="health-radio-group" role="radiogroup" aria-label="{{ $question['text'] }}">
+                                        @foreach ($question['options'] as $option)
+                                            @php
+                                                $optionId = $key . '_' . $loop->index;
+                                            @endphp
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="health_questions[{{ $key }}]" id="{{ $optionId }}" value="{{ $option }}" required>
+                                                <label class="form-check-label" for="{{ $optionId }}">{{ $option }}</label>
+                                            </div>
+                                        @endforeach
                                     </div>
                                 </div>
                             @endforeach
@@ -100,7 +93,7 @@
                         <div class="form-check check-premium-terms mt-3">
                             <input class="form-check-input" type="checkbox" value="1" id="terms" name="terms" required>
                             <label class="form-check-label" for="terms">
-                                I understand the <button type="button" class="terms-link" data-bs-toggle="modal" data-bs-target="#underwritingModal">terms and conditions</button> by Sahamongkhon.
+                                ข้าพเจ้าเข้าใจ <button type="button" class="terms-link" data-bs-toggle="modal" data-bs-target="#underwritingModal">ข้อกำหนดและเงื่อนไข</button> โดยสหมงคลประกันภัย
                             </label>
                         </div>
 
@@ -168,13 +161,7 @@
                 <section>
                     <h3>Occupations Exclusions</h3>
                     <p>
-                        Motorcycle taxi drivers, general laborers, construction workers, mechanics, miners, fishermen, high-rise window cleaners,
-                        electricians, high-voltage electricians, surveyors, machinery repair technicians, security guards, firefighters, stunt performers,
-                        bus drivers, taxi drivers, public transport and truck drivers, racing drivers, boxers, divers, extreme sports athletes,
-                        professional athletes, mountaineers, mining workers, oil and natural gas rig workers, boat operators, rescue officers,
-                        rescue volunteers, antenna or billboard installation workers, vocational engineering students, couriers, cash collection and delivery
-                        personnel, factory workers, gas production workers, or any occupation involving a comparable level of risk, manual laborers or any
-                        occupation involving a comparable level of risk, police officers, military personnel, pilots, and flight crew.
+                        รับจ้างทั่วไป,ผู้ปฏิบัติงานระเบิด/วัตถุระเบิด,ชาวประมง,พนักงานทำความสะอาดกระจก รวมถึงอาคารสูง,นักแข่งรถจักรยานยนต์,ช่างไฟฟ้าแรงสูง,พนักงานดับเพลิง,นักแสดงผาดโผนหรือสตั๊นท์แมน,นักแข่งรถ,นักมวย,นักประดาน้ำ,นักกีฬาเอ็กซ์ตรีม,นักกีฬาอาชีพ,นักปีนเขา,ผู้ปฏิบัติงานแท่นขุดเจาะ/แท่นผลิตกลางทะเล,คนงานแท่นขุดเจาะน้ำมัน,คนงานเหมืองใต้ดิน,คนงานเหมืองหิน,คนขับเรือ,เจ้าหน้าที่กู้ภัย,อาสาสมัครกู้ภัย,พนักงานติดตั้งเสาอากาศหรือป้ายโฆษณา,นักกีฬาต่อสู้/ศิลปะการต่อสู้อาชีพ,ทหาร/เจ้าหน้าที่ทหาร,ตำรวจ,นักบินและลูกเรือ,พยาบาล,แพทย์,ทันตแพทย์,จักษุแพทย์,ศัลยแพทย์,นักการเมือง,อาชีพอิสระ,ธุรกิจส่วนตัว,เจ้าของกิจการ,ค้าขาย,พนักงานX-RAY,พนักงานในโรงพยาบาล,พนักงานกายภาพบำบัด,ผู้ช่วยพยาบาล,ว่างงาน,นักเทคนิคการแพทย์,นักรังสีเทคนิค,ผู้ปฏิบัติงานเกี่ยวกับวัตถุระเบิด,คนงานรื้อถอนอาคาร,คนงานก่อสร้างบนที่สูง,ผู้ควบคุมปั้นจั่นหอสูง,ผู้ควบคุมเครื่องจักร/ปั้นจั่นหนัก,ช่างปฏิบัติงานสายไฟฟ้าแรงสูง,ผู้ปฏิบัติงานระบบไฟฟ้าแรงสูง,คนงานโรงงานเคมีที่มีความเสี่ยงสูง,ผู้ปฏิบัติงานกำจัดของเสียอันตราย,ผู้ฉีดพ่นสารกำจัดศัตรูพืช,ผู้ปฏิบัติงานกำจัดแมลง/สัตว์พาหะ,นักแสดงกายกรรม/ละครสัตว์,นักกายกรรม,นักกระโดดร่ม,นักร่มร่อน,นักบินเครื่องร่อน,นักปีนหน้าผาอาชีพ,คนงานก่อสร้างอุโมงค์ใต้ดิน,ช่างทำ/ซ่อมหลังคาที่ทำงานบนที่สูง,คนงานติดตั้ง/รื้อถอนนั่งร้าน,คนงานอู่ต่อเรือ
                     </p>
                 </section>
             </div>

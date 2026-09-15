@@ -673,6 +673,32 @@ body{font-family:'Kanit',sans-serif;}h1,h2,h3,h4,h5,h6{font-family:'Kanit',sans-
     color: #ffffff;
 }
 
+.health-plan-card-readonly {
+    background: #f8fafc;
+}
+
+.health-plan-summary {
+    align-items: flex-start;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+
+.health-plan-summary h3 {
+    margin-bottom: 0.2rem;
+}
+
+.health-plan-summary span {
+    background: rgba(56, 76, 149, 0.1);
+    border-radius: 999px;
+    color: var(--theme-primary-color);
+    flex: 0 0 auto;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.35rem 0.75rem;
+}
+
 .health-question-list {
     display: grid;
     gap: 0.9rem;

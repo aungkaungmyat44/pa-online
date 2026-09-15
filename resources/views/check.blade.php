@@ -92,13 +92,7 @@
                 <section>
                     <h3>Occupations Exclusions</h3>
                     <p>
-                        Motorcycle taxi drivers, general laborers, construction workers, mechanics, miners, fishermen, high-rise window cleaners,
-                        electricians, high-voltage electricians, surveyors, machinery repair technicians, security guards, firefighters, stunt performers,
-                        bus drivers, taxi drivers, public transport and truck drivers, racing drivers, boxers, divers, extreme sports athletes,
-                        professional athletes, mountaineers, mining workers, oil and natural gas rig workers, boat operators, rescue officers,
-                        rescue volunteers, antenna or billboard installation workers, vocational engineering students, couriers, cash collection and delivery
-                        personnel, factory workers, gas production workers, or any occupation involving a comparable level of risk, manual laborers or any
-                        occupation involving a comparable level of risk, police officers, military personnel, pilots, and flight crew.
+                        รับจ้างทั่วไป,ผู้ปฏิบัติงานระเบิด/วัตถุระเบิด,ชาวประมง,พนักงานทำความสะอาดกระจก รวมถึงอาคารสูง,นักแข่งรถจักรยานยนต์,ช่างไฟฟ้าแรงสูง,พนักงานดับเพลิง,นักแสดงผาดโผนหรือสตั๊นท์แมน,นักแข่งรถ,นักมวย,นักประดาน้ำ,นักกีฬาเอ็กซ์ตรีม,นักกีฬาอาชีพ,นักปีนเขา,ผู้ปฏิบัติงานแท่นขุดเจาะ/แท่นผลิตกลางทะเล,คนงานแท่นขุดเจาะน้ำมัน,คนงานเหมืองใต้ดิน,คนงานเหมืองหิน,คนขับเรือ,เจ้าหน้าที่กู้ภัย,อาสาสมัครกู้ภัย,พนักงานติดตั้งเสาอากาศหรือป้ายโฆษณา,นักกีฬาต่อสู้/ศิลปะการต่อสู้อาชีพ,ทหาร/เจ้าหน้าที่ทหาร,ตำรวจ,นักบินและลูกเรือ,พยาบาล,แพทย์,ทันตแพทย์,จักษุแพทย์,ศัลยแพทย์,นักการเมือง,อาชีพอิสระ,ธุรกิจส่วนตัว,เจ้าของกิจการ,ค้าขาย,พนักงานX-RAY,พนักงานในโรงพยาบาล,พนักงานกายภาพบำบัด,ผู้ช่วยพยาบาล,ว่างงาน,นักเทคนิคการแพทย์,นักรังสีเทคนิค,ผู้ปฏิบัติงานเกี่ยวกับวัตถุระเบิด,คนงานรื้อถอนอาคาร,คนงานก่อสร้างบนที่สูง,ผู้ควบคุมปั้นจั่นหอสูง,ผู้ควบคุมเครื่องจักร/ปั้นจั่นหนัก,ช่างปฏิบัติงานสายไฟฟ้าแรงสูง,ผู้ปฏิบัติงานระบบไฟฟ้าแรงสูง,คนงานโรงงานเคมีที่มีความเสี่ยงสูง,ผู้ปฏิบัติงานกำจัดของเสียอันตราย,ผู้ฉีดพ่นสารกำจัดศัตรูพืช,ผู้ปฏิบัติงานกำจัดแมลง/สัตว์พาหะ,นักแสดงกายกรรม/ละครสัตว์,นักกายกรรม,นักกระโดดร่ม,นักร่มร่อน,นักบินเครื่องร่อน,นักปีนหน้าผาอาชีพ,คนงานก่อสร้างอุโมงค์ใต้ดิน,ช่างทำ/ซ่อมหลังคาที่ทำงานบนที่สูง,คนงานติดตั้ง/รื้อถอนนั่งร้าน,คนงานอู่ต่อเรือ
                     </p>
                 </section>
             </div>
