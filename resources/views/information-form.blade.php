@@ -1,10 +1,17 @@
 @extends('layout.master')
 
-@section('title', 'Information Form')
+@section('title', 'ข้อมูลส่วนบุคคล')
 
 @section('content')
 @php
     $customer = $customer ?? [];
+    $cardTypeLabels = [
+        'National ID Card' => 'บัตรประจำตัวประชาชน',
+        'Passport' => 'หนังสือเดินทาง',
+        'Alien ID Card' => 'บัตรประจำตัวคนต่างด้าว',
+        'Government / State Enterprise / Company / Partnership / Shop' => 'หน่วยงานราชการ / รัฐวิสาหกิจ / บริษัท / ห้างหุ้นส่วน / ร้านค้า',
+        'Other' => 'อื่น ๆ',
+    ];
 @endphp
 
 <section id="check-premium-section">
@@ -18,7 +25,7 @@
         <div class="row">
             <div class="col-lg-10 mx-auto">
                 <div class="check-premium-card information-form-card">
-                    <h1>Personal Information</h1>
+                    <h1>ข้อมูลส่วนบุคคล</h1>
                     <form action="{{ route('review-information') }}" method="POST">
                         @csrf
                         <input type="hidden" name="occupation" value="{{ $customer['occupation'] ?? '' }}">
@@ -32,127 +39,133 @@
                         @endforeach
 
                         <div class="information-section">
-                            <h2>Personal Info</h2>
+                            <h2>ข้อมูลส่วนตัว</h2>
                             <div class="row g-3">
                                 <div class="col-md-4">
-	                                    <label for="prefix" class="form-label">Prefix</label>
+	                                    <label for="prefix" class="form-label">คำนำหน้า</label>
 	                                    <select class="form-control" id="prefix" name="prefix" required>
-	                                        <option value="">Select prefix</option>
+	                                        <option value="">เลือกคำนำหน้า</option>
 	                                        @foreach (($nameTitles ?? []) as $nameTitle)
 	                                            <option value="{{ $nameTitle->title }}">{{ $nameTitle->name_s }}</option>
 	                                        @endforeach
 	                                    </select>
 	                                </div>
                                 <div class="col-md-4">
-                                    <label for="first_name" class="form-label">First Name</label>
-                                    <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Enter first name" required>
+                                    <label for="first_name" class="form-label">ชื่อ</label>
+                                    <input type="text" class="form-control" id="first_name" name="first_name" placeholder="กรอกชื่อ" required>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="last_name" class="form-label">Last Name</label>
-                                    <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Enter last name" required>
+                                    <label for="last_name" class="form-label">นามสกุล</label>
+                                    <input type="text" class="form-control" id="last_name" name="last_name" placeholder="กรอกนามสกุล" required>
                                 </div>
 	                                <div class="col-md-4">
-	                                    <label for="nationality" class="form-label">Nationality</label>
+	                                    <label for="nationality" class="form-label">สัญชาติ</label>
 	                                    <select class="form-control" id="nationality" name="nationality" required>
-	                                        <option value="">Select nationality</option>
+	                                        <option value="">เลือกสัญชาติ</option>
 	                                        @foreach (($countries ?? []) as $country)
-	                                            <option value="{{ $country->ct_code }}">{{ ucwords(strtolower($country->ct_nameeng)) }}</option>
+	                                            <option value="{{ $country->ct_code }}">{{ ucwords(strtolower($country->ct_nameth)) }}</option>
 	                                        @endforeach
 	                                    </select>
 	                                </div>
                                 <div class="col-md-4">
-                                    <label for="identity_type" class="form-label">Identity Type</label>
+                                    <label for="identity_type" class="form-label">ประเภทเอกสารยืนยันตัวตน</label>
                                     <select class="form-control" id="identity_type" name="identity_type" required>
-                                        <option value="">Select identity type</option>
+                                        <option value="">เลือกประเภทเอกสาร</option>
                                         @foreach (($cardTypes ?? []) as $cardType)
-                                            <option value="{{ $cardType }}">{{ $cardType }}</option>
+                                            <option value="{{ $cardType }}">{{ $cardTypeLabels[$cardType] ?? $cardType }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="identity_number" class="form-label">Identity Number</label>
-                                    <input type="text" class="form-control" id="identity_number" name="identity_number" placeholder="Enter identity number" required>
+                                    <label for="identity_number" class="form-label">เลขที่เอกสารยืนยันตัวตน</label>
+                                    <input type="text" class="form-control" id="identity_number" name="identity_number" placeholder="กรอกเลขที่เอกสาร" required>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="date_of_birth" class="form-label">Date of Birth</label>
+                                    <label for="date_of_birth" class="form-label">วันเกิด</label>
                                     <input type="text" class="form-control" id="date_of_birth" name="date_of_birth" value="{{ $customer['date_of_birth'] ?? '' }}" readonly>
                                 </div>
                             </div>
                         </div>
 
                         <div class="information-section">
-                            <h2>Contact Info</h2>
+                            <h2>ข้อมูลติดต่อ</h2>
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label for="email" class="form-label">Email</label>
+                                    <label for="email" class="form-label">อีเมล</label>
                                     <input type="email" class="form-control" id="email" name="email" value="{{ $customer['email'] ?? '' }}" readonly>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="phone_number" class="form-label">Phone Number</label>
-                                    <input type="tel" class="form-control" id="phone_number" name="phone_number" placeholder="Enter phone number" required>
+                                    <label for="phone_number" class="form-label">หมายเลขโทรศัพท์</label>
+                                    <input type="tel" class="form-control" id="phone_number" name="phone_number" placeholder="กรอกหมายเลขโทรศัพท์" required>
                                 </div>
                             </div>
                         </div>
 
                         <div class="information-section">
-                            <h2>Address Information</h2>
+                            <h2>ข้อมูลที่อยู่</h2>
                             <div class="row g-3">
                                 <div class="col-md-12">
-                                    <label for="full_address" class="form-label">Full Address</label>
-                                    <textarea class="form-control" id="full_address" name="full_address" rows="3" placeholder="Enter full address" required></textarea>
+                                    <label for="full_address" class="form-label">ที่อยู่</label>
+                                    <textarea class="form-control" id="full_address" name="full_address" rows="3" placeholder="กรอกที่อยู่" required></textarea>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="province" class="form-label">Province</label>
+                                    <label for="province" class="form-label">จังหวัด</label>
                                     <select class="form-control" id="province" name="province" required>
-                                        <option value="">Select province</option>
+                                        <option value="">เลือกจังหวัด</option>
                                         @foreach (($provinces ?? []) as $province)
                                             <option value="{{ $province->province_code }}">{{ $province->province_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="district" class="form-label">District</label>
+                                    <label for="district" class="form-label">อำเภอ/เขต</label>
                                     <select class="form-control" id="district" name="district" required disabled>
-                                        <option value="">Select district</option>
+                                        <option value="">เลือกอำเภอ/เขต</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="subdistrict" class="form-label">Subdistrict</label>
+                                    <label for="subdistrict" class="form-label">ตำบล/แขวง</label>
                                     <select class="form-control" id="subdistrict" name="subdistrict" required disabled>
-                                        <option value="">Select subdistrict</option>
+                                        <option value="">เลือกตำบล/แขวง</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="zipcode" class="form-label">Zipcode</label>
-                                    <input type="text" class="form-control" id="zipcode" name="zipcode" placeholder="Zipcode" required>
+                                    <label for="zipcode" class="form-label">รหัสไปรษณีย์</label>
+                                    <input type="text" class="form-control" id="zipcode" name="zipcode" placeholder="รหัสไปรษณีย์" required>
                                 </div>
                             </div>
                         </div>
 
                         <div class="information-section">
-                            <h2>Beneficiary</h2>
-                            <input type="text" class="form-control" name="beneficiary" value="Legal heir" readonly>
+                            <h2>ผู้รับผลประโยชน์</h2>
+                            <input type="text" class="form-control" name="beneficiary" value="ทายาทโดยธรรม" readonly>
                         </div>
 
                         <div class="information-section information-consent-section">
-                            <h2>Consent</h2>
+                            <h2>ความยินยอม</h2>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="1" id="personal_data_collection" name="personal_data_collection" required>
-                                <label class="form-check-label" for="personal_data_collection">Personal Data Collection</label>
+                                <label class="form-check-label" for="personal_data_collection">
+                                    การเก็บรวบรวมข้อมูลส่วนบุคคล (ข้าพเจ้ายอมรับเงื่อนไขการประกันภัย และมีความประสงค์ขอเอาประกันภัยกับบริษัทฯ ตามเงื่อนไขของกรมธรรม์ประกันภัยที่บริษัทฯ ใช้สำหรับการประกันภัยนี้ โดยข้าพเจ้ารับรองว่า รายละเอียดและข้อความที่ข้าพเจ้าได้แถลงไว้ข้างต้นเป็นความจริง ถูกต้อง และครบถ้วนทุกประการ)
+                                </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="1" id="sensitive_personal_data" name="sensitive_personal_data" required>
-                                <label class="form-check-label" for="sensitive_personal_data">Sensitive Personal Data</label>
+                                <label class="form-check-label" for="sensitive_personal_data">
+                                    ข้อมูลส่วนบุคคลที่มีความอ่อนไหว(ข้าพเจ้าตกลงให้คำขอเอาประกันภัยฉบับนี้เป็นมูลฐานแห่งสัญญาประกันภัยระหว่างข้าพเจ้ากับบริษัทฯ หากปรากฏว่าข้อมูลหรือรายละเอียดที่ข้าพเจ้าแถลงไว้เป็นเท็จ หรือมีการปกปิดไม่เปิดเผยข้อเท็จจริง ข้าพเจ้ายินยอมให้บริษัทฯ บอกเลิกสัญญาประกันภัยได้)
+                                </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="1" id="marketing_consent" name="marketing_consent">
-                                <label class="form-check-label" for="marketing_consent">Marketing consent (optional)</label>
+                                <label class="form-check-label" for="marketing_consent">
+                                    ความยินยอมด้านการตลาด (<span class="text-danger">ไม่บังคับ</span> - ข้าพเจ้ายินยอมให้บริษัทฯ เก็บรวบรวม ใช้ และเปิดเผยข้อมูลเกี่ยวกับสุขภาพและข้อมูลส่วนบุคคลของข้าพเจ้าแก่สำนักงานคณะกรรมการกำกับและส่งเสริมการประกอบธุรกิจประกันภัย (คปภ.) เพื่อประโยชน์ในการกำกับดูแลธุรกิจประกันภัย)
+                                </label>
                             </div>
                         </div>
 
                         <div class="health-question-actions">
-                            <a href="{{ route('check-premium') }}" class="otp-btn otp-btn-outline">Back</a>
-                            <button type="submit" class="check-premium-submit">Continue</button>
+                            <a href="{{ route('check-premium') }}" class="otp-btn otp-btn-outline">ย้อนกลับ</a>
+                            <button type="submit" class="check-premium-submit">ดำเนินการต่อ</button>
                         </div>
                     </form>
                 </div>
@@ -166,13 +179,13 @@
 
         function resetDistrict() {
             $('#district')
-                .html('<option value="">Select district</option>')
+                .html('<option value="">เลือกอำเภอ/เขต</option>')
                 .prop('disabled', true);
         }
 
         function resetSubdistrict() {
             $('#subdistrict')
-                .html('<option value="">Select subdistrict</option>')
+                .html('<option value="">เลือกตำบล/แขวง</option>')
                 .prop('disabled', true);
             $('#zipcode').val('');
         }
@@ -190,7 +203,7 @@
             });
 
             const districts = response.data || [];
-            let options = '<option value="">Select district</option>';
+            let options = '<option value="">เลือกอำเภอ/เขต</option>';
 
             districts.forEach(function (district) {
                 options += '<option value="' + district.district_code + '">' + district.district_name + '</option>';
@@ -212,7 +225,7 @@
             });
 
             const subdistricts = response.data || [];
-            let options = '<option value="">Select subdistrict</option>';
+            let options = '<option value="">เลือกตำบล/แขวง</option>';
 
             subdistricts.forEach(function (subdistrict) {
                 options += '<option value="' + subdistrict.subdistrict_code + '" data-zipcode="' + subdistrict.zipcode + '">' + subdistrict.subdistrict_name + '</option>';
