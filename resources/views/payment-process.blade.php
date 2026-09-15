@@ -6,17 +6,11 @@
 @php
     $payment = $payment ?? [];
     $selectedPlan = $payment['selected_plan'] ?? null;
-    $planAmounts = [
-        'Plan 1' => 200000,
-        'Plan 2' => 500000,
-        'Plan 3' => 800000,
-        'Plan 4' => 1000000,
-        'Plan 5' => 1500000,
-    ];
-    $coverageAmount = $planAmounts[$selectedPlan] ?? 0;
-    $coverageAmountLabel = $coverageAmount > 0 ? number_format($coverageAmount) . ' Baht' : '-';
+    $coverageAmount = $payment['coverage_amount'] ?? config('coverage_plans.rows.0.amounts.0');
+    $coverageAmountValue = (int) str_replace(',', '', $coverageAmount);
+    $coverageAmountLabel = $coverageAmountValue > 0 ? number_format($coverageAmountValue) . ' บาท' : '-';
     $premiumAmount = 2000;
-    $premiumAmountLabel = number_format($premiumAmount) . ' Baht';
+    $premiumAmountLabel = number_format($premiumAmount) . ' บาท';
     $productName = $selectedPlan ?? 'Personal Accident Insurance';
     $orderIdValue = '1';
     $customerName = trim(implode(' ', array_filter([

@@ -1,41 +1,36 @@
 @extends('layout.master')
 
-@section('title', 'Payment Methods')
+@section('title', 'วิธีชำระเงิน')
 
 @section('content')
 @php
     $payment = $payment ?? [];
     $selectedPlan = $payment['selected_plan'] ?? null;
-    $planAmounts = [
-        'Plan 1' => '200,000 Baht',
-        'Plan 2' => '500,000 Baht',
-        'Plan 3' => '800,000 Baht',
-        'Plan 4' => '1,000,000 Baht',
-        'Plan 5' => '1,500,000 Baht',
-    ];
-    $premiumAmountLabel = '2,000 Baht';
+    $coverageAmount = $payment['coverage_amount'] ?? config('coverage_plans.rows.0.amounts.0');
+    $coverageAmountLabel = filled($coverageAmount) ? number_format((int) str_replace(',', '', $coverageAmount)) . ' บาท' : '-';
+    $premiumAmountLabel = '2,000 บาท';
 
     $paymentMethods = [
         [
             'value' => 'card',
-            'title' => 'Credit / Debit Card',
-            'description' => 'Pay securely with Mastercard, Visa, or JCB card.',
+            'title' => 'บัตรเครดิต / บัตรเดบิต',
+            'description' => 'ชำระเงินอย่างปลอดภัยด้วยบัตร Mastercard, Visa หรือ JCB',
             'image' => 'assets/images/master.png',
-            'image_alt' => 'Mastercard logo',
+            'image_alt' => 'โลโก้ Mastercard',
         ],
         [
             'value' => 'thai_qr',
-            'title' => 'Thai QR Payment',
-            'description' => 'Scan a QR code with your mobile banking application.',
+            'title' => 'ชำระเงินด้วย Thai QR',
+            'description' => 'สแกน QR Code ผ่านแอปพลิเคชันธนาคารบนมือถือ',
             'image' => 'assets/images/thai_qr.png',
-            'image_alt' => 'Thai QR logo',
+            'image_alt' => 'โลโก้ Thai QR',
         ],
         [
             'value' => 'payment_link',
-            'title' => 'KBank Payment Link',
-            'description' => 'Receive a payment link and complete payment through KBank.',
+            'title' => 'ลิงก์ชำระเงิน KBank',
+            'description' => 'รับลิงก์ชำระเงินและดำเนินการชำระผ่าน KBank',
             'image' => 'assets/images/kbank.png',
-            'image_alt' => 'KBank logo',
+            'image_alt' => 'โลโก้ KBank',
         ],
     ];
 @endphp
@@ -52,26 +47,26 @@
             <div class="col-lg-10">
                 <form action="{{ route('payment-process') }}" method="post" class="check-premium-card payment-methods-card">
                     @csrf
-                    <h1>Payment Methods</h1>
-                    <p class="payment-methods-subtitle">Choose one payment method to continue. Images can be added to each payment type later.</p>
+                    <h1>วิธีชำระเงิน</h1>
+                    <p class="payment-methods-subtitle">เลือกวิธีชำระเงินหนึ่งรายการเพื่อดำเนินการต่อ</p>
 
                     <div class="payment-summary-box">
                         <div>
-                            <span>Selected Plan</span>
+                            <span>แผนประกัน</span>
                             <strong>{{ $selectedPlan ?? '-' }}</strong>
                         </div>
                         <div>
-                            <span>Coverage Amount</span>
-                            <strong>{{ $planAmounts[$selectedPlan] ?? '-' }}</strong>
+                            <span>จำนวนเงินความคุ้มครอง</span>
+                            <strong>{{ $coverageAmountLabel }}</strong>
                         </div>
                         <div>
-                            <span>Premium Amount</span>
+                            <span>จำนวนเบี้ยประกัน</span>
                             <strong>{{ $premiumAmountLabel }}</strong>
                         </div>
                     </div>
 
                     @foreach ($payment as $key => $value)
-                        @continue($key === '_token')
+                        @continue($key === '_token' || $key === 'coverage_amount')
                         @if (is_array($value))
                             @foreach ($value as $childKey => $childValue)
                                 <input type="hidden" name="{{ $key }}[{{ $childKey }}]" value="{{ $childValue }}">
@@ -80,6 +75,7 @@
                             <input type="hidden" name="{{ $key }}" value="{{ $value }}">
                         @endif
                     @endforeach
+                    <input type="hidden" name="coverage_amount" value="{{ $coverageAmount }}">
 
                     <div class="row g-3 payment-method-row">
                         @foreach ($paymentMethods as $index => $method)
@@ -111,8 +107,8 @@
                             formaction="{{ route('review-information') }}"
                             formmethod="post"
                             formnovalidate
-                        >Back</button>
-                        <button type="submit" class="check-premium-submit">Payment Proceed</button>
+                        >ย้อนกลับ</button>
+                        <button type="submit" class="check-premium-submit">ดำเนินการชำระเงิน</button>
                     </div>
                 </form>
             </div>
