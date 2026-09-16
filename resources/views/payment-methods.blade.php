@@ -8,7 +8,7 @@
     $selectedPlan = $payment['selected_plan'] ?? null;
     $coverageAmount = $payment['coverage_amount'] ?? config('coverage_plans.rows.0.amounts.0');
     $coverageAmountLabel = filled($coverageAmount) ? number_format((int) str_replace(',', '', $coverageAmount)) . ' บาท' : '-';
-    $premiumAmountLabel = '2,000 บาท';
+    $premiumAmountLabel = '888 บาท';
 
     $paymentMethods = [
         [

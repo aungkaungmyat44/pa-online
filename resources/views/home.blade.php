@@ -103,11 +103,11 @@
                 <div class="premium-action">
                     <a href="{{ route('check-premium') }}" class="check-premium-btn">
                         <i class="bi bi-calculator"></i>
-                        <span>คำนวณเบี้ย</span>
+                        <span>เช็คเบี้ย</span>
                     </a>
                     <a href="{{ asset('assets/files/policy.pdf') }}" class="check-premium-btn policy-download-btn" download>
                         <i class="bi bi-download"></i>
-                        <span>ดาวน์โหลดกรมธรรม์</span>
+                        <span>ข้อตกลงคุ้มครอง</span>
                     </a>
                 </div>
             </div>

@@ -9,7 +9,7 @@
     $coverageAmount = $payment['coverage_amount'] ?? config('coverage_plans.rows.0.amounts.0');
     $coverageAmountValue = (int) str_replace(',', '', $coverageAmount);
     $coverageAmountLabel = $coverageAmountValue > 0 ? number_format($coverageAmountValue) . ' บาท' : '-';
-    $premiumAmount = 2000;
+    $premiumAmount = 888;
     $premiumAmountLabel = number_format($premiumAmount) . ' บาท';
     $productName = $selectedPlan ?? 'ประกันภัยอุบัติเหตุส่วนบุคคล';
     $orderIdValue = '1';
