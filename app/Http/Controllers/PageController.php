@@ -4,14 +4,43 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Plan;
 
 class PageController extends Controller
 {
     public function home()
     {
+        $plans = Plan::orderBy('id', 'asc')->get();
+
+        $coverageRows = [
+            [
+                'label' => 'เสียชีวิตจากอุบัติเหตุ',
+                'field' => 'death_coverage',
+            ],
+            [
+                'label' => 'ถูกฆ่าหรือทำร้ายร่างกาย',
+                'field' => 'assaulted_coverage',
+            ],
+            [
+                'label' => 'ขับขี่/โดยสารรถจักรยานยนต์',
+                'field' => 'vehicle_coverage',
+            ],
+            [
+                'label' => 'ค่ารักษาพยาบาล',
+                'field' => 'medical_expense_coverage',
+            ],
+        ];
+
         return view('home', [
-            'coveragePlans' => config('coverage_plans.plans', []),
-            'coverageRows' => config('coverage_plans.rows', []),
+            'coveragePlans' => $plans->map(fn ($plan) => [
+                'title' => $plan->name_th,
+                'subtitle' => $plan->name_en,
+                'value' => $plan->name_th,
+            ]),
+            'coverageRows' => collect($coverageRows)->map(fn ($row) => [
+                'label' => $row['label'],
+                'amounts' => $plans->map(fn ($plan) => number_format((float) $plan->{$row['field']})),
+            ]),
         ]);
     }
 
