@@ -1,0 +1,127 @@
+/* Footer styles extracted from views/footer.php dependencies. */
+.footer {
+    background: #fff;
+    color: #000;
+    border-top: 2px solid #dee2e6;
+    padding-top: 2rem;
+}
+
+.footer,
+.copyright {
+    font-size: 1rem;
+}
+
+.footer h6,
+.footer .h6 {
+    font-size: 1rem;
+}
+
+.footer a,
+.footer .list-group-item {
+    font-size: 1rem;
+}
+
+.footer > .custom-container {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+@media (min-width: 576px) {
+    .footer > .custom-container {
+        max-width: 560px;
+    }
+}
+
+@media (min-width: 768px) {
+    .footer > .custom-container {
+        max-width: 755px;
+    }
+}
+
+@media (min-width: 992px) {
+    .footer > .custom-container {
+        max-width: 975px;
+        min-width: 992px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .footer > .custom-container {
+        max-width: 1190px;
+    }
+}
+
+.footer .row > [class*="col-"] {
+    margin-bottom: 1.5rem;
+}
+
+.footer .list-group-sm .list-group-item {
+    padding: .1rem .75rem;
+    padding-left: 0;
+}
+
+.footer .list-group-sm .list-group-item:focus,
+.footer .list-group-sm .list-group-item:hover {
+    background-color: inherit;
+    color: #00a3a3;
+    font-weight: 700;
+}
+
+.footer a {
+    color: #606975;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    color: #00a3a3;
+}
+
+.copyright {
+    text-align: center;
+    padding: 1rem .5rem;
+    background: -webkit-linear-gradient(45deg, rgb(0 54 107) 0%, rgb(0 128 129) 99%, rgb(0 128 128) 100%);
+    background: linear-gradient(45deg, rgb(0 54 107) 0%, rgb(0 128 129) 99%, rgb(0 128 128) 100%);
+    color: #fff;
+    border-top: 1px solid #dee2e6;
+    font-size: 90%;
+}
+
+.copyright p {
+    font-size: inherit;
+    margin-bottom: 0.8rem;
+}
+
+.copyright .nav-link {
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    font-size: inherit;
+    padding: .5rem 1rem;
+}
+
+.copyright .nav-link:focus,
+.copyright .nav-link:hover {
+    color: #000 !important;
+}
+
+.copyright .nav-link svg {
+    color: #fff;
+}
+
+.copyright .nav-link:focus svg,
+.copyright .nav-link:hover svg {
+    color: #fff;
+}
+
+.hightlighed {
+    color: #00366b !important;
+    font-weight: 700 !important;
+}
+
+.hightlighed h6 {
+    color: inherit;
+    font-weight: 700 !important;
+}

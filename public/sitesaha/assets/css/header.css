@@ -1,0 +1,363 @@
+/* Header styles for the shared site header. */
+.topbar {
+    position: relative;
+    z-index: 1031;
+    background: -webkit-linear-gradient(45deg, rgb(0 54 107) 0%, rgb(0 128 129) 99%, rgb(0 128 128) 100%);
+    background: linear-gradient(45deg, rgb(0 54 107) 0%, rgb(0 128 129) 99%, rgb(0 128 128) 100%);
+}
+
+.topbar,
+header,
+#menuModal {
+    font-size: 1rem;
+}
+
+.topbar .nav-link {
+    padding: .25rem 1rem;
+}
+
+.topbar .nav-link,
+header .nav-link,
+header .dropdown-item,
+header .list-group-item {
+    font-size: 1rem;
+}
+
+.topbar a,
+header a {
+    font-size: 1rem;
+}
+
+.topbar > .custom-container,
+header > .custom-container {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+@media (min-width: 576px) {
+    .topbar > .custom-container,
+    header > .custom-container {
+        max-width: 560px;
+    }
+}
+
+@media (min-width: 768px) {
+    .topbar > .custom-container,
+    header > .custom-container {
+        max-width: 755px;
+    }
+}
+
+@media (min-width: 992px) {
+    .topbar > .custom-container,
+    header > .custom-container {
+        max-width: 975px;
+        min-width: 992px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .topbar > .custom-container,
+    header > .custom-container {
+        max-width: 1190px;
+    }
+}
+
+.nav-lang .nav-link {
+    font-weight: 700;
+    padding: .25rem;
+    color: #fff;
+}
+
+.nav-lang .nav-link.active {
+    color: #00a3a3;
+    background-color: #fff;
+}
+
+.nav-lang .nav-link.pipe {
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+header {
+    position: relative;
+    z-index: 1030;
+    display: flex;
+    height: 80px;
+    background-color: #fff;
+    box-shadow: 0 .125rem .25rem rgb(0 0 0 / .075);
+}
+
+header.fixed-top,
+header.is-sticky {
+    animation-name: headerAnimation;
+    animation-duration: .5s;
+    animation-fill-mode: both;
+}
+
+.header-sticky-spacer {
+    height: 0;
+}
+
+header .custom-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    position: absolute;
+    top: 0;
+    z-index: 999;
+}
+
+.nav-logo {
+    vertical-align: middle;
+    max-width: 80%;
+    height: auto;
+}
+
+.nav-main {
+    align-items: center;
+    font-weight: 700;
+}
+
+.nav-main .nav-link {
+    color: #606975;
+    font-weight: 700;
+    position: relative;
+}
+
+.nav-main .nav-link:hover,
+.nav-main .show > .nav-link {
+    color: #00a3a3;
+}
+
+.nav-main .nav-link.active::after {
+    position: absolute;
+    bottom: -23px;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    content: '';
+    background-color: #00366B;
+}
+
+.nav-main .dropdown-item {
+    padding: .35rem 1rem;
+}
+
+.nav-main .dropdown-menu {
+    font-weight: 400;
+}
+
+.nav-main .dropdown-menu strong {
+    font-weight: 700;
+}
+
+.nav-main .dropdown-item.active {
+    font-weight: 700;
+    color: #00a3a3;
+    background-color: #fff;
+}
+
+.topbar .nav-item a,
+header .nav-item a {
+    color: #606975;
+}
+
+.topbar #languageDropDownBtn,
+.topbar #languageDropDownBtn svg {
+    color: #fff;
+}
+
+.nav-link svg {
+    color: #000;
+}
+
+header .dropdown-toggle::after,
+.topbar .dropdown-toggle::after {
+    display: none;
+}
+
+.nav-icon {
+    position: relative;
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-icon:hover {
+    background-color: #e9ecef;
+}
+
+.dropdown-menu {
+    box-shadow: 0 .5rem 1rem rgb(0 0 0 / .15);
+}
+
+.show .dropdown-menu {
+    animation-name: dropdownAnimate;
+    animation-duration: .25s;
+}
+
+@keyframes dropdownAnimate {
+    from {
+        transform: translate3d(0, -10px, 0);
+        opacity: 0;
+    }
+    to {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+}
+
+@keyframes headerAnimation {
+    from {
+        transform: translate3d(0, -100%, 0);
+    }
+    to {
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@media (min-width: 992px) {
+    header .nav-main > .dropdown {
+        position: static;
+    }
+
+    header .nav-main > .dropdown > .dropdown-menu {
+        top: calc(100% - 24px);
+        margin-top: 0 !important;
+    }
+
+    header .nav-main > .dropdown:not(.dropdown-mega) > .dropdown-menu {
+        left: auto;
+        right: auto;
+    }
+
+    .dropdown-hover .dropdown-menu {
+        margin: 0;
+    }
+
+    .dropdown-hover:hover > .dropdown-menu {
+        display: block;
+        animation-name: dropdownAnimate;
+        animation-duration: .25s;
+    }
+
+    .dropdown-hover > .dropdown-toggle:not(.forwardable):active {
+        pointer-events: none;
+    }
+}
+
+.dropdown-mega {
+    position: static;
+}
+
+.dropdown-mega > .dropdown-menu {
+    left: 15px;
+    right: 15px;
+    margin-top: 0 !important;
+    padding: 1rem;
+}
+
+.list-group-no-border .list-group-item {
+    margin-bottom: 0;
+    border: 0;
+}
+
+.list-group-sm .list-group-item {
+    padding: .1rem .75rem;
+}
+
+.feather {
+    vertical-align: sub;
+}
+
+.feather[width="24"] {
+    width: 18px;
+    height: 18px;
+}
+
+.ml-ni {
+    margin-left: -.657rem;
+}
+
+.mr-ni {
+    margin-right: -.657rem;
+}
+
+@media (max-width: 991.98px) {
+    .topbar > .custom-container {
+        flex-direction: column;
+        align-items: flex-start;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .topbar .nav-lang {
+        padding-top: .25rem;
+        padding-bottom: .25rem;
+    }
+
+    .topbar .nav-lang:first-child {
+        flex-shrink: 0;
+        flex-wrap: nowrap;
+    }
+
+    .topbar .nav-lang.ms-auto {
+        width: 100%;
+        min-width: 0;
+        margin-left: 0 !important;
+        justify-content: flex-start;
+    }
+
+    .topbar .nav-lang .nav-link {
+        padding: .25rem;
+        font-size: 1rem;
+        white-space: nowrap;
+    }
+
+    .topbar .nav-lang > .nav-link > img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .topbar #languageDropDownMenu {
+        right: 0;
+        left: auto;
+    }
+
+    header {
+        height: auto;
+        min-height: 80px;
+        padding: .5rem 0;
+    }
+
+    header .custom-container {
+        flex-wrap: wrap;
+    }
+
+    .nav-main {
+        width: 100%;
+        align-items: stretch;
+        padding: .5rem 0;
+    }
+
+    .nav-main .nav-link {
+        padding: .6rem 0;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .nav-logo {
+        max-width: 70%;
+    }
+}
