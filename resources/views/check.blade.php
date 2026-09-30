@@ -18,21 +18,30 @@
                         @csrf
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label for="occupation" class="form-label">อาชีพ</label>
+                                <label for="occupation" class="form-label">อาชีพ<span class="text-danger"> *</span></label>
                                 <select class="form-control" id="occupation" name="occupation" required>
                                     <option value="">เลือกอาชีพของคุณ</option>
                                     @foreach ($occupations as $occupation)
-                                        <option value="{{ $occupation }}">{{ $occupation }}</option>
+                                        <option value="{{ $occupation }}" @selected(old('occupation') === $occupation)>{{ $occupation }}</option>
                                     @endforeach
                                 </select>
+                                @error('occupation')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="col-md-6">
-                                <label for="date_of_birth" class="form-label">วันเดือนปีเกิด</label>
-                                <input type="text" class="form-control" id="date_of_birth" name="date_of_birth" placeholder="เลือกวันเดือนปีเกิด" autocomplete="off" required>
+                                <label for="date_of_birth" class="form-label">วันเดือนปีเกิด <span class="text-danger"> *</span></label>
+                                <input type="text" class="form-control" id="date_of_birth" name="date_of_birth" value="{{ old('date_of_birth') }}" placeholder="เลือกวันเดือนปีเกิด" autocomplete="off" required>
+                                @error('date_of_birth')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="col-md-6">
-                                <label for="email" class="form-label">อีเมล</label>
-                                <input type="email" class="form-control" id="email" name="email" placeholder="กรอกอีเมลของคุณ" required>
+                                <label for="email" class="form-label">อีเมล <span class="text-danger"> *</span></label>
+                                <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" placeholder="กรอกอีเมลของคุณ" required>
+                                @error('email')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="col-md-12">
                                 อ่าน <button type="button" class="terms-link" data-bs-toggle="modal" data-bs-target="#underwritingModal">ข้อกำหนดและเงื่อนไข</button> โดยสหมงคลประกันภัย

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\OtpFormRequest;
 use App\Models\Plan;
+use App\Models\Customer;
 
 class PageController extends Controller
 {
@@ -56,8 +58,20 @@ class PageController extends Controller
         ]);
     }
 
-    public function otpConfirmation(Request $request)
+    public function otpConfirmation(OtpFormRequest $request)
     {
+        $data = $request->validated();
+        $email = trim($data['email']);
+        $customer = Customer::where('email', $email)->first();
+
+        if (empty($customer)) {
+            $customer = Customer::create(['email' => $email]);
+        }
+
+        if (!$customer['is_otp_sent']) {
+            dd("send email bruh");
+        }
+
         return view('otp', [
             'customer' => [
                 'occupation' => $request->input('occupation'),
