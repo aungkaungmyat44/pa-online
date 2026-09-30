@@ -21,7 +21,7 @@
     font-size: 1rem;
 }
 
-.footer > .custom-container {
+.footer > .container {
     width: 100%;
     padding-right: 15px;
     padding-left: 15px;
@@ -30,26 +30,26 @@
 }
 
 @media (min-width: 576px) {
-    .footer > .custom-container {
+    .footer > .container {
         max-width: 560px;
     }
 }
 
 @media (min-width: 768px) {
-    .footer > .custom-container {
+    .footer > .container {
         max-width: 755px;
     }
 }
 
 @media (min-width: 992px) {
-    .footer > .custom-container {
+    .footer > .container {
         max-width: 975px;
         min-width: 992px;
     }
 }
 
 @media (min-width: 1200px) {
-    .footer > .custom-container {
+    .footer > .container {
         max-width: 1190px;
     }
 }
