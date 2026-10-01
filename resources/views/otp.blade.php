@@ -4,7 +4,7 @@
 
 @section('content')
 @php
-    $customer = $customer ?? [];
+    $customer = session()->get('customer');
     $email = trim((string) ($customer['email'] ?? ''));
     $occupation = trim((string) ($customer['occupation'] ?? ''));
     $dateOfBirth = trim((string) ($customer['date_of_birth'] ?? ''));
@@ -27,8 +27,9 @@
                 {{ $email !== '' ? $email : '-' }}
             </div>
 
-            <form id="otpForm" action="{{ route('health-questions') }}" method="POST" autocomplete="one-time-code">
+            <form id="otpForm" action="{{ route('verify-otp') }}" method="POST" autocomplete="one-time-code">
                 @csrf
+                @method("POST")
                 <input type="hidden" name="occupation" value="{{ $occupation }}">
                 <input type="hidden" name="email" value="{{ $email }}">
                 <input type="hidden" name="date_of_birth" value="{{ $dateOfBirth }}">

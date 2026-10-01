@@ -21,8 +21,8 @@
                                 <label for="occupation" class="form-label">อาชีพ<span class="text-danger"> *</span></label>
                                 <select class="form-control" id="occupation" name="occupation" required>
                                     <option value="">เลือกอาชีพของคุณ</option>
-                                    @foreach ($occupations as $occupation)
-                                        <option value="{{ $occupation }}" @selected(old('occupation') === $occupation)>{{ $occupation }}</option>
+                                    @foreach ($occupations as $key => $occupation)
+                                        <option value="{{ $key }}" @selected(old('occupation') === $key)>{{ $occupation }}</option>
                                     @endforeach
                                 </select>
                                 @error('occupation')

@@ -4,11 +4,6 @@
 
 @section('content')
 @php
-    $customer = $customer ?? [];
-    $selectedPlan = $customer['selected_plan'] ?? config('coverage_plans.default_plan');
-    $defaultPlanIndex = 0;
-    $defaultPlan = config('coverage_plans.plans.' . $defaultPlanIndex, []);
-    $coverageRows = config('coverage_plans.rows', []);
     $questions = [
         'other_insurance' => [
             'text' => 'ท่านมีหรือได้ขอเอาประกันภัยอุบัติเหตุส่วนบุคคล หรือประกันชีวิตไว้กับบริษัทประกันภัยอื่นหรือไม่',
@@ -51,21 +46,29 @@
                         <input type="hidden" name="email" value="{{ $customer['email'] ?? '' }}">
                         <input type="hidden" name="date_of_birth" value="{{ $customer['date_of_birth'] ?? '' }}">
                         <input type="hidden" name="otp_code" value="{{ $customer['otp_code'] ?? '' }}">
-                        <input type="hidden" name="selected_plan" value="{{ $selectedPlan }}">
+                        <input type="hidden" name="selected_plan" value="{{ $selectedPlan['id'] }}">
 
                         <div class="health-plan-section">
                             <h2>แผนความคุ้มครอง</h2>
                             <div class="health-plan-card health-plan-card-readonly">
                                 <div class="health-plan-summary">
                                     <div>
-                                        <h6>{{ $defaultPlan['title'] ?? 'อาชีพชั้น 1' }}</h6>
-                                        <strong>{{ $defaultPlan['subtitle'] ?? 'Class1' }}</strong>
+                                        <h6>{{ data_get($selectedPlan, 'name_th') }}</h6>
+                                        <strong>{{ data_get($selectedPlan, 'name_en') }}</strong>
                                     </div>
                                     <span>เลือกอัตโนมัติ</span>
                                 </div>
+
                                 <ul>
                                     @foreach ($coverageRows as $row)
-                                        <li>{{ $row['label'] }}: {{ $row['amounts'][$defaultPlanIndex] ?? '-' }}</li>
+                                        @php
+                                            $amount = $row['amount'] ?? null;
+                                        @endphp
+
+                                        <li>
+                                            {{ $row['label'] }}:
+                                            {{ $amount !== null ? number_format((float) $amount) . ' บาท' : '-' }}
+                                        </li>
                                     @endforeach
                                 </ul>
                             </div>

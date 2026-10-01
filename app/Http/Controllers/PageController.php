@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\OtpFormRequest;
 use App\Models\Plan;
 use App\Models\Customer;
+use App\Models\PlanOccupation;
 use App\Mail\OtpMail;
 use Illuminate\Support\Facades\Mail;
 use App\Services\EmailService;
@@ -16,7 +17,6 @@ class PageController extends Controller
     public function home()
     {
         $plans = Plan::orderBy('id', 'asc')->get();
-
         $coverageRows = [
             [
                 'label' => 'เสียชีวิตจากอุบัติเหตุ',
@@ -38,26 +38,27 @@ class PageController extends Controller
 
         return view('home', [
             'coveragePlans' => $plans->map(fn ($plan) => [
-                'title' => $plan->name_th,
+                'title'    => $plan->name_th,
                 'subtitle' => $plan->name_en,
-                'value' => $plan->name_th,
+                'value'    => $plan->name_th,
             ]),
             'coverageRows' => collect($coverageRows)->map(fn ($row) => [
                 'label' => $row['label'],
-                'amounts' => $plans->map(fn ($plan) => number_format((float) $plan->{$row['field']})),
+                'amounts' => $plans->map(
+                    fn ($plan) => number_format((float) $plan->{$row['field']})
+                ),
             ]),
         ]);
     }
 
     public function checkPremium()
     {
-        $occupation1 = config('occupations.occupationForPlan1');
-        $occupation2 = config('occupations.occupationForPlan2');
-        $occupation3 = config('occupations.occupationForPlan3');
-        $occupations = array_merge($occupation1, $occupation2, $occupation3);
+        $occupations = PlanOccupation::orderBy('id', 'asc')
+                                    ->pluck('occupation_th', 'occupation_slug')
+                                    ->toArray();
 
         return view('check', [
-            'occupations' => $occupations
+            'occupations' => $occupations,
         ]);
     }
 
@@ -65,14 +66,18 @@ class PageController extends Controller
     {
         $data = $request->validated();
         $email = trim($data['email']);
-        $customer = Customer::where('email', $email)->first();
 
-        if (empty($customer)) {
-            $customer = Customer::create(['email' => $email]);
-        }
+        $customer = Customer::firstOrCreate([
+            'email' => $email,
+        ]);
 
-        if ((bool)$customer['is_otp_sent'] == false) {
-            $otp = $this->generateOtp(); // Example: "482193"
+        if (
+            !$customer->is_otp_sent or
+            blank($customer->otp_code) or
+            !$customer->otp_expires_at or
+            now()->greaterThanOrEqualTo($customer->otp_expires_at)
+        ) {
+            $otp = $this->generateOtp();
             $subject = 'PA Online - Sending OTP Code';
 
             $mailable = new OtpMail(
@@ -82,54 +87,195 @@ class PageController extends Controller
                     'recipientName' => $customer->name ?? 'Customer',
                     'introText' => 'Please use the OTP code below to verify your account.',
                     'detailLabel' => 'OTP Code',
-                    'detailValue' => (string) $otp,
-                    'bodyMessage' => 'Do not share this code with anyone.',
+                    'detailValue' => $otp,
+                    'bodyMessage' => 'This code expires in 2 minutes. Do not share this code with anyone.',
                     'footerText' => 'Ignore this email if you did not request an OTP code.',
                     'autoReplyText' => 'Please do not reply to this email. This is an automated message.',
                 ],
                 subjectText: $subject,
             );
 
-            $sent = app(EmailService::class)->sendEmailApi(
-                $customer->email,
-                $subject,
-                $mailable->render(),
-            );
-            
-            if ($sent) {
-                $customer->update([
-                    'otp_code' => $otp,
-                    'is_otp_sent' => true,
-                    'otp_expires_at' => now()->addMinutes(2),
-                    'otp_attempts' => 1,
-                ]);
-            } else {
-                return redirect()->back()->withErrors(['email' => 'Failed to send OTP email. Please try again later.']);
+            $sent = app(EmailService::class)->sendEmailApi($customer->email, $subject, $mailable->render(),);
+
+            if (!$sent) {
+                return redirect()->route('check-premium')
+                    ->withInput($request->only('occupation', 'email', 'date_of_birth'))
+                    ->withErrors([
+                        'email' => 'Failed to send OTP email. Please try again later.',
+                    ]);
             }
+
+            $customer->update([
+                'otp_code' => $otp,
+                'is_otp_sent' => true,
+                'otp_expires_at' => now()->addMinutes(2),
+                'otp_attempts' => 1,
+            ]);
         }
-        
-        return view('otp', [
-            'customer' => [
-                'occupation' => $request->input('occupation'),
-                'email' => $request->input('email'),
-                'date_of_birth' => $request->input('date_of_birth'),
-            ],
+
+        $request->session()->put('customer', [
+            'occupation'    => $data['occupation'],
+            'email'         => $email,
+            'date_of_birth' => $data['date_of_birth'],
         ]);
+
+        return redirect()->route('otp-form');
     }
 
-    public function healthQuestion(Request $request)
+    public function showOtpForm(Request $request)
     {
-        return view('health-questions', [
-            'customer' => [
-                'occupation' => $request->input('occupation'),
-                'email' => $request->input('email'),
-                'date_of_birth' => $request->input('date_of_birth'),
-                'otp_code' => $request->input('otp_code'),
-                'selected_plan' => config('coverage_plans.default_plan'),
-            ],
+        $customer = $request->session()->get('customer');
+
+        if (empty($customer['email'])) {
+            return redirect()->route('check-premium')->withErrors([
+                'email' => 'Please request an OTP first.',
+            ]);
+        }
+
+        return view('otp', [
+            'customer' => $customer,
         ]);
     }
 
+    public function verifyOtpCode(Request $request)
+    {
+        $sessionCustomer = $request->session()->get('customer');
+
+        if (empty($sessionCustomer['email'])) {
+            return redirect()->route('check-premium')->withErrors([
+                'email' => 'Your session has expired. Please request an OTP again.',
+            ]);
+        }
+
+        $validator = validator($request->only('otp_code'), [
+            'otp_code' => ['required', 'string', 'regex:/^[0-9]{6}$/'],
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('otp-form')->withErrors($validator);
+        }
+
+        $otpCode = $validator->validated()['otp_code'];
+
+        $customer = Customer::where('email',$sessionCustomer['email'])->first();
+
+        if (!$customer) {
+            $request->session()->forget('customer');
+
+            return redirect()->route('check-premium')->withErrors([
+                'email' => 'Customer not found. Please request an OTP again.',
+            ]);
+        }
+
+        if (!$customer->is_otp_sent or blank($customer->otp_code)) {
+            return redirect()->route('otp-form')->withErrors([
+                'otp_code' => 'No active OTP code. Please request a new one.',
+            ]);
+        }
+
+        if (!$customer->otp_expires_at or now()->greaterThanOrEqualTo($customer->otp_expires_at)) {
+            return redirect()->route('otp-form')->withErrors([
+                'otp_code' => 'OTP code has expired. Please request a new one.',
+            ]);
+        }
+
+        if ($otpCode !== (string) $customer->otp_code) {
+            return redirect()->route('otp-form')->withErrors([
+                'otp_code' => 'Invalid OTP code.',
+            ]);
+        }
+
+        $planId = PlanOccupation::where('occupation_slug', $sessionCustomer['occupation'] ?? '')->value('plan_id');
+
+        $plan = $planId ? Plan::find($planId) : null;
+
+        if (!$plan) {
+            return redirect()->route('check-premium')->withErrors([
+                'occupation' => 'No plan was found for your occupation. Please select again.',
+            ]);
+        }
+
+        $verifiedAt = now();
+        $customer->update([
+            'otp_verified_at' => $verifiedAt,
+            'is_activated'    => true,
+            'otp_code'        => null,
+            'otp_expires_at'  => null,
+            'is_otp_sent'     => false,
+        ]);
+
+        $request->session()->put('customer', array_merge($sessionCustomer, [
+            'customer_id' => $customer->id,
+            'otp_verified_at' => $verifiedAt->toDateTimeString(),
+            'is_activated' => true,
+            'plan' => $plan->toArray(),
+        ]));
+
+        return redirect()->route('show-health-questions');
+    }
+
+    public function showHealthQuestion(Request $request)
+    {
+        $customer = $request->session()->get('customer');
+
+        if (empty($customer['email'])) {
+            return redirect()->route('check-premium')->withErrors([
+                'email' => 'Please request an OTP first.',
+            ]);
+        }
+
+        if (empty($customer['otp_verified_at'])) {
+            return redirect()->route('otp-form')->withErrors([
+                'otp_code' => 'Please verify your OTP first.',
+            ]);
+        }
+
+        if (empty($customer['plan'])) {
+            return redirect()->route('check-premium')->withErrors([
+                'occupation' => 'Please select your occupation again.',
+            ]);
+        }
+
+        $plan = $customer['plan'];
+
+        $coverageFields = [
+            [
+                'label' => 'เสียชีวิตจากอุบัติเหตุ',
+                'field' => 'death_coverage',
+            ],
+            [
+                'label' => 'ถูกฆ่าหรือทำร้ายร่างกาย',
+                'field' => 'assaulted_coverage',
+            ],
+            [
+                'label' => 'ขับขี่/โดยสารรถจักรยานยนต์',
+                'field' => 'vehicle_coverage',
+            ],
+            [
+                'label' => 'ค่ารักษาพยาบาล',
+                'field' => 'medical_expense_coverage',
+            ],
+        ];
+
+        $coverageRows = collect($coverageFields)->map(function ($row) use ($plan) {
+            $amount = data_get($plan, $row['field']);
+
+            return [
+                'label' => $row['label'],
+                'amount' => $amount !== null ? number_format((float) $amount) . ' บาท' : '-',
+            ];
+        });
+        
+        return view('health-questions', [
+            'customer' => $customer,
+            'plan' => $plan,
+            'selectedPlan' => $plan,
+            'coverageRows' => $coverageRows,
+        ]);
+    }
+
+    /*
+    // Fix starting from here
     public function informationForm(Request $request)
     {
         $cardTypes = [
@@ -140,20 +286,25 @@ class PageController extends Controller
             'Other'
         ];
 
-        return view('information-form', [
-            'customer' => [
-                'occupation' => $request->input('occupation'),
-                'email' => $request->input('email'),
-                'date_of_birth' => $request->input('date_of_birth'),
-                'otp_code' => $request->input('otp_code'),
-                'selected_plan' => $request->input('selected_plan'),
-                'health_questions' => $request->input('health_questions', []),
-            ],
-            'cardTypes' => $cardTypes,
-            'nameTitles' => $this->getNameTitles(),
-            'countries' => $this->getCountries(),
-            'provinces' => $this->getProvinces(),
-        ]);
+        // return view('information-form', [
+        //     'customer' => [
+        //         'occupation' => $request->input('occupation'),
+        //         'email' => $request->input('email'),
+        //         'date_of_birth' => $request->input('date_of_birth'),
+        //         'otp_code' => $request->input('otp_code'),
+        //         'selected_plan' => $request->input('selected_plan'),
+        //         'health_questions' => $request->input('health_questions', []),
+        //     ],
+        //     'cardTypes' => $cardTypes,
+        //     'nameTitles' => $this->getNameTitles(),
+        //     'countries' => $this->getCountries(),
+        //     'provinces' => $this->getProvinces(),
+        // ]);
+    }
+
+    public function showInformationForm(Request $request)
+    {
+        // Get form
     }
 
     public function reviewInformation(Request $request)
@@ -215,6 +366,7 @@ class PageController extends Controller
             ->orderBy('title')
             ->get();
     }
+    */
 
     public function getCountries()
     {
