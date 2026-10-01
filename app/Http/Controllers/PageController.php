@@ -71,7 +71,7 @@ class PageController extends Controller
             $customer = Customer::create(['email' => $email]);
         }
 
-        if (!$customer['is_otp_sent']) {
+        if ((bool)$customer['is_otp_sent'] == false) {
             $otp = $this->generateOtp(); // Example: "482193"
             $subject = 'PA Online - Sending OTP Code';
 
@@ -95,11 +95,13 @@ class PageController extends Controller
                 $subject,
                 $mailable->render(),
             );
-
+            
             if ($sent) {
                 $customer->update([
                     'otp_code' => $otp,
                     'is_otp_sent' => true,
+                    'otp_expires_at' => now()->addMinutes(2),
+                    'otp_attempts' => 1,
                 ]);
             } else {
                 return redirect()->back()->withErrors(['email' => 'Failed to send OTP email. Please try again later.']);

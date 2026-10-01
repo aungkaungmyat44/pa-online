@@ -65,7 +65,10 @@ final class EmailService
 
                 return false;
             }
-
+            Log::info('ZeptoMail API email sent successfully.', [
+                'status' => $response->status(),
+                'code' => $response->json('code'),
+            ]);
             return $response->successful();
         } catch (\Throwable $error) {
             Log::error('ZeptoMail API email sending failed.', [

@@ -8,20 +8,11 @@ class Customer extends Authenticatable
 {
     protected $fillable = [
         'email',
-    ];
-
-    protected $hidden = [
+        'is_otp_sent',
         'otp_code',
+        'otp_expires_at',
+        'otp_attempts',
+        'otp_verified_at',
+        'is_activated',
     ];
-
-    protected function casts(): array
-    {
-        return [
-            'is_otp_sent' => 'boolean',
-            'otp_expires_at' => 'datetime',
-            'otp_attempts' => 'integer',
-            'otp_verified_at' => 'datetime',
-            'is_activated' => 'boolean',
-        ];
-    }
 }
