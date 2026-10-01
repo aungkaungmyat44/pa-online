@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\OtpFormRequest;
 use App\Models\Plan;
 use App\Models\Customer;
+use App\Mail\OtpMail;
+use Illuminate\Support\Facades\Mail;
+use App\Services\EmailService;
 
 class PageController extends Controller
 {
@@ -69,9 +72,40 @@ class PageController extends Controller
         }
 
         if (!$customer['is_otp_sent']) {
-            dd("send email bruh");
-        }
+            $otp = $this->generateOtp(); // Example: "482193"
+            $subject = 'PA Online - Sending OTP Code';
 
+            $mailable = new OtpMail(
+                data: [
+                    'brandName' => 'PA Online',
+                    'headerTitle' => 'Sending OTP Code',
+                    'recipientName' => $customer->name ?? 'Customer',
+                    'introText' => 'Please use the OTP code below to verify your account.',
+                    'detailLabel' => 'OTP Code',
+                    'detailValue' => (string) $otp,
+                    'bodyMessage' => 'Do not share this code with anyone.',
+                    'footerText' => 'Ignore this email if you did not request an OTP code.',
+                    'autoReplyText' => 'Please do not reply to this email. This is an automated message.',
+                ],
+                subjectText: $subject,
+            );
+
+            $sent = app(EmailService::class)->sendEmailApi(
+                $customer->email,
+                $subject,
+                $mailable->render(),
+            );
+
+            if ($sent) {
+                $customer->update([
+                    'otp_code' => $otp,
+                    'is_otp_sent' => true,
+                ]);
+            } else {
+                return redirect()->back()->withErrors(['email' => 'Failed to send OTP email. Please try again later.']);
+            }
+        }
+        
         return view('otp', [
             'customer' => [
                 'occupation' => $request->input('occupation'),
@@ -255,5 +289,10 @@ class PageController extends Controller
         return response()->json([
             'data' => $subdistricts,
         ]);
+    }
+
+    private function generateOtp(): string
+    {
+        return (string) random_int(100000, 999999);
     }
 }
