@@ -37,7 +37,10 @@ class SaveInformationRequest extends FormRequest
             'district' => 'required|string|max:255',
             'subdistrict' => 'required|string|max:255',
             'zipcode' => 'required|string|max:10',
-            'beneficiary' => 'nullable|string|max:255'
+            'beneficiary' => 'nullable|string|max:255',
+            'personal_data_collection' => 'accepted',
+            'sensitive_personal_data' => 'accepted',
+            'marketing_consent' => 'nullable|boolean',
         ];
     }
 }

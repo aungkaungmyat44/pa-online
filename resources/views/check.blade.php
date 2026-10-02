@@ -3,6 +3,12 @@
 @section('title', 'คำนวณเบี้ยประกัน')
 
 @section('content')
+<style>
+    .select2-selection.is-invalid {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 .2rem rgb(220 53 69 / .25);
+    }
+</style>
 <section id="check-premium-section">
     <div class="container">
         <div class="row">
@@ -14,33 +20,42 @@
             <div class="col-lg-8 mx-auto">
                 <div class="check-premium-card">
                     <h1>กรุณากรอกข้อมูลต่อไปนี้เพื่อดำเนินการต่อ</h1>
-                    <form action="{{ route('otp-confirmation') }}" method="POST">
+                    <div class="alert alert-warning d-none js-required-alert" role="alert">
+                        Please fill in all required fields before continuing.
+                    </div>
+                    @if ($errors->any())
+                        <div class="alert alert-danger" role="alert">
+                            <div class="fw-semibold mb-1">Please recheck the highlighted fields.</div>
+                            <div>{{ $errors->first() }}</div>
+                        </div>
+                    @endif
+                    <form action="{{ route('otp-confirmation') }}" method="POST" id="checkPremiumForm" novalidate>
                         @csrf
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="occupation" class="form-label">อาชีพ<span class="text-danger"> *</span></label>
-                                <select class="form-control" id="occupation" name="occupation" required>
+                                <select class="form-control @error('occupation') is-invalid @enderror" id="occupation" name="occupation" required>
                                     <option value="">เลือกอาชีพของคุณ</option>
                                     @foreach ($occupations as $key => $occupation)
-                                        <option value="{{ $key }}" @selected(old('occupation') === $key)>{{ $occupation }}</option>
+                                        <option value="{{ $key }}" @selected((string) old('occupation') === (string) $key)>{{ $occupation }}</option>
                                     @endforeach
                                 </select>
                                 @error('occupation')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-md-6">
                                 <label for="date_of_birth" class="form-label">วันเดือนปีเกิด <span class="text-danger"> *</span></label>
-                                <input type="text" class="form-control" id="date_of_birth" name="date_of_birth" value="{{ old('date_of_birth') }}" placeholder="เลือกวันเดือนปีเกิด" autocomplete="off" required>
+                                <input type="text" class="form-control @error('date_of_birth') is-invalid @enderror" id="date_of_birth" name="date_of_birth" value="{{ old('date_of_birth') }}" placeholder="เลือกวันเดือนปีเกิด" autocomplete="off" required>
                                 @error('date_of_birth')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-md-6">
                                 <label for="email" class="form-label">อีเมล <span class="text-danger"> *</span></label>
-                                <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" placeholder="กรอกอีเมลของคุณ" required>
+                                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" placeholder="กรอกอีเมลของคุณ">
                                 @error('email')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-md-12">
@@ -111,6 +126,51 @@
 </div>
 <script>
     $(function () {
+        const checkPremiumForm = $('#checkPremiumForm');
+
+        function showClientValidation(form) {
+            const invalidFields = $(form).find(':input[required]').filter(function () {
+                return !this.checkValidity();
+            });
+
+            $(form).find('.is-invalid').removeClass('is-invalid');
+            $(form).find('.js-client-invalid-feedback').remove();
+
+            if (!invalidFields.length) {
+                $('.js-required-alert').addClass('d-none');
+                return true;
+            }
+
+            $('.js-required-alert').removeClass('d-none');
+
+            invalidFields.each(function () {
+                const field = $(this);
+                const select2Container = field.next('.select2-container');
+                const message = this.validationMessage || 'This field is required.';
+                field.addClass('is-invalid');
+                select2Container.find('.select2-selection').addClass('is-invalid');
+
+                if (!field.next('.invalid-feedback').length && !field.parent().find('.js-client-invalid-feedback').length) {
+                    const feedback = $('<div class="invalid-feedback js-client-invalid-feedback d-block"></div>').text(message);
+
+                    if (select2Container.length) {
+                        feedback.insertAfter(select2Container);
+                    } else {
+                        feedback.insertAfter(field);
+                    }
+                }
+            });
+
+            if (!invalidFields.first().hasClass('select2-hidden-accessible')) {
+                invalidFields.first()[0].reportValidity();
+            } else {
+                invalidFields.first().next('.select2-container').find('.select2-selection').trigger('focus');
+            }
+            invalidFields.first()[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            return false;
+        }
+
         $('#occupation').select2({
             placeholder: 'เลือกอาชีพของคุณ',
             width: '100%'
@@ -122,6 +182,26 @@
             dateFormat: 'yy-mm-dd',
             maxDate: 0,
             yearRange: '-100:+0'
+        });
+
+        checkPremiumForm.on('submit', function (event) {
+            if (!showClientValidation(this)) {
+                event.preventDefault();
+            }
+        });
+
+        checkPremiumForm.find(':input[required]').on('input change', function () {
+            if (this.checkValidity()) {
+                $(this).removeClass('is-invalid');
+                $(this).next('.select2-container').find('.select2-selection').removeClass('is-invalid');
+                $(this).next('.js-client-invalid-feedback').remove();
+            }
+
+            if (!checkPremiumForm.find(':input[required]').filter(function () {
+                return !this.checkValidity();
+            }).length) {
+                $('.js-required-alert').addClass('d-none');
+            }
         });
     });
 </script>
