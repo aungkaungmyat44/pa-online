@@ -1,42 +1,22 @@
 <?php
 
 return [
-    'default_plan' => 'อาชีพชั้น 1',
-
-    'plans' => [
-        [
-            'title' => 'อาชีพชั้น 1',
-            'subtitle' => 'Class1',
-            'value' => 'อาชีพชั้น 1',
-        ],
-        [
-            'title' => 'อาชีพชั้น 2',
-            'subtitle' => 'Class2',
-            'value' => 'อาชีพชั้น 2',
-        ],
-        [
-            'title' => 'อาชีพชั้น 3',
-            'subtitle' => 'Class3',
-            'value' => 'อาชีพชั้น 3',
-        ],
-    ],
-
-    'rows' => [
+    'coverage_fields' => [
         [
             'label' => 'เสียชีวิตจากอุบัติเหตุ',
-            'amounts' => ['300000', '200000', '100,000'],
+            'field' => 'death_coverage',
         ],
         [
             'label' => 'ถูกฆ่าหรือทำร้ายร่างกาย',
-            'amounts' => ['300000', '200000', '100,000'],
+            'field' => 'assaulted_coverage',
         ],
         [
             'label' => 'ขับขี่/โดยสารรถจักรยานยนต์',
-            'amounts' => ['150,000', '100,000', '50,000'],
+            'field' => 'vehicle_coverage',
         ],
         [
             'label' => 'ค่ารักษาพยาบาล',
-            'amounts' => ['30,000', '30,000', '10,000'],
+            'field' => 'medical_expense_coverage',
         ],
     ],
 ];

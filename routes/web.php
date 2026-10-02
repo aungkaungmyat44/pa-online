@@ -17,6 +17,7 @@ Route::get('information-form', [PageController::class, 'showInformationForm'])->
 
 Route::post('save-information', [PageController::class, 'saveInformation'])->name('save-information');
 
+Route::get('review-information', [PageController::class, 'showReviewInformation'])->name('show-review-information');
 
 // Route::post('review-information', [PageController::class, 'reviewInformation'])->name('review-information');
 // Route::post('payment-methods', [PageController::class, 'paymentMethods'])->name('payment-methods');

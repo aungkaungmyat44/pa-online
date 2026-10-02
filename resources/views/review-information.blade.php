@@ -6,13 +6,7 @@
 @php
     $review = $review ?? [];
     $healthQuestions = $review['health_questions'] ?? [];
-    $cardTypeLabels = [
-        'National ID Card' => 'บัตรประจำตัวประชาชน',
-        'Passport' => 'หนังสือเดินทาง',
-        'Alien ID Card' => 'บัตรประจำตัวคนต่างด้าว',
-        'Government / State Enterprise / Company / Partnership / Shop' => 'หน่วยงานราชการ / รัฐวิสาหกิจ / บริษัท / ห้างหุ้นส่วน / ร้านค้า',
-        'Other' => 'อื่น ๆ',
-    ];
+    $cardTypeLabels = config('card_types.labels', []);
     $healthQuestionLabels = [
         'other_insurance' => 'ท่านมีหรือได้ขอเอาประกันภัยอุบัติเหตุส่วนบุคคล หรือประกันชีวิตไว้กับบริษัทประกันภัยอื่นหรือไม่',
         'insurance_declined' => 'ท่านเคยถูกบริษัทประกันภัยปฏิเสธการรับประกันภัย ยกเลิกประกันภัย หรือเรียกเก็บเบี้ยประกันภัยเพิ่มสำหรับการประกันภัยดังกล่าวหรือไม่',

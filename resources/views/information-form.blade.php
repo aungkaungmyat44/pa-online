@@ -5,13 +5,7 @@
 @section('content')
 @php
     $customer = $customer ?? [];
-    $cardTypeLabels = [
-        'National ID Card' => 'บัตรประจำตัวประชาชน',
-        'Passport' => 'หนังสือเดินทาง',
-        'Alien ID Card' => 'บัตรประจำตัวคนต่างด้าว',
-        'Government / State Enterprise / Company / Partnership / Shop' => 'หน่วยงานราชการ / รัฐวิสาหกิจ / บริษัท / ห้างหุ้นส่วน / ร้านค้า',
-        'Other' => 'อื่น ๆ',
-    ];
+    $cardTypeLabels = config('card_types.labels', []);
 @endphp
 
 <section id="check-premium-section">
@@ -21,35 +15,27 @@
                 <x-progress-steps active="information" />
             </div>
         </div>
-
         <div class="row">
             <div class="col-lg-10 mx-auto">
                 <div class="check-premium-card information-form-card">
                     <h1>ข้อมูลส่วนบุคคล</h1>
                     <form action="{{ route('save-information') }}" method="POST">
                         @csrf
-                        <input type="hidden" name="occupation" value="{{ $customer['occupation'] ?? '' }}">
-                        <input type="hidden" name="otp_code" value="{{ $customer['otp_code'] ?? '' }}">
-                        <input type="hidden" name="selected_plan" value="{{ $customer['selected_plan'] ?? '' }}">
                         <input type="hidden" id="province_name" name="province_name" value="">
                         <input type="hidden" id="district_name" name="district_name" value="">
                         <input type="hidden" id="subdistrict_name" name="subdistrict_name" value="">
-                        @foreach (($customer['health_questions'] ?? []) as $key => $answer)
-                            <input type="hidden" name="health_questions[{{ $key }}]" value="{{ $answer }}">
-                        @endforeach
-
                         <div class="information-section">
                             <h2>ข้อมูลส่วนตัว</h2>
                             <div class="row g-3">
                                 <div class="col-md-4">
-	                                    <label for="prefix" class="form-label">คำนำหน้า<span class="text-danger"> *</span></label>
-	                                    <select class="form-control" id="prefix" name="prefix" required>
-	                                        <option value="">เลือกคำนำหน้า</option>
-	                                        @foreach (($nameTitles ?? []) as $nameTitle)
-	                                            <option value="{{ $nameTitle->title }}">{{ $nameTitle->name_s }}</option>
-	                                        @endforeach
-	                                    </select>
-	                                </div>
+                                    <label for="prefix" class="form-label">คำนำหน้า<span class="text-danger"> *</span></label>
+                                    <select class="form-control" id="prefix" name="prefix" required>
+                                        <option value="">เลือกคำนำหน้า</option>
+                                        @foreach (($nameTitles ?? []) as $nameTitle)
+                                            <option value="{{ $nameTitle->title }}">{{ $nameTitle->name_s }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="col-md-4">
                                     <label for="first_name" class="form-label">ชื่อ<span class="text-danger"> *</span></label>
                                     <input type="text" class="form-control" id="first_name" name="first_name" placeholder="กรอกชื่อ" required>
@@ -63,7 +49,7 @@
 	                                    <select class="form-control" id="nationality" name="nationality" required>
 	                                        <option value="">เลือกสัญชาติ</option>
 	                                        @foreach (($countries ?? []) as $country)
-	                                            <option value="{{ $country->ct_code }}">{{ ucwords(strtolower($country->ct_nameth)) }}</option>
+	                                            <option value="{{ $country->ct_code }}" @if($country->ct_code == 'THA') selected @endif>{{ ucwords(strtolower($country->ct_nameth)) }}</option>
 	                                        @endforeach
 	                                    </select>
 	                                </div>
@@ -71,8 +57,8 @@
                                     <label for="identity_type" class="form-label">ประเภทเอกสารยืนยันตัวตน<span class="text-danger"> *</span></label>
                                     <select class="form-control" id="identity_type" name="identity_type" required>
                                         <option value="">เลือกประเภทเอกสาร</option>
-                                        @foreach (($cardTypes ?? []) as $cardType)
-                                            <option value="{{ $cardType }}">{{ $cardTypeLabels[$cardType] ?? $cardType }}</option>
+                                        @foreach (($cardTypes ?? []) as $cardTypeId => $cardType)
+                                            <option value="{{ $cardTypeId }}">{{ $cardTypeLabels[$cardTypeId] ?? ucwords($cardType) }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -86,7 +72,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="information-section">
                             <h2>ข้อมูลติดต่อ</h2>
                             <div class="row g-3">
@@ -100,7 +85,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="information-section">
                             <h2>ข้อมูลที่อยู่</h2>
                             <div class="row g-3">
@@ -135,12 +119,10 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="information-section">
-                            <h2>ผู้รับผลประโยชน์</h2>
-                            <input type="text" class="form-control" name="beneficiary" value="ทายาทโดยธรรม">
+                            <label>ผู้รับผลประโยชน์ <span class="text-danger">*หากเว้นว่างไว้ จะถือว่าผู้รับผลประโยชน์เป็นทายาทโดยธรรม*</span></label>
+                            <input type="text" class="form-control" name="beneficiary" placeholder="กรอกชื่อผู้รับผลประโยชน์" required>
                         </div>
-
                         <div class="information-section information-consent-section">
                             <h2>ความยินยอม</h2>
                             <div class="form-check">
@@ -162,7 +144,6 @@
                                 </label>
                             </div>
                         </div>
-
                         <div class="health-question-actions">
                             <a href="{{ url()->previous() }}" class="otp-btn otp-btn-outline">ย้อนกลับ</a>
                             <button type="submit" class="check-premium-submit">ดำเนินการต่อ</button>

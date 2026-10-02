@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\OtpFormRequest;
 use App\Http\Requests\HealthQuestionRequest;
+use App\Http\Requests\SaveInformationRequest;
 use App\Models\Plan;
 use App\Models\Customer;
 use App\Models\PlanOccupation;
@@ -18,24 +19,7 @@ class PageController extends Controller
     public function home()
     {
         $plans = Plan::orderBy('id', 'asc')->get();
-        $coverageRows = [
-            [
-                'label' => 'เสียชีวิตจากอุบัติเหตุ',
-                'field' => 'death_coverage',
-            ],
-            [
-                'label' => 'ถูกฆ่าหรือทำร้ายร่างกาย',
-                'field' => 'assaulted_coverage',
-            ],
-            [
-                'label' => 'ขับขี่/โดยสารรถจักรยานยนต์',
-                'field' => 'vehicle_coverage',
-            ],
-            [
-                'label' => 'ค่ารักษาพยาบาล',
-                'field' => 'medical_expense_coverage',
-            ],
-        ];
+        $coverageFields = config('coverage_plans.coverage_fields', []);
 
         return view('home', [
             'coveragePlans' => $plans->map(fn ($plan) => [
@@ -43,7 +27,7 @@ class PageController extends Controller
                 'subtitle' => $plan->name_en,
                 'value'    => $plan->name_th,
             ]),
-            'coverageRows' => collect($coverageRows)->map(fn ($row) => [
+            'coverageRows' => collect($coverageFields)->map(fn ($row) => [
                 'label' => $row['label'],
                 'amounts' => $plans->map(
                     fn ($plan) => number_format((float) $plan->{$row['field']})
@@ -99,11 +83,13 @@ class PageController extends Controller
             $sent = app(EmailService::class)->sendEmailApi($customer->email, $subject, $mailable->render(),);
 
             if (!$sent) {
-                return redirect()->route('check-premium')
-                    ->withInput($request->only('occupation', 'email', 'date_of_birth'))
-                    ->withErrors([
+                return $this->redirectRoute(
+                    'check-premium',
+                    errors: [
                         'email' => 'Failed to send OTP email. Please try again later.',
-                    ]);
+                    ],
+                    input: $request->only('occupation', 'email', 'date_of_birth'),
+                );
             }
 
             $customer->update([
@@ -120,7 +106,7 @@ class PageController extends Controller
             'date_of_birth' => $data['date_of_birth'],
         ]);
 
-        return redirect()->route('otp-form');
+        return $this->redirectRoute('otp-form');
     }
 
     public function showOtpForm(Request $request)
@@ -128,7 +114,7 @@ class PageController extends Controller
         $customer = $request->session()->get('customer');
 
         if (empty($customer['email'])) {
-            return redirect()->route('check-premium')->withErrors([
+            return $this->redirectRoute('check-premium', errors: [
                 'email' => 'Please request an OTP first.',
             ]);
         }
@@ -143,7 +129,7 @@ class PageController extends Controller
         $sessionCustomer = $request->session()->get('customer');
 
         if (empty($sessionCustomer['email'])) {
-            return redirect()->route('check-premium')->withErrors([
+            return $this->redirectRoute('check-premium', errors: [
                 'email' => 'Your session has expired. Please request an OTP again.',
             ]);
         }
@@ -153,7 +139,7 @@ class PageController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('otp-form')->withErrors($validator);
+            return $this->redirectRoute('otp-form', errors: $validator);
         }
 
         $otpCode = $validator->validated()['otp_code'];
@@ -163,25 +149,25 @@ class PageController extends Controller
         if (!$customer) {
             $request->session()->forget('customer');
 
-            return redirect()->route('check-premium')->withErrors([
+            return $this->redirectRoute('check-premium', errors: [
                 'email' => 'Customer not found. Please request an OTP again.',
             ]);
         }
 
         if (!$customer->is_otp_sent or blank($customer->otp_code)) {
-            return redirect()->route('otp-form')->withErrors([
+            return $this->redirectRoute('otp-form', errors: [
                 'otp_code' => 'No active OTP code. Please request a new one.',
             ]);
         }
 
         if (!$customer->otp_expires_at or now()->greaterThanOrEqualTo($customer->otp_expires_at)) {
-            return redirect()->route('otp-form')->withErrors([
+            return $this->redirectRoute('otp-form', errors: [
                 'otp_code' => 'OTP code has expired. Please request a new one.',
             ]);
         }
 
         if ($otpCode !== (string) $customer->otp_code) {
-            return redirect()->route('otp-form')->withErrors([
+            return $this->redirectRoute('otp-form', errors: [
                 'otp_code' => 'Invalid OTP code.',
             ]);
         }
@@ -191,7 +177,7 @@ class PageController extends Controller
         $plan = $planId ? Plan::find($planId) : null;
 
         if (!$plan) {
-            return redirect()->route('check-premium')->withErrors([
+            return $this->redirectRoute('check-premium', errors: [
                 'occupation' => 'No plan was found for your occupation. Please select again.',
             ]);
         }
@@ -212,7 +198,9 @@ class PageController extends Controller
             'plan' => $plan->toArray(),
         ]));
 
-        return redirect()->route('show-health-questions')->with('success', 'OTP verified successfully.');
+        return $this->redirectRoute('show-health-questions', flash: [
+            'success' => 'OTP verified successfully.',
+        ]);
     }
 
     public function showHealthQuestion(Request $request)
@@ -220,43 +208,25 @@ class PageController extends Controller
         $customer = $request->session()->get('customer');
 
         if (empty($customer['email'])) {
-            return redirect()->route('check-premium')->withErrors([
+            return $this->redirectRoute('check-premium', errors: [
                 'email' => 'Please request an OTP first.',
             ]);
         }
 
         if (empty($customer['otp_verified_at'])) {
-            return redirect()->route('otp-form')->withErrors([
+            return $this->redirectRoute('otp-form', errors: [
                 'otp_code' => 'Please verify your OTP first.',
             ]);
         }
 
         if (empty($customer['plan'])) {
-            return redirect()->route('check-premium')->withErrors([
+            return $this->redirectRoute('check-premium', errors: [
                 'occupation' => 'Please select your occupation again.',
             ]);
         }
 
         $plan = $customer['plan'];
-
-        $coverageFields = [
-            [
-                'label' => 'เสียชีวิตจากอุบัติเหตุ',
-                'field' => 'death_coverage',
-            ],
-            [
-                'label' => 'ถูกฆ่าหรือทำร้ายร่างกาย',
-                'field' => 'assaulted_coverage',
-            ],
-            [
-                'label' => 'ขับขี่/โดยสารรถจักรยานยนต์',
-                'field' => 'vehicle_coverage',
-            ],
-            [
-                'label' => 'ค่ารักษาพยาบาล',
-                'field' => 'medical_expense_coverage',
-            ],
-        ];
+        $coverageFields = config('coverage_plans.coverage_fields', []);
 
         $coverageRows = collect($coverageFields)->map(function ($row) use ($plan) {
             $amount = data_get($plan, $row['field']);
@@ -281,66 +251,62 @@ class PageController extends Controller
         $data = $request->validated();
         
         if (empty($customer['email'])) {
-            return redirect()->route('check-premium')->withErrors([
+            return $this->redirectRoute('check-premium', errors: [
                 'email' => 'Please request an OTP first.',
             ]);
         }
 
         if (empty($customer['otp_verified_at'])) {
-            return redirect()->route('otp-form')->withErrors([
+            return $this->redirectRoute('otp-form', errors: [
                 'otp_code' => 'Please verify your OTP first.',
             ]);
         }
 
         if (empty($customer['plan'])) {
-            return redirect()->route('check-premium')->withErrors([
+            return $this->redirectRoute('check-premium', errors: [
                 'occupation' => 'Please select your occupation again.',
             ]);
         }
 
         $request->session()->put('customer.health_questions', $data['health_questions']);
 
-        return redirect()->route('show-information-form');
+        return $this->redirectRoute('show-information-form',flash: [
+            'success' => 'Health questions submitted successfully.',
+        ]);
     }
 
     public function showInformationForm()
     {
-        $cardTypes = [
-            'National ID Card',
-            'Passport',
-            'Alien ID Card',
-            'Government / State Enterprise / Company / Partnership / Shop',
-            'Other'
-        ];
         $customer = session('customer');
         
         return view('information-form', [
             'customer' => $customer,
-            'cardTypes' => $cardTypes,
+            'cardTypes' => config('card_types.types', []),
             'nameTitles' => $this->getNameTitles(),
             'countries' => $this->getCountries(),
             'provinces' => $this->getProvinces(),
         ]);
     }
 
-    public function saveInformation(Request $request)
+    public function saveInformation(SaveInformationRequest $request)
     {
+        $data = $request->validated();
         $customer = $request->session()->get('customer');
 
         if (empty($customer['email'])) {
-            return redirect()->route('check-premium')->withErrors([
+            return $this->redirectRoute('check-premium', errors: [
                 'email' => 'Please request an OTP first.',
             ]);
         }
 
         if (empty($customer['otp_verified_at'])) {
-            return redirect()->route('otp-form')->withErrors([
+            return $this->redirectRoute('otp-form', errors: [
                 'otp_code' => 'Please verify your OTP first.',
             ]);
         }
 
         if (empty($customer['plan'])) {
-            return redirect()->route('check-premium')->withErrors([
+            return $this->redirectRoute('check-premium', errors: [
                 'occupation' => 'Please select your occupation again.',
             ]);
         }
@@ -348,7 +314,34 @@ class PageController extends Controller
         $data = $request->all();
         $request->session()->put('customer.information', $data);
 
-        return redirect()->route('review-information');
+        return $this->redirectRoute('show-review-information');
+    }
+
+    public function showReviewInformation(Request $request)
+    {
+        $customer = $request->session()->get('customer');
+        
+        if (empty($customer['email'])) {
+            return $this->redirectRoute('check-premium', errors: [
+                'email' => 'Please request an OTP first.',
+            ]);
+        }
+
+        if (empty($customer['otp_verified_at'])) {
+            return $this->redirectRoute('otp-form', errors: [
+                'otp_code' => 'Please verify your OTP first.',
+            ]);
+        }
+
+        if (empty($customer['plan'])) {
+            return $this->redirectRoute('check-premium', errors: [
+                'occupation' => 'Please select your occupation again.',
+            ]);
+        }
+
+        return view('review-information', [
+            'customer' => $customer,
+        ]);
     }
 
     /*
@@ -444,7 +437,6 @@ class PageController extends Controller
         return DB::connection('helperDB')
             ->table('country')
             ->select('ct_code', 'ct_nameth', 'ct_nameeng')
-            //->where('ct_code', '<>', 'THA')
             ->where('sts', '<>', '0')
             ->orderBy('position')
             ->get();
