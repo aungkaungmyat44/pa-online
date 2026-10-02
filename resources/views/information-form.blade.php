@@ -26,7 +26,7 @@
             <div class="col-lg-10 mx-auto">
                 <div class="check-premium-card information-form-card">
                     <h1>ข้อมูลส่วนบุคคล</h1>
-                    <form action="{{ route('review-information') }}" method="POST">
+                    <form action="{{ route('save-information') }}" method="POST">
                         @csrf
                         <input type="hidden" name="occupation" value="{{ $customer['occupation'] ?? '' }}">
                         <input type="hidden" name="otp_code" value="{{ $customer['otp_code'] ?? '' }}">
@@ -164,7 +164,7 @@
                         </div>
 
                         <div class="health-question-actions">
-                            <a href="{{ route('check-premium') }}" class="otp-btn otp-btn-outline">ย้อนกลับ</a>
+                            <a href="{{ url()->previous() }}" class="otp-btn otp-btn-outline">ย้อนกลับ</a>
                             <button type="submit" class="check-premium-submit">ดำเนินการต่อ</button>
                         </div>
                     </form>

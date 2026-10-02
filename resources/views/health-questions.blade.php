@@ -40,7 +40,7 @@
             <div class="col-lg-9 mx-auto">
                 <div class="check-premium-card health-question-card">
                     <h1>แบบสอบถามสุขภาพ</h1>
-                    <form action="{{ route('information-form') }}" method="POST">
+                    <form action="{{ route('save-health-questions') }}" method="POST">
                         @csrf
                         <input type="hidden" name="occupation" value="{{ $customer['occupation'] ?? '' }}">
                         <input type="hidden" name="email" value="{{ $customer['email'] ?? '' }}">
@@ -111,7 +111,9 @@
 
                         <div class="health-question-actions">
                             <a href="{{ route('check-premium') }}" class="otp-btn otp-btn-outline">ย้อนกลับ</a>
-                            <button type="submit" class="check-premium-submit">ดำเนินการต่อ</button>
+                            <button type="submit" id="submitButton" class="check-premium-submit" disabled>
+                                ดำเนินการต่อ
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -173,3 +175,27 @@
     </div>
 </div>
 @endsection
+
+@push('css')
+<style>
+    .check-premium-submit:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+</style>
+@endpush
+
+@push('js')
+<script>
+    $(function () {
+        function updateSubmitButton() {
+            $('#submitButton').prop('disabled', !$('#terms').is(':checked'));
+        }
+
+        $('#terms').on('change', updateSubmitButton);
+        $(window).on('pageshow', updateSubmitButton);
+
+        updateSubmitButton();
+    });
+</script>
+@endpush

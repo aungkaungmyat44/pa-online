@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\OtpFormRequest;
+use App\Http\Requests\HealthQuestionRequest;
 use App\Models\Plan;
 use App\Models\Customer;
 use App\Models\PlanOccupation;
@@ -198,10 +199,10 @@ class PageController extends Controller
         $verifiedAt = now();
         $customer->update([
             'otp_verified_at' => $verifiedAt,
-            'is_activated'    => true,
-            'otp_code'        => null,
-            'otp_expires_at'  => null,
-            'is_otp_sent'     => false,
+            'is_activated' => true,
+            'otp_code' => null,
+            'otp_expires_at' => null,
+            'is_otp_sent' => false,
         ]);
 
         $request->session()->put('customer', array_merge($sessionCustomer, [
@@ -211,7 +212,7 @@ class PageController extends Controller
             'plan' => $plan->toArray(),
         ]));
 
-        return redirect()->route('show-health-questions');
+        return redirect()->route('show-health-questions')->with('success', 'OTP verified successfully.');
     }
 
     public function showHealthQuestion(Request $request)
@@ -274,9 +275,35 @@ class PageController extends Controller
         ]);
     }
 
-    /*
-    // Fix starting from here
-    public function informationForm(Request $request)
+    public function saveHealthQuestion(HealthQuestionRequest $request)
+    {
+        $customer = $request->session()->get('customer');
+        $data = $request->validated();
+        
+        if (empty($customer['email'])) {
+            return redirect()->route('check-premium')->withErrors([
+                'email' => 'Please request an OTP first.',
+            ]);
+        }
+
+        if (empty($customer['otp_verified_at'])) {
+            return redirect()->route('otp-form')->withErrors([
+                'otp_code' => 'Please verify your OTP first.',
+            ]);
+        }
+
+        if (empty($customer['plan'])) {
+            return redirect()->route('check-premium')->withErrors([
+                'occupation' => 'Please select your occupation again.',
+            ]);
+        }
+
+        $request->session()->put('customer.health_questions', $data['health_questions']);
+
+        return redirect()->route('show-information-form');
+    }
+
+    public function showInformationForm()
     {
         $cardTypes = [
             'National ID Card',
@@ -285,6 +312,50 @@ class PageController extends Controller
             'Government / State Enterprise / Company / Partnership / Shop',
             'Other'
         ];
+        $customer = session('customer');
+        
+        return view('information-form', [
+            'customer' => $customer,
+            'cardTypes' => $cardTypes,
+            'nameTitles' => $this->getNameTitles(),
+            'countries' => $this->getCountries(),
+            'provinces' => $this->getProvinces(),
+        ]);
+    }
+
+    public function saveInformation(Request $request)
+    {
+        $customer = $request->session()->get('customer');
+
+        if (empty($customer['email'])) {
+            return redirect()->route('check-premium')->withErrors([
+                'email' => 'Please request an OTP first.',
+            ]);
+        }
+
+        if (empty($customer['otp_verified_at'])) {
+            return redirect()->route('otp-form')->withErrors([
+                'otp_code' => 'Please verify your OTP first.',
+            ]);
+        }
+
+        if (empty($customer['plan'])) {
+            return redirect()->route('check-premium')->withErrors([
+                'occupation' => 'Please select your occupation again.',
+            ]);
+        }
+
+        $data = $request->all();
+        $request->session()->put('customer.information', $data);
+
+        return redirect()->route('review-information');
+    }
+
+    /*
+    // Fix starting from here
+    public function informationForm(Request $request)
+    {
+        
 
         // return view('information-form', [
         //     'customer' => [
@@ -352,6 +423,7 @@ class PageController extends Controller
     {
         return view('check-policy-form');
     }
+    */
 
     // Json Helpers
     public function getNameTitles()
@@ -366,8 +438,7 @@ class PageController extends Controller
             ->orderBy('title')
             ->get();
     }
-    */
-
+    
     public function getCountries()
     {
         return DB::connection('helperDB')
