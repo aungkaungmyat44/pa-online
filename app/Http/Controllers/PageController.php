@@ -23,9 +23,9 @@ class PageController extends Controller
 
         return view('home', [
             'coveragePlans' => $plans->map(fn ($plan) => [
-                'title'    => $plan->name_th,
+                'title' => $plan->name_th,
                 'subtitle' => $plan->name_en,
-                'value'    => $plan->name_th,
+                'value' => $plan->name_th,
             ]),
             'coverageRows' => collect($coverageFields)->map(fn ($row) => [
                 'label' => $row['label'],
@@ -52,9 +52,7 @@ class PageController extends Controller
         $data = $request->validated();
         $email = trim($data['email']);
 
-        $customer = Customer::firstOrCreate([
-            'email' => $email,
-        ]);
+        $customer = Customer::firstOrCreate(['email' => $email,]);
 
         if (
             !$customer->is_otp_sent or
@@ -80,7 +78,7 @@ class PageController extends Controller
                 subjectText: $subject,
             );
 
-            $sent = app(EmailService::class)->sendEmailApi($customer->email, $subject, $mailable->render(),);
+            $sent = app(EmailService::class)->sendEmailApi($customer->email, $subject, $mailable->render());
 
             if (!$sent) {
                 return $this->redirectRoute(
@@ -101,8 +99,8 @@ class PageController extends Controller
         }
 
         $request->session()->put('customer', [
-            'occupation'    => $data['occupation'],
-            'email'         => $email,
+            'occupation' => $data['occupation'],
+            'email' => $email,
             'date_of_birth' => $data['date_of_birth'],
         ]);
 
@@ -148,7 +146,6 @@ class PageController extends Controller
 
         if (!$customer) {
             $request->session()->forget('customer');
-
             return $this->redirectRoute('check-premium', errors: [
                 'email' => 'Customer not found. Please request an OTP again.',
             ]);
@@ -241,7 +238,7 @@ class PageController extends Controller
             'customer' => $customer,
             'plan' => $plan,
             'selectedPlan' => $plan,
-            'coverageRows' => $coverageRows,
+            'coverageRows' => $coverageRows
         ]);
     }
 
@@ -344,80 +341,6 @@ class PageController extends Controller
         ]);
     }
 
-    /*
-    // Fix starting from here
-    public function informationForm(Request $request)
-    {
-        
-
-        // return view('information-form', [
-        //     'customer' => [
-        //         'occupation' => $request->input('occupation'),
-        //         'email' => $request->input('email'),
-        //         'date_of_birth' => $request->input('date_of_birth'),
-        //         'otp_code' => $request->input('otp_code'),
-        //         'selected_plan' => $request->input('selected_plan'),
-        //         'health_questions' => $request->input('health_questions', []),
-        //     ],
-        //     'cardTypes' => $cardTypes,
-        //     'nameTitles' => $this->getNameTitles(),
-        //     'countries' => $this->getCountries(),
-        //     'provinces' => $this->getProvinces(),
-        // ]);
-    }
-
-    public function showInformationForm(Request $request)
-    {
-        // Get form
-    }
-
-    public function reviewInformation(Request $request)
-    {
-        return view('review-information', [
-            'review' => $request->all(),
-        ]);
-    }
-
-    public function paymentMethods(Request $request)
-    {
-        return view('payment-methods', [
-            'payment' => $request->all(),
-        ]);
-    }
-
-    public function paymentProcess(Request $request)
-    {
-        $payment = $request->all();
-        $payment['payment_method'] = 'card';
-        $payment['payment_variant'] = 'master';
-
-        return view('payment-process', [
-            'payment' => $payment,
-        ]);
-    }
-
-    public function checkout(Request $request)
-    {
-        return view('receipt', [
-            'policyNumber' => 'PA-0000001',
-            'email' => $request->input('email'),
-        ]);
-    }
-
-    public function checkPolicy(Request $request)
-    {
-        return view('check-policy', [
-            'policyNumber' => $request->query('policy_number', 'PA-0000001'),
-            'orderReference' => $request->query('ref', '1'),
-        ]);
-    }
-
-    public function checkPolicyForm()
-    {
-        return view('check-policy-form');
-    }
-    */
-
     // Json Helpers
     public function getNameTitles()
     {
@@ -512,4 +435,78 @@ class PageController extends Controller
     {
         return (string) random_int(100000, 999999);
     }
+
+    /*
+    // Fix starting from here
+    public function informationForm(Request $request)
+    {
+        
+
+        // return view('information-form', [
+        //     'customer' => [
+        //         'occupation' => $request->input('occupation'),
+        //         'email' => $request->input('email'),
+        //         'date_of_birth' => $request->input('date_of_birth'),
+        //         'otp_code' => $request->input('otp_code'),
+        //         'selected_plan' => $request->input('selected_plan'),
+        //         'health_questions' => $request->input('health_questions', []),
+        //     ],
+        //     'cardTypes' => $cardTypes,
+        //     'nameTitles' => $this->getNameTitles(),
+        //     'countries' => $this->getCountries(),
+        //     'provinces' => $this->getProvinces(),
+        // ]);
+    }
+
+    public function showInformationForm(Request $request)
+    {
+        // Get form
+    }
+
+    public function reviewInformation(Request $request)
+    {
+        return view('review-information', [
+            'review' => $request->all(),
+        ]);
+    }
+
+    public function paymentMethods(Request $request)
+    {
+        return view('payment-methods', [
+            'payment' => $request->all(),
+        ]);
+    }
+
+    public function paymentProcess(Request $request)
+    {
+        $payment = $request->all();
+        $payment['payment_method'] = 'card';
+        $payment['payment_variant'] = 'master';
+
+        return view('payment-process', [
+            'payment' => $payment,
+        ]);
+    }
+
+    public function checkout(Request $request)
+    {
+        return view('receipt', [
+            'policyNumber' => 'PA-0000001',
+            'email' => $request->input('email'),
+        ]);
+    }
+
+    public function checkPolicy(Request $request)
+    {
+        return view('check-policy', [
+            'policyNumber' => $request->query('policy_number', 'PA-0000001'),
+            'orderReference' => $request->query('ref', '1'),
+        ]);
+    }
+
+    public function checkPolicyForm()
+    {
+        return view('check-policy-form');
+    }
+    */
 }
