@@ -269,7 +269,7 @@ class PageController extends Controller
 
         $request->session()->put('customer.health_questions', $data['health_questions']);
 
-        return $this->redirectRoute('show-information-form',flash: [
+        return $this->redirectRoute('show-information-form', flash: [
             'success' => 'Health questions submitted successfully.',
         ]);
     }
@@ -289,7 +289,8 @@ class PageController extends Controller
 
     public function saveInformation(SaveInformationRequest $request)
     {
-        $data = $request->validated();
+        $data = $request->all();
+        $request->session()->put('customer.information', $data);
         $customer = $request->session()->get('customer');
 
         if (empty($customer['email'])) {
@@ -310,10 +311,51 @@ class PageController extends Controller
             ]);
         }
 
-        $data = $request->all();
-        $request->session()->put('customer.information', $data);
+        $titleType = $customer['information']['title_type'] ?? null; 
+        $cardType = $customer['information']['identity_type'];
+        $idNo = $customer['information']['identity_number'];
+        $cardCheckResult = false;
+        
+        if (($titleType == "P") or ($titleType == "C") or ($titleType == "O") or ($titleType == "G")) {
+            $cardCheckResult =  true;
 
-        return $this->redirectRoute('show-review-information');
+            if ($titleType == "P") {
+                if ($cardType == "1") {
+                    if (strlen($idNo) == 13) {
+                        $cardCheckResult =  true;
+                    }
+                } elseif (($cardType == "2") or ($cardType == "3")) {
+                    if (strlen($idNo) > 0) {
+                        $cardCheckResult =  true;
+                    }
+                }
+            }
+            if ($titleType == "C") {
+                if ($cardType == "4") {
+                    if (strlen($idNo) >= 13) {
+                        $cardCheckResult =  true;
+                    }
+                }
+            }
+        }
+        
+        if (!$cardCheckResult) {
+            return $this->redirectRoute('show-information-form', errors: [
+                'identity_type' => 'Customer card type is not valid.',
+            ], input: $data);
+        }
+        
+        $resultStatus = $this->validateIdentityCard($cardType, $idNo);
+        
+        if (!$resultStatus['status']) {
+            return $this->redirectRoute('show-information-form', errors: [
+                'identity_number' => 'Customer card type is not compatible with the ID number.',
+            ], input: $data);
+        }
+
+        return $this->redirectRoute('show-review-information',flash: [
+            'success' => 'Personal information submitted successfully.',
+        ]);
     }
 
     public function showReviewInformation(Request $request)
@@ -340,7 +382,7 @@ class PageController extends Controller
 
         return view('review-information', [
             'customer' => $customer,
-        ]);
+        ])->with(['success' => 'Choose any payment method']);
     }
 
     public function proceedPayment(Request $request)
@@ -435,7 +477,7 @@ class PageController extends Controller
     {
         return DB::connection('helperDB')
             ->table('title')
-            ->select('title', 'name_s')
+            ->select('title', 'name_s', 'titletype')
             ->whereNotNull('title')
             ->whereNotNull('name_s')
             ->whereRaw("TRIM(title) != ''")
@@ -535,4 +577,52 @@ class PageController extends Controller
 
 		return $orderNumber;
 	}
+
+    private function validateThai13DigitId(string $idNo): bool
+    {
+        if (preg_match('/^\d{13}$/', $idNo) !== 1) {
+            return false;
+        }
+
+        $sum = 0;
+
+        // Multiply the first 12 digits by 13, 12, 11 ... 2
+        for ($i = 0; $i < 12; $i++) {
+            $sum += (int) $idNo[$i] * (13 - $i);
+        }
+
+        $checkDigit = (11 - ($sum % 11)) % 10;
+
+        return $checkDigit === (int) $idNo[12];
+    }
+
+    private function validateIdentityCard(string $cardType, string $idNo): array
+    {
+        // Remove spaces and hyphens before validation
+        $idNo = strtoupper(preg_replace('/[\s-]+/', '', trim($idNo)));
+
+        $messages = [
+            "1" => 'Invalid Thai ID card number. It must contain 13 digits and have a valid checksum.',
+            "2" => 'Invalid passport number. It should contain 6-9 English letters or numbers.',
+            "3" => 'Invalid alien ID card number. It must contain 13 digits and have a valid checksum.',
+            "4" => 'Invalid company/store ID. It must contain 13 digits and have a valid checksum.',
+            "5" => 'Invalid other ID. It should contain 5-20 letters, numbers, hyphens, or slashes.'
+        ];
+        $message = $messages[$cardType] ?? t('invalid_card_type'); //'Invalid card type.'
+
+        if (in_array($cardType, ["1", "3", "4"], true)) {
+            $status = $this->validateThai13DigitId($idNo);
+        } else if ($cardType == "2") {
+            $status = preg_match('/^[A-Z0-9]{6,9}$/', $idNo) === 1;
+        } else if ($cardType == "5") {
+            $status = preg_match('/^[\p{L}\p{N}\/-]{5,20}$/u', $idNo) === 1;
+        } else {
+            $status = false;
+        }
+
+        return [
+            'message' => $status ? '' : $message,
+            'status'  => $status,
+        ];
+    }
 }

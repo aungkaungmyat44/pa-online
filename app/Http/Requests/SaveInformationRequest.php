@@ -23,7 +23,7 @@ class SaveInformationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'prefix' => 'required|string|numeric',
+            'prefix' => 'required|string',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'nationality' => 'required|string',
@@ -34,8 +34,11 @@ class SaveInformationRequest extends FormRequest
             'phone_number' => 'required|string|max:20',
             'full_address' => 'required|string|max:500',
             'province' => 'required|string|max:255',
+            'province_name' => 'required|string|max:255',
             'district' => 'required|string|max:255',
+            'district_name' => 'required|string|max:255',
             'subdistrict' => 'required|string|max:255',
+            'subdistrict_name' => 'required|string|max:255',
             'zipcode' => 'required|string|max:10',
             'beneficiary' => 'nullable|string|max:255',
             'personal_data_collection' => 'accepted',

@@ -3,6 +3,12 @@
 @section('title', 'คำนวณเบี้ยประกัน')
 
 @section('content')
+@php
+    $customer = session('customer', []);
+    $fieldValue = fn ($key, $default = '') => session()->hasOldInput($key)
+        ? old($key)
+        : data_get($customer, $key, $default);
+@endphp
 <style>
     .select2-selection.is-invalid {
         border-color: #dc3545 !important;
@@ -37,7 +43,7 @@
                                 <select class="form-control @error('occupation') is-invalid @enderror" id="occupation" name="occupation" required>
                                     <option value="">เลือกอาชีพของคุณ</option>
                                     @foreach ($occupations as $key => $occupation)
-                                        <option value="{{ $key }}" @selected((string) old('occupation') === (string) $key)>{{ $occupation }}</option>
+                                        <option value="{{ $key }}" @selected((string) $fieldValue('occupation') === (string) $key)>{{ $occupation }}</option>
                                     @endforeach
                                 </select>
                                 @error('occupation')
@@ -46,14 +52,15 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="date_of_birth" class="form-label">วันเดือนปีเกิด <span class="text-danger"> *</span></label>
-                                <input type="text" class="form-control @error('date_of_birth') is-invalid @enderror" id="date_of_birth" name="date_of_birth" value="{{ old('date_of_birth') }}" placeholder="เลือกวันเดือนปีเกิด" autocomplete="off" required>
+                                <input type="text" class="form-control @error('date_of_birth') is-invalid @enderror" id="date_of_birth" name="date_of_birth" value="{{ $fieldValue('date_of_birth') }}" placeholder="เลือกวันเดือนปีเกิด" autocomplete="off" required>
                                 @error('date_of_birth')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-md-6">
                                 <label for="email" class="form-label">อีเมล <span class="text-danger"> *</span></label>
-                                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" placeholder="กรอกอีเมลของคุณ">
+                                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ $fieldValue('email') }}" placeholder="กรอกอีเมลของคุณ">
+                                {{-- required --}}
                                 @error('email')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

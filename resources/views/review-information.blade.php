@@ -180,7 +180,7 @@
                         </div>
 
                         <div class="health-question-actions">
-                            <a href="{{ route('check-premium') }}" class="otp-btn otp-btn-outline">ย้อนกลับ</a>
+                            <a href="{{ route('show-information-form') }}" class="otp-btn otp-btn-outline">ย้อนกลับ</a>
                             <button type="submit" class="check-premium-submit">ยืนยัน</button>
                         </div>
                     </form>
