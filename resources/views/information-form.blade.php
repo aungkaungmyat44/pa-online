@@ -33,6 +33,7 @@
                         <input type="hidden" id="province_name" name="province_name" value="{{ old('province_name') }}">
                         <input type="hidden" id="district_name" name="district_name" value="{{ old('district_name') }}">
                         <input type="hidden" id="subdistrict_name" name="subdistrict_name" value="{{ old('subdistrict_name') }}">
+                        <input type="hidden" id="title_name" name="title_name" value="{{ old('title_name') }}">
                         <div class="information-section">
                             <h2>ข้อมูลส่วนตัว</h2>
                             <div class="row g-3">
@@ -136,7 +137,7 @@
                                     <select class="form-control @error('province') is-invalid @enderror" id="province" name="province" required>
                                         <option value="">เลือกจังหวัด</option>
                                         @foreach (($provinces ?? []) as $province)
-                                            <option value="{{ $province->province_code }}" @selected((string) old('province') === (string) $province->province_code)>{{ $province->province_name }}</option>
+                                            <option value="{{ $province->province_code }}" @selected((string) old('province') === (string) $province->province_code) data-province-name="{{ $province->province_name }}">{{ $province->province_name }}</option>
                                         @endforeach
                                     </select>
                                     @error('province')
@@ -337,6 +338,10 @@
             await loadDistrict(currentProvinceCode);
         });
 
+        $('#prefix').on('change', function () {
+            $('#title_name').val($(this).find(':selected').text());
+        });
+
         $('#district').on('change', async function (event) {
             event.preventDefault();
             $('#district_name').val($(this).find(':selected').text());
@@ -351,6 +356,13 @@
         });
 
         informationForm.on('submit', function (event) {
+            const selectedTitle = $('#prefix').find(':selected');
+            $('#title_name').val(selectedTitle.text());
+
+            const selectedProvince = $('#province').find(':selected');
+            const provinceName = selectedProvince.data('province-name') || selectedProvince.text();
+            $('#province_name').val(provinceName);
+
             if (!showClientValidation(this)) {
                 event.preventDefault();
             }

@@ -16,8 +16,11 @@ Route::post('health-questions', [PageController::class, 'saveHealthQuestion'])->
 Route::get('information-form', [PageController::class, 'showInformationForm'])->name('show-information-form'); // show information form
 
 Route::post('save-information', [PageController::class, 'saveInformation'])->name('save-information');
-
 Route::get('review-information', [PageController::class, 'showReviewInformation'])->name('show-review-information');
+
+Route::post('proceed-payment', [PageController::class, 'proceedPayment'])->name('proceed-payment');
+Route::get('payment-method', [PageController::class, 'paymentMethod'])->name('payment-method');
+Route::get('make-payment', [PageController::class, 'makePayment'])->name('make-payment');
 
 // Route::post('review-information', [PageController::class, 'reviewInformation'])->name('review-information');
 // Route::post('payment-methods', [PageController::class, 'paymentMethods'])->name('payment-methods');

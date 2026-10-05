@@ -10,9 +10,11 @@ use App\Http\Requests\SaveInformationRequest;
 use App\Models\Plan;
 use App\Models\Customer;
 use App\Models\PlanOccupation;
+use App\Models\Order;
 use App\Mail\OtpMail;
 use Illuminate\Support\Facades\Mail;
 use App\Services\EmailService;
+use Carbon\Carbon;
 
 class PageController extends Controller
 {
@@ -78,8 +80,8 @@ class PageController extends Controller
                 subjectText: $subject,
             );
 
-            $sent = app(EmailService::class)->sendEmailApi($customer->email, $subject, $mailable->render());
-
+            //$sent = app(EmailService::class)->sendEmailApi($customer->email, $subject, $mailable->render());
+            $sent = true;
             if (!$sent) {
                 return $this->redirectRoute(
                     'check-premium',
@@ -341,6 +343,93 @@ class PageController extends Controller
         ]);
     }
 
+    public function proceedPayment(Request $request)
+    {
+        $data = $request->all();
+        $customer = session()->get('customer');
+
+        // Check previous order
+        $oldOrder = Order::where('customer_id', $customer['customer_id'])
+                         ->where('customer_id_type', $customer['information']['identity_type'])
+                         ->where('customer_id_number', $customer['information']['identity_number'])
+                         ->latest()
+                         ->first();
+
+        $orderPayload = [
+            'plan_id' => $customer['plan']['id'],
+            'customer_id' => $customer['customer_id'],
+            'customer_id_type' => $customer['information']['identity_type'],
+            'customer_id_number' => $customer['information']['identity_number'],
+            'agent_no' => 'test-agent',
+            'policy_no' => null,
+            'order_info' => array_merge($data, $customer),
+            'health_question_answers' => $customer['health_questions'],
+            'effective_date' => Carbon::now()->format('Y-m-d H:i:s'),
+            'expire_date' => Carbon::now()->addYear(1)->format('Y-m-d H:i:s'),
+            'status' => 'pending',
+            'premium_amount' => 888,
+            'total_amount' => 888,
+            'vat' => 0,
+            'duty' => 0,
+            'payment_method' => null,
+            'payment_status' => 'unpaid',
+            'paid_at' => null,
+            'is_email_sent' => false,
+            'policy_url' => null,
+            'barcode_no' => null,
+            'is_policy_generated' => false,
+            'save_data_result' => null,
+            'issue_policy_result' => null,
+        ];
+
+        if (empty($oldOrder)) {
+            $order = Order::create(array_merge($orderPayload, [
+                'order_unique_code' => $this->generateOrderNumber(),
+            ]));
+        } else {
+            if ($oldOrder->status === 'delivered' and !empty(($oldOrder->policy_no))) {
+                return $this->redirectRoute('show-review-information', errors: [
+                    'order' => 'Customer has already purchased an active personal insurance policy.',
+                ]);
+            }
+
+            $oldOrder->update($orderPayload);
+            $order = $oldOrder;
+        }
+        
+        session()->put('order', $order);
+        return $this->redirectRoute('payment-method');
+    }
+
+    public function paymentMethod()
+    {
+        $sessionOrder = session()->get('order');
+        $orderId = data_get($sessionOrder, 'id');
+
+        if (empty($orderId)) {
+            return $this->redirectRoute('check-premium', errors: [
+                'order' => 'Order session timeout. Please start again.',
+            ]);
+        }
+
+        $order = Order::find($orderId);
+        
+        if (empty($order)) {
+            return $this->redirectRoute('check-premium', errors: [
+                'order' => 'Order session timeout. Please start again.',
+            ]);
+        }
+
+        return view('payment-methods', [
+            'order' => $order->order_info ?? [],
+        ]);
+    }
+
+    public function makePayment()
+    {
+
+    }
+
     // Json Helpers
     public function getNameTitles()
     {
@@ -436,77 +525,14 @@ class PageController extends Controller
         return (string) random_int(100000, 999999);
     }
 
-    /*
-    // Fix starting from here
-    public function informationForm(Request $request)
+    private function generateOrderNumber(): string 
     {
+		$orderNumber = "PA_" . date('YmdHis');
         
+		if (app()->environment(['development', 'uat', 'local'])) {
+			$orderNumber .= '_TEST';
+		}
 
-        // return view('information-form', [
-        //     'customer' => [
-        //         'occupation' => $request->input('occupation'),
-        //         'email' => $request->input('email'),
-        //         'date_of_birth' => $request->input('date_of_birth'),
-        //         'otp_code' => $request->input('otp_code'),
-        //         'selected_plan' => $request->input('selected_plan'),
-        //         'health_questions' => $request->input('health_questions', []),
-        //     ],
-        //     'cardTypes' => $cardTypes,
-        //     'nameTitles' => $this->getNameTitles(),
-        //     'countries' => $this->getCountries(),
-        //     'provinces' => $this->getProvinces(),
-        // ]);
-    }
-
-    public function showInformationForm(Request $request)
-    {
-        // Get form
-    }
-
-    public function reviewInformation(Request $request)
-    {
-        return view('review-information', [
-            'review' => $request->all(),
-        ]);
-    }
-
-    public function paymentMethods(Request $request)
-    {
-        return view('payment-methods', [
-            'payment' => $request->all(),
-        ]);
-    }
-
-    public function paymentProcess(Request $request)
-    {
-        $payment = $request->all();
-        $payment['payment_method'] = 'card';
-        $payment['payment_variant'] = 'master';
-
-        return view('payment-process', [
-            'payment' => $payment,
-        ]);
-    }
-
-    public function checkout(Request $request)
-    {
-        return view('receipt', [
-            'policyNumber' => 'PA-0000001',
-            'email' => $request->input('email'),
-        ]);
-    }
-
-    public function checkPolicy(Request $request)
-    {
-        return view('check-policy', [
-            'policyNumber' => $request->query('policy_number', 'PA-0000001'),
-            'orderReference' => $request->query('ref', '1'),
-        ]);
-    }
-
-    public function checkPolicyForm()
-    {
-        return view('check-policy-form');
-    }
-    */
+		return $orderNumber;
+	}
 }

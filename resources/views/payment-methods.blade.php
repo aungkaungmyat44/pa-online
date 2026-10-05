@@ -4,10 +4,9 @@
 
 @section('content')
 @php
-    $payment = $payment ?? [];
-    $selectedPlan = $payment['selected_plan'] ?? null;
-    $coverageAmount = $payment['coverage_amount'] ?? config('coverage_plans.rows.0.amounts.0');
-    $coverageAmountLabel = filled($coverageAmount) ? number_format((int) str_replace(',', '', $coverageAmount)) . ' บาท' : '-';
+    $selectedPlan = $order['plan'] ?? null;
+    $coverageAmount = $order['coverage_amount'] ?? config('coverage_plans.rows.0.amounts.0');
+    $coverageAmountLabel = number_format((int) str_replace(',', '', $selectedPlan['death_coverage'])) . ' บาท';
     $premiumAmountLabel = '888 บาท';
 
     $paymentMethods = [
@@ -45,7 +44,7 @@
 
         <div class="row justify-content-center">
             <div class="col-lg-10">
-                <form action="{{ route('payment-process') }}" method="post" class="check-premium-card payment-methods-card">
+                <form action="{{ route('make-payment') }}" method="post" class="check-premium-card payment-methods-card">
                     @csrf
                     <h1>วิธีชำระเงิน</h1>
                     <p class="payment-methods-subtitle">เลือกวิธีชำระเงินหนึ่งรายการเพื่อดำเนินการต่อ</p>
@@ -53,7 +52,7 @@
                     <div class="payment-summary-box">
                         <div>
                             <span>แผนประกัน</span>
-                            <strong>{{ $selectedPlan ?? '-' }}</strong>
+                            <strong>{{ $selectedPlan['name_th'] ?? '-' }}</strong>
                         </div>
                         <div>
                             <span>จำนวนเงินความคุ้มครอง</span>
@@ -64,19 +63,6 @@
                             <strong>{{ $premiumAmountLabel }}</strong>
                         </div>
                     </div>
-
-                    @foreach ($payment as $key => $value)
-                        @continue($key === '_token' || $key === 'coverage_amount')
-                        @if (is_array($value))
-                            @foreach ($value as $childKey => $childValue)
-                                <input type="hidden" name="{{ $key }}[{{ $childKey }}]" value="{{ $childValue }}">
-                            @endforeach
-                        @else
-                            <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-                        @endif
-                    @endforeach
-                    <input type="hidden" name="coverage_amount" value="{{ $coverageAmount }}">
-
                     <div class="row g-3 payment-method-row">
                         @foreach ($paymentMethods as $index => $method)
                             <div class="col-md-4">
@@ -104,7 +90,7 @@
                         <button
                             type="submit"
                             class="otp-btn otp-btn-outline"
-                            formaction="{{ route('review-information') }}"
+                            formaction="{{ route('show-review-information') }}"
                             formmethod="post"
                             formnovalidate
                         >ย้อนกลับ</button>
