@@ -34,11 +34,11 @@
                     @endif
                     <form action="{{ route('save-information') }}" method="POST" id="informationForm" novalidate>
                         @csrf
-                        <input type="text" id="province_name" name="province_name" value="{{ $fieldValue('province_name') }}">
-                        <input type="text" id="district_name" name="district_name" value="{{ $fieldValue('district_name') }}">
-                        <input type="text" id="subdistrict_name" name="subdistrict_name" value="{{ $fieldValue('subdistrict_name') }}">
-                        <input type="text" id="title_name" name="title_name" value="{{ $fieldValue('title_name') }}">
-                        <input type="text" id="title_type" name="title_type" value="{{ $fieldValue('title_type') }}">
+                        <input type="hidden" id="province_name" name="province_name" value="{{ $fieldValue('province_name') }}">
+                        <input type="hidden" id="district_name" name="district_name" value="{{ $fieldValue('district_name') }}">
+                        <input type="hidden" id="subdistrict_name" name="subdistrict_name" value="{{ $fieldValue('subdistrict_name') }}">
+                        <input type="hidden" id="title_name" name="title_name" value="{{ $fieldValue('title_name') }}">
+                        <input type="hidden" id="title_type" name="title_type" value="{{ $fieldValue('title_type') }}">
                         <div class="information-section">
                             <h2>ข้อมูลส่วนตัว</h2>
                             <div class="row g-3">
@@ -219,7 +219,7 @@
                             </div>
                         </div>
                         <div class="health-question-actions">
-                            <a href="{{ url()->previous() }}" class="otp-btn otp-btn-outline">ย้อนกลับ</a>
+                            <a href="{{ route('show-health-questions') }}" class="otp-btn otp-btn-outline">ย้อนกลับ</a>
                             <button type="submit" class="check-premium-submit" id="informationSubmit">ดำเนินการต่อ</button>
                         </div>
                     </form>

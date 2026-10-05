@@ -26,6 +26,8 @@
             'options' => ['ไม่เคย', 'เคย'],
         ],
     ];
+    $answers = old('health_questions', $customer['health_questions'] ?? []);
+    $termsAccepted = old('terms', $customer['health_terms'] ?? false);
 @endphp
 
 <section id="check-premium-section">
@@ -40,6 +42,11 @@
             <div class="col-lg-9 mx-auto">
                 <div class="check-premium-card health-question-card">
                     <h1>แบบสอบถามสุขภาพ</h1>
+                    @if ($errors->any())
+                        <div class="alert alert-danger" role="alert">
+                            <div class="fw-semibold mb-1">Please recheck the highlighted fields.</div>
+                        </div>
+                    @endif
                     <form action="{{ route('save-health-questions') }}" method="POST">
                         @csrf
                         <input type="hidden" name="occupation" value="{{ $customer['occupation'] ?? '' }}">
@@ -58,16 +65,11 @@
                                     </div>
                                     <span>เลือกอัตโนมัติ</span>
                                 </div>
-
                                 <ul>
                                     @foreach ($coverageRows as $row)
-                                        @php
-                                            $amount = $row['amount'] ?? null;
-                                        @endphp
-
                                         <li>
                                             {{ $row['label'] }}:
-                                            {{ $amount !== null ? number_format((float) $amount) . ' บาท' : '-' }}
+                                            {{ $row['amount'] }}
                                         </li>
                                     @endforeach
                                 </ul>
@@ -84,30 +86,27 @@
                                                 $optionId = $key . '_' . $loop->index;
                                             @endphp
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="health_questions[{{ $key }}]" id="{{ $optionId }}" value="{{ $option }}" required>
+                                                <input class="form-check-input @error("health_questions.$key") is-invalid @enderror" type="radio" name="health_questions[{{ $key }}]" id="{{ $optionId }}" value="{{ $option }}" @checked(($answers[$key] ?? null) === $option) required>
                                                 <label class="form-check-label" for="{{ $optionId }}">{{ $option }}</label>
                                             </div>
                                         @endforeach
                                     </div>
+                                    @error("health_questions.$key")
+                                        <div class="invalid-feedback d-block">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             @endforeach
                         </div>
 
                         <div class="form-check check-premium-terms mt-3">
-                            <input class="form-check-input" type="checkbox" value="1" id="terms" name="terms" required>
+                            <input class="form-check-input @error('terms') is-invalid @enderror" type="checkbox" value="1" id="terms" name="terms" @checked($termsAccepted) required>
                             <label class="form-check-label" for="terms">
                                 ข้าพเจ้าเข้าใจ <button type="button" class="terms-link" data-bs-toggle="modal" data-bs-target="#underwritingModal">ข้อกำหนดและเงื่อนไข</button> โดยสหมงคลประกันภัย
                             </label>
+                            @error('terms')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
                         </div>
-
-                        {{-- <div class="alert alert-danger mt-3 mb-0" role="alert">
-                            <strong>Warning from the Office of Insurance Commission (OIC)</strong>
-                            <span>
-                                Concealing any facts or making any false statement may render this insurance contract voidable.
-                                This may cause the insurer to deny liability under the insurance contract or cancel the insurance contract
-                                in accordance with Section 865 of the Civil and Commercial Code.
-                            </span>
-                        </div> --}}
 
                         <div class="health-question-actions">
                             <a href="{{ route('check-premium') }}" class="otp-btn otp-btn-outline">ย้อนกลับ</a>

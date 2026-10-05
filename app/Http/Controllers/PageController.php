@@ -268,6 +268,7 @@ class PageController extends Controller
         }
 
         $request->session()->put('customer.health_questions', $data['health_questions']);
+        $request->session()->put('customer.health_terms', $data['terms']);
 
         return $this->redirectRoute('show-information-form', flash: [
             'success' => 'Health questions submitted successfully.',

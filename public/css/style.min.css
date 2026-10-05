@@ -449,6 +449,19 @@ body{font-family:'Sarabun',sans-serif;}body,button,input,optgroup,select,textare
     transform: translateY(-2px);
 }
 
+.check-premium-submit:disabled {
+    box-shadow: none;
+    cursor: not-allowed;
+    filter: grayscale(0.2);
+    opacity: 0.5;
+}
+
+.check-premium-submit:disabled:hover {
+    box-shadow: none;
+    filter: grayscale(0.2);
+    transform: none;
+}
+
 .terms-link {
     background: transparent;
     border: 0;
