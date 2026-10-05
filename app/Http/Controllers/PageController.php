@@ -54,8 +54,7 @@ class PageController extends Controller
         $data = $request->validated();
         $email = trim($data['email']);
 
-        $customer = Customer::firstOrCreate(['email' => $email,]);
-
+        $customer = Customer::firstOrCreate(['email' => $email]);
         if (
             !$customer->is_otp_sent or
             blank($customer->otp_code) or
@@ -80,8 +79,8 @@ class PageController extends Controller
                 subjectText: $subject,
             );
 
-            //$sent = app(EmailService::class)->sendEmailApi($customer->email, $subject, $mailable->render());
-            $sent = true;
+            $sent = app(EmailService::class)->sendEmailApi($customer->email, $subject, $mailable->render());
+            
             if (!$sent) {
                 return $this->redirectRoute(
                     'check-premium',
@@ -470,7 +469,7 @@ class PageController extends Controller
 
     public function makePayment()
     {
-
+        // make payment steps
     }
 
     // Json Helpers
