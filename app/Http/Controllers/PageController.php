@@ -380,8 +380,26 @@ class PageController extends Controller
             ]);
         }
 
+        $occupation = PlanOccupation::where('occupation_slug', $customer['occupation'])->first();
+
+        $namePrefix = $customer['information']['title_name'];
+        $title = DB::connection('helperDB')
+                ->table('title')
+                ->where('name_s', $namePrefix)
+                ->first();
+        
+        $countryCode = $customer['information']['nationality'];
+        $country = DB::connection('helperDB')
+            ->table('country')
+            ->select('ct_code', 'ct_nameth', 'ct_nameeng')
+            ->where('ct_code', $countryCode)
+            ->first();
+        
         return view('review-information', [
             'customer' => $customer,
+            'occupation' => $occupation,
+            'title' => $title,
+            'country' => $country
         ])->with(['success' => 'Choose any payment method']);
     }
 

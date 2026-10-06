@@ -45,7 +45,7 @@
                             </div>
                             <div>
                                 <span>อาชีพ</span>
-                                <strong>{{ $formatValue($review['occupation'] ?? null) }}</strong>
+                                <strong>{{ $formatValue($occupation['occupation_th']) }}</strong>
                             </div>
                         </div>
                     </div>
@@ -55,7 +55,7 @@
                         <div class="review-grid">
                             <div>
                                 <span>คำนำหน้า</span>
-                                <strong>{{ $formatValue($review['information']['title_name'] ?? null) }}</strong>
+                                <strong>{{ $formatValue($title->name_full) }}</strong>
                             </div>
                             <div>
                                 <span>ชื่อ</span>
@@ -67,7 +67,7 @@
                             </div>
                             <div>
                                 <span>สัญชาติ</span>
-                                <strong>{{ $formatValue($review['information']['nationality'] ?? null) }}</strong>
+                                <strong>{{ $formatValue($country->ct_nameth) }}</strong>
                             </div>
                             <div>
                                 <span>ประเภทเอกสารยืนยันตัวตน</span>
