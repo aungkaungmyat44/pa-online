@@ -14,6 +14,7 @@ use App\Models\Order;
 use App\Mail\OtpMail;
 use Illuminate\Support\Facades\Mail;
 use App\Services\EmailService;
+use App\Services\KbankPaymentService;
 use Carbon\Carbon;
 
 class PageController extends Controller
@@ -485,9 +486,28 @@ class PageController extends Controller
         ]);
     }
 
-    public function makePayment()
+    public function requestPayment(Request $request)
     {
-        // make payment steps
+        $sessionOrder = session()->get('order');
+        $orderId = data_get($sessionOrder, 'id');
+
+        if (empty($orderId)) {
+            return $this->redirectRoute('check-premium', errors: [
+                'order' => 'Order session timeout. Please start again.',
+            ]);
+        }
+
+        $order = Order::find($orderId);
+        
+        if (empty($order)) {
+            return $this->redirectRoute('check-premium', errors: [
+                'order' => 'Order session timeout. Please start again.',
+            ]);
+        }
+        
+        $paymentMethod = $request->payment_method;
+        $paymentService = new KbankPaymentService($paymentMethod);
+        dd($paymentService->checkout($order));
     }
 
     // Json Helpers

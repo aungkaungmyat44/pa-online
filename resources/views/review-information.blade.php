@@ -169,7 +169,7 @@
                             <h2>ท่านต้องการรับเอกสารกรมธรรม์อย่างไร</h2>
                             <div class="policy-document-options">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="policy_delivery[]" id="policy_delivery_email" value="รับกรมธรรม์ทางอีเมล" checked>
+                                    <input class="form-check-input" type="checkbox" name="policy_delivery[]" id="policy_delivery_email" value="รับกรมธรรม์ทางอีเมล" checked aria-readonly="true" onclick="return false;" onkeydown="return false;">
                                     <label class="form-check-label" for="policy_delivery_email">รับกรมธรรม์ทางอีเมล</label>
                                 </div>
                                 <div class="form-check">

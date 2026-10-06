@@ -52,4 +52,12 @@ return [
         ],
     ],
 
+    'kbank' => [
+        'public_key' => env('KBANK_PUBLIC_KEY', 'pkey_test_22500dOmwrzgdQXT7BZghVMHnHijHyJB9JN2J'),
+        'private_key' => env('KBANK_PRIVATE_KEY', 'skey_test_22500QnBdlhrUgSfdxbM08IOByagApQIXWNKI'),
+        'merchant_name' => env('KBANK_MASTER_MERCHANT_ID', 'SAHAMONGKHON INSURANCE'),
+        'master_merchant_id' => env('KBANK_MASTER_MERCHANT_ID', '401926120298001'),
+        'create_qr_url' => env('KBANK_CREATE_QR_URL', 'https://dev-kpaymentgateway-services.kasikornbank.com/qr/v2/order'),
+        'create_link_url' => env('KBANK_CREATE_LINK_URL', 'https://dev-kpaymentgateway-services.kasikornbank.com/KPGW-Payment-Webapi/public/api/payment-link/create'),
+    ],
 ];

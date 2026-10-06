@@ -20,7 +20,7 @@ Route::get('review-information', [PageController::class, 'showReviewInformation'
 
 Route::post('proceed-payment', [PageController::class, 'proceedPayment'])->name('proceed-payment');
 Route::get('payment-method', [PageController::class, 'paymentMethod'])->name('payment-method');
-Route::get('make-payment', [PageController::class, 'makePayment'])->name('make-payment');
+Route::post('request-payment', [PageController::class, 'requestPayment'])->name('request-payment');
 
 // Route::post('review-information', [PageController::class, 'reviewInformation'])->name('review-information');
 // Route::post('payment-methods', [PageController::class, 'paymentMethods'])->name('payment-methods');
