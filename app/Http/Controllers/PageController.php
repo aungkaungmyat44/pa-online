@@ -507,7 +507,7 @@ class PageController extends Controller
         
         $paymentMethod = $request->payment_method;
         $paymentService = new KbankPaymentService($paymentMethod);
-        dd($paymentService->checkout($order));
+        $data = $paymentService->checkout($order);
     }
 
     // Json Helpers

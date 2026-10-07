@@ -25,7 +25,7 @@
             'image_alt' => 'โลโก้ Thai QR',
         ],
         [
-            'value' => 'payment_link',
+            'value' => 'link',
             'title' => 'ลิงก์ชำระเงิน KBank',
             'description' => 'รับลิงก์ชำระเงินและดำเนินการชำระผ่าน KBank',
             'image' => 'assets/images/kbank.png',
