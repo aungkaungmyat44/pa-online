@@ -507,7 +507,17 @@ class PageController extends Controller
         
         $paymentMethod = $request->payment_method;
         $paymentService = new KbankPaymentService($paymentMethod);
-        $data = $paymentService->checkout($order);
+        $checkoutData = $paymentService->checkout($order);
+        $request->session()->put('customer.checkout_data', $checkoutData);
+
+        return $this->redirectRoute('show-checkout', flash: [
+            'success' => 'Please perform payment via pay button.',
+        ]);
+    }
+
+    public function showCheckout()
+    {
+        dd("hello");
     }
 
     // Json Helpers
