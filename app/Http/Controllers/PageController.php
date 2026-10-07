@@ -457,8 +457,10 @@ class PageController extends Controller
             $oldOrder->update($orderPayload);
             $order = $oldOrder;
         }
-        
+
+        // Save order data
         session()->put('order', $order);
+
         return $this->redirectRoute('payment-method');
     }
 
@@ -466,7 +468,7 @@ class PageController extends Controller
     {
         $sessionOrder = session()->get('order');
         $orderId = data_get($sessionOrder, 'id');
-
+        
         if (empty($orderId)) {
             return $this->redirectRoute('check-premium', errors: [
                 'order' => 'Order session timeout. Please start again.',
@@ -490,7 +492,7 @@ class PageController extends Controller
     {
         $sessionOrder = session()->get('order');
         $orderId = data_get($sessionOrder, 'id');
-
+        
         if (empty($orderId)) {
             return $this->redirectRoute('check-premium', errors: [
                 'order' => 'Order session timeout. Please start again.',
@@ -508,8 +510,8 @@ class PageController extends Controller
         $paymentMethod = $request->payment_method;
         $paymentService = new KbankPaymentService($paymentMethod);
         $checkoutData = $paymentService->checkout($order);
-        $request->session()->put('customer.checkout_data', $checkoutData);
-
+        $request->session()->put('check_out_data', $checkoutData);
+        
         return $this->redirectRoute('show-checkout', flash: [
             'success' => 'Please perform payment via pay button.',
         ]);
@@ -517,7 +519,29 @@ class PageController extends Controller
 
     public function showCheckout()
     {
-        dd("hello");
+        $sessionOrder = session()->get('order');
+        $orderId = data_get($sessionOrder, 'id');
+
+        if (empty($orderId)) {
+            return $this->redirectRoute('check-premium', errors: [
+                'order' => 'Order session timeout. Please start again.',
+            ]);
+        }
+
+        $order = Order::find($orderId);
+        
+        if (empty($order)) {
+            return $this->redirectRoute('check-premium', errors: [
+                'order' => 'Order session timeout. Please start again.',
+            ]);
+        }
+
+        $checkoutData = session()->get('check_out_data');
+        
+        return view('checkout', [
+            'order' => $order,
+            'checkoutData' => $checkoutData
+        ]);
     }
 
     // Json Helpers
