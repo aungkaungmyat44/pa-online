@@ -27,9 +27,27 @@
                     </div>
                     <div class="check-policy-body">
                         <div class="check-policy-table-wrap">
-                            <div id="policyPdfRender" class="check-policy-pdf-render" data-pdf-url="{{ asset('assets/files/sample.pdf') }}">
+                            <table class="check-policy-meta">
+                                <tr>
+                                    <td>Reference number</td>
+                                    <td>{{ $orderReference !== '' ? $orderReference : '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Insured</td>
+                                    <td>{{ $customerName }}</td>
+                                </tr>
+                                <tr>
+                                    <td>ผลิตภัณฑ์</td>
+                                    <td>{{ $productName }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Coverage period</td>
+                                    <td>{{ $coveragePeriod !== '' ? $coveragePeriod : '-' }}</td>
+                                </tr>
+                            </table>
+                            {{-- <div id="policyPdfRender" class="check-policy-pdf-render" data-pdf-url="{{ asset('assets/files/sample.pdf') }}">
                                 <p class="check-policy-pdf-loading">กำลังโหลดกรมธรรม์...</p>
-                            </div>
+                            </div> --}}
                         </div>
                         <p>
                             หากมีคำถามเพิ่มเติม กรุณาติดต่อฝ่ายบริการลูกค้าที่ 02-68-77777

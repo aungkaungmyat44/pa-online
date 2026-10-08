@@ -22,8 +22,11 @@ use Carbon\Carbon;
 
 class PageController extends Controller
 {
-    public function home()
+    public function home(Request $request)
     {
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         $plans = Plan::orderBy('id', 'asc')->get();
         $coverageFields = config('coverage_plans.coverage_fields', []);
 
@@ -601,6 +604,11 @@ class PageController extends Controller
             'kbankMerchantName' => $kbankMerchantName,
             'kbankMasterMerchantId' => $kbankMasterMerchantId
         ]);
+    }
+
+    public function checkPolicy(Request $request) 
+    {
+        return view('check-policy');
     }
 
     // Json Helpers

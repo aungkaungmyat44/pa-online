@@ -38,7 +38,22 @@ class PaymentController extends Controller
 
     public function receipt(Order $order)
     {
-        return view('receipt');
+        $sessionOrder = session()->get('order');
+        $orderId = data_get($sessionOrder, 'id');
+
+        if (empty($orderId) or (int) $orderId !== $order->id) {
+            return $this->redirectRoute('check-premium', errors: [
+                'order' => 'Order session timeout. Please start again.',
+            ]);
+        }
+
+        $order->loadMissing('customer');
+
+        return view('receipt', [
+            'order' => $order,
+            'policyNumber' => $order->policy_no ?: '-',
+            'email' => $order->customer?->email ?? '',
+        ]);
     }
 
     public function kbankCheckout(Request $request, Order $order)
@@ -344,7 +359,7 @@ class PaymentController extends Controller
                 }
     
                 $payment = PaymentTransition::where('order_id', $order->id)->first();
-    
+
                 return $this->jsonResponse('Success to fetch K-Bank payment information', $payment, null, 200);
             }
         }
