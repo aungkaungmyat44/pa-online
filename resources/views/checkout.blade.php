@@ -93,7 +93,7 @@
             @if ($isQrPayment and $qrOrderId !== '')
                 <div class="row mt-3 justify-content-center">
                     <div class="col-xl-12 col-md-12 col-sm-12">
-                        <form method="POST" action="{{ route('show-checkout') }}" id="qrCheckoutForm">
+                        <form method="POST" action="{{ route('request-payment', ['is_paid' => 1]) }}" id="qrCheckoutForm">
                             @csrf
                             <input type="hidden" name="order_id" value="{{ $orderIdValue }}">
                             <script type="text/javascript"

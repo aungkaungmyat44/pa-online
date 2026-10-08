@@ -490,6 +490,14 @@ class PageController extends Controller
 
     public function requestPayment(Request $request)
     {
+        $isPaid = (bool)$request->is_paid;
+
+        if ($isPaid) {
+            return $this->redirectRoute('show-checkout', flash: [
+                'success' => 'Please perform payment via pay button.',
+            ]);
+        }
+
         $sessionOrder = session()->get('order');
         $orderId = data_get($sessionOrder, 'id');
         
