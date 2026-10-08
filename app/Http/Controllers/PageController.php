@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Requests\OtpFormRequest;
 use App\Http\Requests\HealthQuestionRequest;
 use App\Http\Requests\SaveInformationRequest;
@@ -11,10 +12,12 @@ use App\Models\Plan;
 use App\Models\Customer;
 use App\Models\PlanOccupation;
 use App\Models\Order;
+use App\Models\PaymentTransition;
 use App\Mail\OtpMail;
 use Illuminate\Support\Facades\Mail;
 use App\Services\EmailService;
 use App\Services\KbankPaymentService;
+use App\Services\HttpService;
 use Carbon\Carbon;
 
 class PageController extends Controller
@@ -490,8 +493,8 @@ class PageController extends Controller
 
     public function requestPayment(Request $request)
     {
+        $paymentMethod = $request->payment_method;
         $isPaid = (bool)$request->is_paid;
-
         if ($isPaid) {
             return $this->redirectRoute('show-checkout', flash: [
                 'success' => 'Please perform payment via pay button.',
@@ -500,7 +503,6 @@ class PageController extends Controller
 
         $sessionOrder = session()->get('order');
         $orderId = data_get($sessionOrder, 'id');
-        
         if (empty($orderId)) {
             return $this->redirectRoute('check-premium', errors: [
                 'order' => 'Order session timeout. Please start again.',
@@ -508,14 +510,12 @@ class PageController extends Controller
         }
 
         $order = Order::find($orderId);
-        
         if (empty($order)) {
             return $this->redirectRoute('check-premium', errors: [
                 'order' => 'Order session timeout. Please start again.',
             ]);
         }
-        
-        $paymentMethod = $request->payment_method;
+
         $paymentService = new KbankPaymentService($paymentMethod);
         $checkoutData = $paymentService->checkout($order);
         $order->payment_method = $paymentMethod;
@@ -528,16 +528,11 @@ class PageController extends Controller
         ]);
     }
 
-    public function checkout(Request $request) 
+    public function showCheckout(Request $request)
     {
-        
-    }
-
-    public function showCheckout()
-    {
+        $chargeId = $request->charge_id;
         $sessionOrder = session()->get('order');
         $orderId = data_get($sessionOrder, 'id');
-
         if (empty($orderId)) {
             return $this->redirectRoute('check-premium', errors: [
                 'order' => 'Order session timeout. Please start again.',
@@ -545,7 +540,6 @@ class PageController extends Controller
         }
 
         $order = Order::find($orderId);
-        
         if (empty($order)) {
             return $this->redirectRoute('check-premium', errors: [
                 'order' => 'Order session timeout. Please start again.',
@@ -558,6 +552,46 @@ class PageController extends Controller
         $kbankPublicKey = config('services.kbank.public_key');
         $kbankMerchantName = config('services.kbank.merchant_name');
         $kbankMasterMerchantId = config('services.kbank.master_merchant_id');
+
+        if (!empty($chargeId)) {
+            $apiKey = config('services.kbank.private_key');
+            $headers = [
+                'Content-Type: application/json',
+                'x-api-key: ' . $apiKey,
+                'Accept: application/json',
+            ];
+            $date = date('Ymd', time());
+            $endpoint = config('services.kbank.master_inquiry_url') . "$chargeId/$date";
+            $httpService = new HttpService($endpoint, $headers, '', 'get');
+            $response = $httpService->sendGet();
+            Log::info('Payment inquiry response: ' . json_encode($response));
+
+            $orderId = $response['reference_order'];
+            $paymentStatus = $response['status'];
+            $providerStatus = $response['transaction_state'];
+
+            $payment = PaymentTransition::where('charge_id', $chargeId)->first();
+            if (empty($payment)) {
+                $payment = PaymentTransition::where('order_id', $order->id)->first();
+            }
+            if (empty($payment)) {
+                $payload = [
+                    'order_id' => $order->id,
+                    'customer_id' => $order->customer_id,
+                    'reference_no' => generateRandomNo(),
+                    'charge_id' => $chargeId,
+                    'provider' => 'kbank',
+                    'method' => $order->payment_method,
+                    'status' => 'pending',
+                    'provider_status' => $providerStatus ?? null,
+                    'amount' => $order->total_amount,
+                    'currency' => 'THB',
+                    'payment_create_info' => [],
+                    'inquiry_data_result' => $response ?? []
+                ];
+                $payment = PaymentTransition::create($payload);
+            }
+        }
 
         return view('checkout', [
             'order' => $order,

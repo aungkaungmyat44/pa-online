@@ -29,17 +29,6 @@ abstract class Controller
         return $this->jsonResponse($message, $data, $error, $statusCode);
     }
 
-    protected function generateRandomNo(int $length = 13): string
-    {
-        $random = '';
-
-        for ($i = 0; $i < $length; $i++) {
-            $random .= mt_rand(0, 9);
-        }
-
-        return $random;
-    }
-
     protected function redirectRoute(
         string $route,
         array $parameters = [],

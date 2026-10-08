@@ -142,7 +142,7 @@ final class KbankPaymentService
                 $payload = [
                     'order_id' => $order['id'],
                     'customer_id' => $order['customer_id'],
-                    'reference_no' => $this->generateRandomNo(),
+                    'reference_no' => generateRandomNo(),
                     'charge_id' => null,
                     'qr_id' => $qrOrderId,
                     'provider' => 'kbank',
@@ -229,7 +229,7 @@ final class KbankPaymentService
                 return [
                     'order_id' => $order->id,
                     'customer_id' => $order->customer_id,
-                    'reference_no' => $this->generateRandomNo(),
+                    'reference_no' => generateRandomNo(),
                     'charge_id' => null,
                     'qr_id' => null,
                     'link_ref' => $linkRef,
@@ -469,12 +469,4 @@ final class KbankPaymentService
         }
     }
 
-    public function generateRandomNo($length = 13): string 
-    {
-		$random = '';
-		for ($i = 0; $i < $length; $i++) {
-			$random .= mt_rand(0, 9);
-		}
-		return $random;
-	}
 }

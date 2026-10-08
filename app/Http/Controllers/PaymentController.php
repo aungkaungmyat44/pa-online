@@ -215,7 +215,7 @@ class PaymentController extends Controller
             $paymentPayload = [
                 'order_id' => $order->id,
                 'customer_id' => $customer->id,
-                'reference_no' => $this->generateRandomNo(),
+                'reference_no' => generateRandomNo(),
                 'charge_id' => $data['charge_id'],
                 'provider' => 'kbank',
                 'method' => $order->payment_method,
