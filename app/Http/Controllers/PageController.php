@@ -713,7 +713,7 @@ class PageController extends Controller
 
     private function generateOrderNumber(): string 
     {
-		$orderNumber = "PA_ORD_" . date('YmdHis');
+		$orderNumber = "PAI_ORD_" . date('YmdHis');
         
 		if (app()->environment(['development', 'uat', 'local'])) {
 			$orderNumber .= '_TEST';
