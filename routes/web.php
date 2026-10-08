@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\PaymentController;
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('check-premium', [PageController::class, 'checkPremium'])->name('check-premium');
@@ -24,6 +25,11 @@ Route::get('payment-method', [PageController::class, 'paymentMethod'])->name('pa
 Route::post('request-payment', [PageController::class, 'requestPayment'])->name('request-payment');
 Route::get('checkout', [PageController::class, 'showCheckout'])->name('show-checkout');
 
+Route::get('districts', [PageController::class, 'districts'])->name('districts');
+Route::get('subdistricts', [PageController::class, 'subdistricts'])->name('subdistricts');
+
+Route::get('payment-issue/{order}', [PaymentController::class, 'paymentIssue'])->name('payment-issue');
+
 // Route::post('review-information', [PageController::class, 'reviewInformation'])->name('review-information');
 // Route::post('payment-methods', [PageController::class, 'paymentMethods'])->name('payment-methods');
 // Route::post('payment-process', [PageController::class, 'paymentProcess'])->name('payment-process');
@@ -31,5 +37,3 @@ Route::get('checkout', [PageController::class, 'showCheckout'])->name('show-chec
 // Route::get('check-policy', [PageController::class, 'checkPolicy'])->name('check-policy');
 
 // Route::get('check-policy-form', [PageController::class, 'checkPolicyForm'])->name('check-policy-form');
-Route::get('districts', [PageController::class, 'districts'])->name('districts');
-Route::get('subdistricts', [PageController::class, 'subdistricts'])->name('subdistricts');

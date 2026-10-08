@@ -4,28 +4,23 @@
 
 @section('content')
 @php
-    $checkoutData = is_array($checkoutData ?? null) ? $checkoutData : [];
-    $checkoutPayload = data_get($checkoutData, 'data', []);
-    $checkoutPayload = is_array($checkoutPayload) ? $checkoutPayload : [];
+    $checkoutData = $checkoutData['data'];
+    $orderInfo = $order['order_info'];
+    $orderId = $order->id;
+    $orderIdValue = $order->order_unique_code;
+    $productId = $orderInfo['plan']['id'];
+    $productName = $orderInfo['plan']['name_th'];
+    $totalAmount = $order->total_amount;
+    $paymentMethod = $order->payment_method;
+    
+    $qrOrderId = $checkoutData['qrId'] ?? "";
+    $linkUrl = $checkoutData['linkUrl'] ?? "";
+    $linkQrCode = $checkoutData['qrCodeSrc'] ?? "";
 
-    $orderId = $order->id ?? data_get($order, 'id');
-    $orderIdValue = (string) ($order->order_unique_code ?? data_get($order, 'order_unique_code', data_get($checkoutPayload, 'referenceOrderId', '')));
-    $productName = (string) data_get($checkoutPayload, 'productName', data_get($order, 'plan.name_th', data_get($order, 'order_info.plan.name_th', '')));
-    $totalAmount = (float) data_get($checkoutPayload, 'totalAmount', data_get($order, 'total_amount', 0));
-    $paymentMethod = (string) data_get($order, 'payment_method', '');
-    $qrOrderId = trim((string) data_get($checkoutPayload, 'qrId', data_get($checkoutPayload, 'paymentTransition.qr_id', '')));
-    $linkUrl = trim((string) data_get($checkoutPayload, 'linkUrl', data_get($checkoutPayload, 'paymentLink.link_url', '')));
-    $linkQrCode = trim((string) data_get($checkoutPayload, 'qrCodeSrc', data_get($checkoutPayload, 'paymentLink.qr_code', '')));
-
-    $isLinkPayment = $linkUrl !== '' || $linkQrCode !== '' || data_get($checkoutPayload, 'linkRef') !== null;
-    $isQrPayment = !$isLinkPayment && ($qrOrderId !== '' || $paymentMethod === 'thai_qr');
-    $isCardPayment = !$isLinkPayment && !$isQrPayment;
-    $orderCreatedAtLabel = data_get($order, 'created_at') ? data_get($order, 'created_at')->format('d M Y, H:i') : '';
-
-    $kbankJsFileLink = config('services.kbank.js_file_link', 'https://dev-kpaymentgateway.kasikornbank.com/ui/v2/kpayment.min.js');
-    $kbankPublicKey = config('services.kbank.public_key');
-    $kbankMerchantName = config('services.kbank.merchant_name');
-    $kbankMasterMerchantId = config('services.kbank.master_merchant_id');
+    $isLinkPayment = $linkUrl !== '' or $linkQrCode !== '';
+    $isQrPayment = !empty($qrOrderId) == true;
+    $isCardPayment = !$isLinkPayment and !$isQrPayment;
+    $orderCreatedAtLabel = date('d M Y, H:i', strtotime($order->created_at));
 @endphp
 
 <section class="payment-inquiry-shell py-5 d-flex align-items-center justify-content-center" style="background: radial-gradient(circle at top, rgba(56,76,149,.1), transparent 60%);">
@@ -77,7 +72,7 @@
                     <div class="col-xl-12 col-md-12 col-sm-12">
                         <form method="POST" action="{{ url('/checkout') }}" id="checkoutForm">
                             @csrf
-                            <input type="hidden" name="product_id" id="checkout_product_id" value="{{ data_get($checkoutPayload, 'productId', data_get($order, 'plan_id', '')) }}">
+                            <input type="hidden" name="product_id" id="checkout_product_id" value="{{ $productId }}">
                             <input type="hidden" name="product_name" id="checkout_product_name" value="{{ $productName }}">
                             <input type="hidden" name="product_price" id="checkout_product_price" value="{{ $totalAmount }}">
                             <input type="hidden" name="order_id" value="{{ $orderIdValue }}">
@@ -95,7 +90,7 @@
                 </div>
             @endif
 
-            @if ($isQrPayment && $qrOrderId !== '')
+            @if ($isQrPayment and $qrOrderId !== '')
                 <div class="row mt-3 justify-content-center">
                     <div class="col-xl-12 col-md-12 col-sm-12">
                         <form method="POST" action="{{ url('/payment-inquiry?order_id=' . rawurlencode($orderIdValue)) }}" id="qrCheckoutForm">
@@ -162,8 +157,13 @@
         const IS_QR_PAYMENT = @json($isQrPayment);
         const IS_LINK_PAYMENT = @json($isLinkPayment);
 
+        let PAYMENT_ISSUE_URL = "{{ url('payment-issue') . '/' . $orderId }}";
+        // let RECEIPT_URL = "{{ url('/receipt?order_id=' . rawurlencode((string) $orderId)) }}";
+        // let INQUIRE_URL = "{{ url('/inquiry-kbank-payment') }}";
+        // let HOME_PAGE_URL = "{{ route('home') }}";
+
         async function getPayment() {
-            let fullUrl = "{{ url('/inquiry-kbank-payment') }}";
+            let fullUrl = INQUIRE_URL;
             let data = {
                 'order_id': @json($orderIdValue)
             };
@@ -173,8 +173,7 @@
 
         const PAYMENT_POLL_INTERVAL_MS = 60000;
         const PAYMENT_REDIRECT_DELAY_MS = 300000;
-        const HOME_PAGE_URL = "{{ route('home') }}";
-        //const PAYMENT_ISSUE_URL = "{{ url('/payment-issue?order_id=' . rawurlencode($orderIdValue)) }}";
+
         const GENERIC_PAYMENT_ERROR = "Please try again later.";
         const AUTO_START_FORM_IDS = [];
         const AUTO_START_LINK_IDS = [];
@@ -282,7 +281,7 @@
                 if (status && ['success', 'fail'].includes(status) && paymentPollTimer !== null) {
                     clearInterval(paymentPollTimer);
                     paymentPollTimer = null;
-                    window.location.href = "{{ url('/receipt?order_id=' . rawurlencode((string) $orderId)) }}";
+                    window.location.href = RECEIPT_URL;
                 }
             } catch (error) {
                 console.error('Polling payment transition failed', error);

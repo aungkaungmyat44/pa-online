@@ -510,6 +510,9 @@ class PageController extends Controller
         $paymentMethod = $request->payment_method;
         $paymentService = new KbankPaymentService($paymentMethod);
         $checkoutData = $paymentService->checkout($order);
+        $order->payment_method = $paymentMethod;
+        $order->save();
+        
         $request->session()->put('check_out_data', $checkoutData);
         
         return $this->redirectRoute('show-checkout', flash: [
@@ -538,9 +541,18 @@ class PageController extends Controller
 
         $checkoutData = session()->get('check_out_data');
         
+        $kbankJsFileLink = config('services.kbank.js_file_link', 'https://dev-kpaymentgateway.kasikornbank.com/ui/v2/kpayment.min.js');
+        $kbankPublicKey = config('services.kbank.public_key');
+        $kbankMerchantName = config('services.kbank.merchant_name');
+        $kbankMasterMerchantId = config('services.kbank.master_merchant_id');
+
         return view('checkout', [
             'order' => $order,
-            'checkoutData' => $checkoutData
+            'checkoutData' => $checkoutData ?? [],
+            'kbankJsFileLink' => $kbankJsFileLink,
+            'kbankPublicKey' => $kbankPublicKey,
+            'kbankMerchantName' => $kbankMerchantName,
+            'kbankMasterMerchantId' => $kbankMasterMerchantId
         ]);
     }
 

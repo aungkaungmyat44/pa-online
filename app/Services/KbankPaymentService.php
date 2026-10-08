@@ -191,7 +191,7 @@ final class KbankPaymentService
                 'description' => $productName,
                 'amount' => $totalAmount,
                 'active_time' => $now->format('YmdHis'),
-                'expire_time' => $now->copy()->addMinutes(6)->format('YmdHis'),
+                'expire_time' => $now->copy()->addMinutes(30)->format('YmdHis'),
                 'type' => 'ONE_TIME',
                 'reference_number' => $referenceOrderId,
 
