@@ -31,7 +31,8 @@ Route::get('subdistricts', [PageController::class, 'subdistricts'])->name('subdi
 
 // Payment Transition Group
 Route::get('payment-transitions/{order}/kbank/inquiry', [PaymentController::class, 'inquiryKBankPaymentTransition'])->name('kbank-payment-inquiry');
-Route::get('payment-transitions/payment-issue/{order}', [PaymentController::class, 'paymentIssue'])->name('payment-issue');
+Route::get('payment-transitions/{order}/payment-issue', [PaymentController::class, 'paymentIssue'])->name('payment-issue');
+Route::get('payment-transitions/{order}/receipt', [PaymentController::class, 'receipt'])->name('receipt');
 
 Route::post('payment-transitions/{order}/kbank/checkout', [PaymentController::class, 'kbankCheckout'])->name('kbank-checkout');
 Route::post('payment-transitions/{order}/create', [PaymentController::class, 'createPaymentTransition'])->name('payment-transitions-create');

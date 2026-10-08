@@ -42,7 +42,7 @@ class PaymentController extends Controller
 
     public function receipt(Order $order)
     {
-
+        return view('receipt');
     }
 
     public function kbankCheckout(Request $request, Order $order)

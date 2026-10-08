@@ -157,7 +157,7 @@
         const IS_QR_PAYMENT = @json($isQrPayment);
         const IS_LINK_PAYMENT = @json($isLinkPayment);
 
-        // let RECEIPT_URL = "{{ url('/receipt?order_id=' . rawurlencode((string) $orderId)) }}";
+        let RECEIPT_URL = "{{ route('receipt', $order) }}";
         let PAYMENT_ISSUE_URL = "{{ route('payment-issue', $order) }}";
         let INQUIRE_URL = "{{ route('kbank-payment-inquiry', $order) }}";
         let HOME_PAGE_URL = "{{ route('home') }}";
