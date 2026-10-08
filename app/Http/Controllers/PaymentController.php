@@ -16,10 +16,7 @@ class PaymentController extends Controller
     {
         $paymentTransition = PaymentTransition::where('order_id', $order->id)->first();
 
-        $issuePolicyResult = json_decode((string)($order->issue_policy_result), true);
-        if (!is_array($issuePolicyResult)) {
-            $issuePolicyResult = [];
-        }
+        $issuePolicyResult = is_array($order->issue_policy_result) ? $order->issue_policy_result : [];
 
         $message = trim((string)$request->message);
         if ($message === '') {
@@ -116,7 +113,7 @@ class PaymentController extends Controller
         // Fetch request get
         $requestType = $request->request_type ?? 'inquire';
         $data = $request->all();
-        write_log('Params are : ' . json_encode($data));
+        Log::info('Params are : ' . json_encode($data));
 
         $createInfo = $data['payment_create_info'] ?? [];
         if (!empty($createInfo)) {
@@ -162,7 +159,7 @@ class PaymentController extends Controller
         if (empty($issueApiResult) or ($issueApiResult['result'] ?? '') == 'Fail') {
             $issueErrorMessage = $this->normalizeString($issueApiResult['errorMessage'] ?? '');
             $order->update([
-                'issue_policy_result' => json_encode([
+                'issue_policy_result' => [
                     'vat' => '',
                     'duty' => '',
                     'total' => '',
@@ -174,7 +171,7 @@ class PaymentController extends Controller
                     'PolicyURL' => '',
                     'errorCode' => '',
                     'errorMessage' => $issueErrorMessage,
-                ], JSON_UNESCAPED_UNICODE),
+                ],
             ]);
 
             return $this->jsonError(
@@ -204,12 +201,12 @@ class PaymentController extends Controller
 
             // When payment is still pending, then need to update the latest result
             if ($payment->status == 'pending') {
-                $paymentModel->update([
+                $payment->update([
                     'charge_id' => $data['charge_id'] ?? null,
                     'provider_status' => $data['transaction_state'],
                     'status' => $data['status'],
-                    'payment_create_info' => json_encode($data['payment_create_info']),
-                    'inquiry_data_result' => json_encode($data['inquiry_data_result'] ?? [])
+                    'payment_create_info' => $data['payment_create_info'] ?? [],
+                    'inquiry_data_result' => $data['inquiry_data_result'] ?? []
                 ]);
                 $payment = PaymentTransition::find($payment->id);
             }
@@ -226,8 +223,8 @@ class PaymentController extends Controller
                 'provider_status' => $data['transaction_state'],
                 'amount' => $data['amount'],
                 'currency' => 'THB',
-                'payment_create_info' => json_encode($createInfo),
-                'inquiry_data_result' => json_encode($payload['inquiry_data_result'] ?? [])
+                'payment_create_info' => $createInfo,
+                'inquiry_data_result' => $data['inquiry_data_result'] ?? []
             ];
             $payment = PaymentTransition::create($paymentPayload);
         }
@@ -239,7 +236,7 @@ class PaymentController extends Controller
                 'status' => 'delivered',
                 'is_email_sent' => 1,
                 'is_policy_generated' => 1,
-                'issue_policy_result' => json_encode($issueApiResult ?? []),
+                'issue_policy_result' => $issueApiResult ?? [],
                 'payment_status' => 'paid',
                 'paid_at' => date('Y-m-d H:i:s', time())
             ]);
@@ -284,7 +281,7 @@ class PaymentController extends Controller
         ];
 
         $kbankPaymentService = new KbankPaymentService($order->payment_method);
-        $chargeResult = $kbankPaymentService->handlleInquiry($order);
+        $chargeResult = $kbankPaymentService->handleInquiry($order);
         $chargeResponse = [];
 
         if (empty($chargeResult) or !$chargeResult['success']) {
@@ -297,31 +294,59 @@ class PaymentController extends Controller
         }
 
         $chargeResponse = $chargeResult['data'];
-        if (!empty($chargeResponse) and !empty($chargeResponse['payment_link']['status']) and $chargeResponse['payment_link']['status'] == 'PAID') {
-            $paymentPayload = [
-                'charge_id' => $chargeResponse['payment_detail'][0]['id'],
-                'reference_order' => $order->order_unique_code,
-                'status' => $chargeResponse['payment_link']['status'] == 'PAID' ? 'success' : 'pending',
-                'transaction_state' => $chargeResponse['payment_detail'][0]['transaction_state'],
-                'amount' => $chargeResponse['payment_link']['amount'] ?? 0,
-                'payment_create_info' => [],
-                'inquiry_data_result' => json_encode($chargeResponse ?? [])
-            ];
+        Log::info('Charge result is : ' . json_encode($chargeResult));
+        $isPaidLink = !empty($chargeResponse)
+            and !empty($chargeResponse['payment_link']['status'])
+            and $chargeResponse['payment_link']['status'] == 'PAID';
 
-            $paymentTransitionRequest = PaymentTransitionCreateRequest::create(
-                route('payment-transitions-create', $order),
-                'POST',
-                $paymentPayload
-            );
+        $isAuthorizedCharge = !empty($chargeResponse)
+            and ($chargeResponse['status'] ?? '') == 'success'
+            and ($chargeResponse['transaction_state'] ?? '') == 'Authorized';
 
-            $result = $this->createPaymentTransition($paymentTransitionRequest, $order);
-            if ($result->getStatusCode() >= 400) {
-                return $result;
+        if (!empty($chargeResponse)) {
+            $paymentPayload = [];
+            if ($isAuthorizedCharge and in_array($order->payment_method, ['card', 'thai_qr'])) {
+                $paymentPayload = [
+                    'charge_id' => $chargeResponse['id'],
+                    'reference_order' => $order->order_unique_code,
+                    'status' => $chargeResponse['status'],
+                    "transaction_state" => $chargeResponse['transaction_state'],
+                    "amount" => $chargeResponse['amount'] ?? 0,
+                    "payment_create_info" => [],
+                    'inquiry_data_result' => $chargeResponse ?? []
+                ];
             }
 
-            $payment = PaymentTransition::where('order_id', $order->id)->first();
-
-            return $this->jsonResponse('Success to fetch K-Bank payment information', $payment, null, 200);
+            if ($isPaidLink and in_array($order->payment_method, ['link'])) {
+                if (!empty($chargeResponse) and !empty($chargeResponse['payment_link']['status']) and $chargeResponse['payment_link']['status'] == 'PAID') {
+                    $paymentPayload = [
+                        'charge_id' => $chargeResponse['payment_detail'][0]['id'],
+                        'reference_order' => $order->order_unique_code,
+                        'status' => $chargeResponse['payment_link']['status'] == 'PAID' ? 'success' : 'pending',
+                        'transaction_state' => $chargeResponse['payment_detail'][0]['transaction_state'],
+                        'amount' => $chargeResponse['payment_link']['amount'] ?? 0,
+                        'payment_create_info' => [],
+                        'inquiry_data_result' => $chargeResponse ?? []
+                    ];
+                }
+            }
+    
+            if (!empty($paymentPayload)) {
+                $paymentTransitionRequest = PaymentTransitionCreateRequest::create(
+                    route('payment-transitions-create', $order),
+                    'POST',
+                    $paymentPayload
+                );
+                Log::info(json_encode($paymentTransitionRequest));
+                $result = $this->createPaymentTransition($paymentTransitionRequest, $order);
+                if ($result->getStatusCode() >= 400) {
+                    return $result;
+                }
+    
+                $payment = PaymentTransition::where('order_id', $order->id)->first();
+    
+                return $this->jsonResponse('Success to fetch K-Bank payment information', $payment, null, 200);
+            }
         }
 
         return $this->jsonResponse('Success to fetch K-Bank payment information', $payment, null, 200);
@@ -331,7 +356,7 @@ class PaymentController extends Controller
     {
         $receivedChecksum = strtolower(preg_replace('/\s+/', '', (string)($createInfo['checksum'] ?? $payload['checksum'] ?? '')));
         if ($receivedChecksum === '') {
-            write_log('KBank checksum is missing from callback payload', 'ERROR');
+            Log::info('KBank checksum is missing from callback payload');
             return false;
         }
 

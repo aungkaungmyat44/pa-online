@@ -360,12 +360,17 @@ final class KbankPaymentService
         }
     }
 
-    public function handlleInquiry(Order $order) : array
+    public function handleInquiry(Order $order) : array
     {
         // Fetch order details
         $method = $order->payment_method ?? 'card';
         $chargeResponse = [];
         $paymentPayload = [];
+        $headers = [
+            'Content-Type: application/json',
+            'x-api-key: ' . $this->privateKey,
+            'Accept: application/json',
+        ];
 
         $referenceOrder = (string)$order->order_unique_code;
         if (trim($referenceOrder) === '') {
@@ -378,8 +383,11 @@ final class KbankPaymentService
         }
 
         try {
-            if (in_array($method, $this->availablePaymentMethods)) {
-                $pendingPayment = $paymentModel->findByOrderId($order['id'], 'pending');
+            if ($method == self::CARD) {
+                $pendingPayment = PaymentTransition::where('order_id', $order->id)
+                                                    ->where('status', 'pending')
+                                                    ->first();
+
                 if (empty($pendingPayment) or empty($pendingPayment['charge_id'])) {
                     return [
                         'success' => true,
@@ -388,14 +396,17 @@ final class KbankPaymentService
                         'code' => 200,
                     ];
                 }
+                
                 $chargeId = $pendingPayment['charge_id'];
                 $date = date('Ymd', time());
                 $endpoint = $this->masterInquiryUrl . "$chargeId";
                 $httpService = new HttpService($endpoint, $headers, '', 'get');
                 $chargeResponse = $httpService->sendGet();
     
-            } else if ($method == 'qr') {
-                $pendingPayment = $paymentModel->findByOrderId($order['id'], 'pending');
+            } else if ($method == self::QRCODE) {
+                $pendingPayment = PaymentTransition::where('order_id', $order->id)
+                    ->where('status', 'pending')
+                    ->first();
                 if (empty($pendingPayment) or empty($pendingPayment['qr_id'])) {
                     return [
                         'success' => true,
@@ -409,8 +420,10 @@ final class KbankPaymentService
                 $httpService = new HttpService($endpoint, $headers, '', 'get');
                 $chargeResponse = $httpService->sendGet();
                 
-            } else if ($method == 'link') {
-                $pendingPayment = $paymentModel->findByOrderId($order['id'], 'pending');
+            } else if ($method == self::LINK) {
+                $pendingPayment = PaymentTransition::where('order_id', $order->id)
+                    ->where('status', 'pending')
+                    ->first();
                 if (empty($pendingPayment) or empty($pendingPayment['link_ref'])) {
                     return [
                         'success' => true,

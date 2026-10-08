@@ -520,6 +520,11 @@ class PageController extends Controller
         ]);
     }
 
+    public function checkout(Request $request) 
+    {
+        
+    }
+
     public function showCheckout()
     {
         $sessionOrder = session()->get('order');

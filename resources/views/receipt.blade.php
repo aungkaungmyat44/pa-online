@@ -33,9 +33,9 @@
 
                     <div class="receipt-actions">
                         <a href="{{ route('home') }}" class="otp-btn otp-btn-outline">หน้าแรก</a>
-                        <a href="{{ route('check-policy', ['policy_number' => $policyNumber]) }}" class="check-premium-submit receipt-policy-btn">
+                        {{-- <a href="{{ route('check-policy', ['policy_number' => $policyNumber]) }}" class="check-premium-submit receipt-policy-btn">
                             ตรวจสอบกรมธรรม์
-                        </a>
+                        </a> --}}
                     </div>
                 </div>
             </div>
