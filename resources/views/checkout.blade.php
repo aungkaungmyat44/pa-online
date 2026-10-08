@@ -241,7 +241,15 @@
         function getPaymentErrorMessage(error) {
             const response = error?.response;
             if (response && typeof response === 'object') {
-                return response.message || response.error || GENERIC_PAYMENT_ERROR;
+                if (response.message) {
+                    return response.message;
+                }
+
+                if (typeof response.error === 'string') {
+                    return response.error;
+                }
+
+                return GENERIC_PAYMENT_ERROR;
             }
 
             if (typeof response === 'string' && response.trim() !== '') {
@@ -263,13 +271,20 @@
                 return;
             }
 
+            const shouldShowPaymentIssue = error?.response?.data?.payment_issue === true;
+            if (!shouldShowPaymentIssue) {
+                return;
+            }
+
             paymentErrorHandled = true;
             if (paymentPollTimer !== null) {
                 clearInterval(paymentPollTimer);
                 paymentPollTimer = null;
             }
             const message = getPaymentErrorMessage(error);
-            window.location.href = PAYMENT_ISSUE_URL + '&message=' + encodeURIComponent(message);
+            const issueUrl = new URL(PAYMENT_ISSUE_URL, window.location.origin);
+            issueUrl.searchParams.set('message', message);
+            window.location.href = issueUrl.toString();
         }
 
         async function pollPaymentTransition() {
@@ -278,11 +293,12 @@
                 const payment = response?.data;
                 const status = typeof payment?.status === 'string' ? payment.status.toLowerCase() : '';
 
-                if (status && ['success', 'fail'].includes(status) && paymentPollTimer !== null) {
+                if (status === 'success' && paymentPollTimer !== null) {
                     clearInterval(paymentPollTimer);
                     paymentPollTimer = null;
                     window.location.href = RECEIPT_URL;
                 }
+
             } catch (error) {
                 console.error('Polling payment transition failed', error);
                 handlePaymentError(error);

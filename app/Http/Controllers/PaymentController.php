@@ -29,7 +29,6 @@ class PaymentController extends Controller
         if ($message === '') {
             $message = "We received your payment, but the policy could not be issued automatically.";
         }
-
         
         return view('payment_issue', [
             'title' => "We received your payment, but the policy could not be issued automatically.",
@@ -267,7 +266,7 @@ class PaymentController extends Controller
             return $this->jsonError(
                 $issueErrorMessage !== '' ? $issueErrorMessage : 'Fail to Issue policy',
                 [],
-                null,
+                ['payment_issue' => true],
                 500
             );
         }
