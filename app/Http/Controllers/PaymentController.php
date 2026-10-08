@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Requests\PaymentTransitionCreateRequest;
 use App\Models\Order;
 use App\Models\PaymentTransition;
 
@@ -41,13 +43,178 @@ class PaymentController extends Controller
 
     }
 
-    public function createPaymentTransition() 
+    public function createPaymentTransition(PaymentTransitionCreateRequest $request, Order $order) 
     {
+        // Fetch request get
+        $requestType = $request->request_type ?? 'inquire';
+        $data = $request->all();
+        write_log('Params are : ' . json_encode($data));
 
+        $createInfo = $data['payment_create_info'] ?? [];
+        if (!empty($createInfo)) {
+            $requestType = 'callback';
+        }
+
+        // If type 'callback' then need to make checksum validation
+        if ($requestType == 'callback' and !$this->verifyChecksum($data, $createInfo)) {
+            Log::error('KBank checksum verification failed. Payload: ' . json_encode($data, JSON_UNESCAPED_UNICODE));
+
+            return $this->jsonError(
+                'KBank checksum verification failed.',
+                ['checksum' => 'Invalid payment checksum.'],
+                $data,
+                422
+            );
+        }
+
+        // Fetch old payment transition
+        $payment = PaymentTransition::where('charge_id', $data['charge_id'])->first();
+        if (empty($payment)) {
+            $payment = PaymentTransition::where('order_id', $order->id)->first();
+        }
+
+        // Fetch customer
+        $customer = $order->customer;
+
+        // Fetch order -> issue_policy_result to check already issued ? or not
+        $existingIssueResult = $order->issue_policy_result ?? [];
+        $alreadyIssued = is_array($existingIssueResult) and (($existingIssueResult['result'] ?? '') === 'Success' or trim((string)($existingIssueResult['PolicyNo'] ?? '')) !== '');
+        
+        /* # Soap API call
+        if ($alreadyIssued) {
+            $issueApiResult = $existingIssueResult;
+            Log::info('Issue API result already exists for order ' . $order['order_id'] . ': ' . json_encode($issueApiResult));
+        } else {
+            # Call issue policy api method
+            $issueApiResult = $this->callIssuePolicyAPI($order);
+            Log::info('Issue API result is : ' . json_encode($issueApiResult));
+        }
+        
+        // Save error message by Soap API
+        if (empty($issueApiResult) or ($issueApiResult['result'] ?? '') == 'Fail') {
+            $issueErrorMessage = $this->normalizeString($issueApiResult['errorMessage'] ?? '');
+            $order->update([
+                'issue_policy_result' => json_encode([
+                    'vat' => '',
+                    'duty' => '',
+                    'total' => '',
+                    'p_code' => '',
+                    'result' => 'Fail',
+                    'Barcode' => '',
+                    'premium' => '',
+                    'PolicyNo' => '',
+                    'PolicyURL' => '',
+                    'errorCode' => '',
+                    'errorMessage' => $issueErrorMessage,
+                ], JSON_UNESCAPED_UNICODE),
+            ]);
+
+            return $this->jsonError(
+                'fail to create payment transition',
+                $issueErrorMessage !== '' ? $issueErrorMessage : null,
+                null,
+                500
+            );
+        }
+        */
+
+        if (!empty($payment)) {
+            // When payment is okay and order is only remaining
+            if ($payment->status === 'success' and $order->payment_status !== 'paid' and $alreadyIssued) {
+                $order->update([
+                    'policy_no' => $existingIssueResult['PolicyNo'] ?? ($order->policy_no ?? ''),
+                    'policy_url' => $existingIssueResult['PolicyURL'] ?? ($order->policy_url ?? ''),
+                    'status' => 'delivered',
+                    'is_email_sent' => 1,
+                    'is_policy_generated' => 1,
+                    'payment_status' => 'paid',
+                    'paid_at' => date('Y-m-d H:i:s', time())
+                ]);
+    
+                return $this->jsonResponse('Successfully created payment transition', $payment);
+            }
+
+            // When payment is still pending, then need to update the latest result
+            if ($payment->status == 'pending') {
+                $paymentModel->update([
+                    'charge_id' => $data['charge_id'] ?? null,
+                    'provider_status' => $data['transaction_state'],
+                    'status' => $data['status'],
+                    'payment_create_info' => json_encode($data['payment_create_info']),
+                    'inquiry_data_result' => json_encode($data['inquiry_data_result'] ?? [])
+                ]);
+                $payment = PaymentTransition::find($payment->id);
+            }
+        } else {
+            // Create fresh payment transition with latest result
+            $paymentPayload = [
+                'order_id' => $order->id,
+                'customer_id' => $customer->id,
+                'reference_no' => $this->generateRandomNo(),
+                'charge_id' => $data['charge_id'],
+                'provider' => 'kbank',
+                'method' => $order->payment_method,
+                'status' => $data['status'],
+                'provider_status' => $data['transaction_state'],
+                'amount' => $data['amount'],
+                'currency' => 'THB',
+                'payment_create_info' => json_encode($createInfo),
+                'inquiry_data_result' => json_encode($payload['inquiry_data_result'] ?? [])
+            ];
+            $payment = PaymentTransition::create($paymentPayload);
+        }
+
+        if ($payment and $order->payment_status == 'unpaid') {
+            $order->update([
+                'policy_no' => $issueApiResult['PolicyNo'] ?? "",
+                'policy_url' => $issueApiResult['PolicyURL'] ?? "",
+                'status' => 'delivered',
+                'is_email_sent' => 1,
+                'is_policy_generated' => 1,
+                'issue_policy_result' => json_encode($issueApiResult ?? []),
+                'payment_status' => 'paid',
+                'paid_at' => date('Y-m-d H:i:s', time())
+            ]);
+        }
+
+        return $this->jsonResponse('Successfully created payment transition', $payment);
     }
 
     public function inquiryKBankPaymentTransition()
     {
 
+    }
+
+    private function verifyChecksum(array $payload, array $createInfo): bool
+    {
+        $receivedChecksum = strtolower(preg_replace('/\s+/', '', (string)($createInfo['checksum'] ?? $payload['checksum'] ?? '')));
+        if ($receivedChecksum === '') {
+            write_log('KBank checksum is missing from callback payload', 'ERROR');
+            return false;
+        }
+
+        $amount = $createInfo['amount'] ?? ($payload['amount'] ?? 0);
+        $checksumBase = $this->normalizeString($createInfo['id'] ?? ($payload['charge_id'] ?? ''))
+            . number_format((float)$amount, 4, '.', '')
+            . $this->normalizeString($createInfo['currency'] ?? ($payload['currency'] ?? 'THB'))
+            . $this->normalizeString($createInfo['status'] ?? ($payload['status'] ?? ''))
+            . $this->normalizeString($createInfo['transaction_state'] ?? ($payload['transaction_state'] ?? ''))
+            . config('services.kbank.private_key');
+
+        $expectedChecksum = hash('sha256', $checksumBase);
+        if (!hash_equals($expectedChecksum, $receivedChecksum)) {
+            Log::error(
+                'KBank checksum mismatch. Expected: ' . $expectedChecksum . ' Received: ' . $receivedChecksum,
+                'ERROR'
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+    private function normalizeString(mixed $value): string
+    {
+        return trim((string) $value);
     }
 }
