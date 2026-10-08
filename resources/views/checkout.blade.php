@@ -70,7 +70,7 @@
             @if ($isCardPayment)
                 <div class="row mt-3 justify-content-center">
                     <div class="col-xl-12 col-md-12 col-sm-12">
-                        <form method="POST" action="{{ url('/checkout') }}" id="checkoutForm">
+                        <form method="POST" action="{{ route('kbank-checkout', $order) }}" id="checkoutForm">
                             @csrf
                             <input type="hidden" name="product_id" id="checkout_product_id" value="{{ $productId }}">
                             <input type="hidden" name="product_name" id="checkout_product_name" value="{{ $productName }}">
@@ -93,7 +93,7 @@
             @if ($isQrPayment and $qrOrderId !== '')
                 <div class="row mt-3 justify-content-center">
                     <div class="col-xl-12 col-md-12 col-sm-12">
-                        <form method="POST" action="{{ url('/payment-inquiry?order_id=' . rawurlencode($orderIdValue)) }}" id="qrCheckoutForm">
+                        <form method="POST" action="{{ route('show-checkout') }}" id="qrCheckoutForm">
                             @csrf
                             <input type="hidden" name="order_id" value="{{ $orderIdValue }}">
                             <script type="text/javascript"
@@ -157,10 +157,10 @@
         const IS_QR_PAYMENT = @json($isQrPayment);
         const IS_LINK_PAYMENT = @json($isLinkPayment);
 
-        let PAYMENT_ISSUE_URL = "{{ url('payment-issue') . '/' . $orderId }}";
         // let RECEIPT_URL = "{{ url('/receipt?order_id=' . rawurlencode((string) $orderId)) }}";
-        // let INQUIRE_URL = "{{ url('/inquiry-kbank-payment') }}";
-        // let HOME_PAGE_URL = "{{ route('home') }}";
+        let PAYMENT_ISSUE_URL = "{{ route('payment-issue', $order) }}";
+        let INQUIRE_URL = "{{ route('kbank-payment-inquiry', $order) }}";
+        let HOME_PAGE_URL = "{{ route('home') }}";
 
         async function getPayment() {
             let fullUrl = INQUIRE_URL;

@@ -8,6 +8,7 @@ use App\Http\Requests\PaymentTransitionCreateRequest;
 use App\Models\Order;
 use App\Models\PaymentTransition;
 use App\Services\KbankPaymentService;
+use App\Services\HttpService;
 
 class PaymentController extends Controller
 {
@@ -42,6 +43,73 @@ class PaymentController extends Controller
     public function receipt(Order $order)
     {
 
+    }
+
+    public function kbankCheckout(Request $request, Order $order)
+    {
+        $data = $request->all();
+        $token = $data['token'];
+        $productName = $data['product_name'];
+        $orderId = $data['order_id'];
+        $amount = (float)$data['product_price'];
+        
+        if (empty($token)) {
+            return $this->redirectRoute('home', errors: [
+                'payment' => 'Please select a plan first!',
+            ]);
+        }
+    
+        $endpoint = config('services.kbank.master_inquiry_url');
+        $apiKey = config('services.kbank.private_key');
+
+        $payload = [
+            'amount' => round($amount, 2),
+            'currency' => 'THB',
+            'description' => $productName,
+            'source_type' => 'card',
+            'mode' => 'token',
+            'reference_order' => $orderId,
+            'token' => $token,
+            'ref_1' => 'ref1',
+            'ref_2' => 'ref2'
+        ];
+
+        $headers = [
+            'Content-Type: application/json',
+            'x-api-key: ' . $apiKey,
+            'Accept: application/json',
+        ];
+
+        $fields = json_encode($payload, JSON_UNESCAPED_UNICODE);
+
+        // Send the request to the payment gateway
+        $httpService = new HttpService($endpoint, $headers, $fields, 'post');
+        $response = $httpService->send();
+            
+        $authorizeStatus = $response['transaction_state'];
+        $status = $response['status'];
+
+        // Handle fail response
+        if (empty($status) or $status != 'success') {
+            return $this->redirectRoute('home', errors: [
+                'payment' => 'Failed to checkout with KBank',
+            ]);
+        }
+
+        // Handle authorize response
+        if ($authorizeStatus == 'Pre-Authorized') {
+            $redirectUrl = ($response['redirect_url'] ?? '');
+            if ($redirectUrl === '') {
+                return $this->redirectRoute('home', errors: [
+                    'payment' => 'KBank redirect URL is missing',
+                ]);
+            }
+
+            return redirect()->away($redirectUrl);
+        }
+
+        // All others go to payment inquire page (checkout.blade.php)
+        return redirect()->route('show-checkout');
     }
 
     public function createPaymentTransition(PaymentTransitionCreateRequest $request, Order $order) 
