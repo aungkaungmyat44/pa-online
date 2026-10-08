@@ -29,6 +29,10 @@ final class KbankPaymentService
     public string $linkMerchantId2;
     public string $inquirePaymentLinkUrl;
 
+    public string $masterInquiryUrl;
+    public string $qrInquiryUrl;
+    public string $linkInquiryUrl;
+
     public function __construct(string $paymentMethod)
     {
         $this->paymentMethod = $paymentMethod;
@@ -41,6 +45,10 @@ final class KbankPaymentService
         $this->linkMerchantId1 = config('services.kbank.link_merchant_id_1');
         $this->linkMerchantId2 = config('services.kbank.link_merchant_id_2');
         $this->inquirePaymentLinkUrl = config('services.kbank.inquiry_payment_link_url');
+
+        $this->masterInquiryUrl = config('services.kbank.master_inquiry_url');
+        $this->qrInquiryUrl = config('services.kbank.qr_inquiry_url');
+        $this->linkInquiryUrl = config('services.kbank.link_inquiry_url');
     }
 
     public function availablePaymentMethods() : array
@@ -70,15 +78,17 @@ final class KbankPaymentService
             }
             
             return [
-                'success' => true,
+                'success' => $result['success'] ?? false,
                 'message' => $result['message'],
-                'data' => $result['data'] ?? []
+                'data' => $result['data'] ?? [],
+                'code' => $result['code'] ?? (($result['success'] ?? false) ? 200 : 400),
             ];
         } else {
             return [
                 'success' => false,
                 'message' => 'Payment method is not valid',
-                'data' => []
+                'data' => [],
+                'code' => 400,
             ];
         }
     }
@@ -87,13 +97,15 @@ final class KbankPaymentService
     {
         // Master checkout only need order information
         return [
+            'success' => true,
             'message' => 'Success to generate master checkout data',
             'data' => [
                 'referenceOrderId' => $referenceOrderId,
                 'totalAmount' => $totalAmount,
                 'productId' => $productId,
                 'productName' => $productName
-            ]
+            ],
+            'code' => 200,
         ];
     }
 
@@ -161,13 +173,16 @@ final class KbankPaymentService
                 'data' => [
                     'qrId' => $qrOrderId,
                     'paymentTransition' => $paymentTransition
-                ]
+                ],
+                'code' => 200,
             ];
         } catch (\Throwable $error) {
             Log::info("Error in QR code generation: " . $error->getMessage());
             return [
                 'success' => false,
-                'message' => 'Error in QR code generation'
+                'message' => 'Error in QR code generation',
+                'data' => [],
+                'code' => 500,
             ];
         }
     }
@@ -328,7 +343,8 @@ final class KbankPaymentService
                     'linkUrl' => $linkUrl,
                     'linkRef' => $linkRef,
                     'qrCodeSrc' => $qrCodeSrc
-                ]
+                ],
+                'code' => 200,
             ];
         } catch (\Throwable $error) {
             Log::error('Error in link URL generation', [
@@ -337,7 +353,105 @@ final class KbankPaymentService
             ]);
             return [
                 'success' => false,
-                'message' => 'Error in link URL generation'
+                'message' => 'Error in link URL generation',
+                'data' => [],
+                'code' => 500,
+            ];
+        }
+    }
+
+    public function handlleInquiry(Order $order) : array
+    {
+        // Fetch order details
+        $method = $order->payment_method ?? 'card';
+        $chargeResponse = [];
+        $paymentPayload = [];
+
+        $referenceOrder = (string)$order->order_unique_code;
+        if (trim($referenceOrder) === '') {
+            return [
+                'success' => false,
+                'message' => "Order has no reference unique code!",
+                'data' => $result['data'] ?? [],
+                'code' => 400,
+            ];
+        }
+
+        try {
+            if (in_array($method, $this->availablePaymentMethods)) {
+                $pendingPayment = $paymentModel->findByOrderId($order['id'], 'pending');
+                if (empty($pendingPayment) or empty($pendingPayment['charge_id'])) {
+                    return [
+                        'success' => true,
+                        'message' => 'Payment is waiting to start',
+                        'data' => ['status' => 'pending'],
+                        'code' => 200,
+                    ];
+                }
+                $chargeId = $pendingPayment['charge_id'];
+                $date = date('Ymd', time());
+                $endpoint = $this->masterInquiryUrl . "$chargeId";
+                $httpService = new HttpService($endpoint, $headers, '', 'get');
+                $chargeResponse = $httpService->sendGet();
+    
+            } else if ($method == 'qr') {
+                $pendingPayment = $paymentModel->findByOrderId($order['id'], 'pending');
+                if (empty($pendingPayment) or empty($pendingPayment['qr_id'])) {
+                    return [
+                        'success' => true,
+                        'message' => 'Payment is waiting to start',
+                        'data' => ['status' => 'pending'],
+                        'code' => 200,
+                    ];
+                }
+                $qrId = $pendingPayment['qr_id'];
+                $endpoint = $this->qrInquiryUrl . "$qrId";
+                $httpService = new HttpService($endpoint, $headers, '', 'get');
+                $chargeResponse = $httpService->sendGet();
+                
+            } else if ($method == 'link') {
+                $pendingPayment = $paymentModel->findByOrderId($order['id'], 'pending');
+                if (empty($pendingPayment) or empty($pendingPayment['link_ref'])) {
+                    return [
+                        'success' => true,
+                        'message' => 'Payment is waiting to start',
+                        'data' => ['status' => 'pending'],
+                        'code' => 200,
+                    ];
+                }
+                $linkRef = $pendingPayment['link_ref'];
+                $endpoint = $this->linkInquiryUrl . "$linkRef";
+                $httpService = new HttpService($endpoint, $headers, '', 'get');
+                $chargeResponse = $httpService->sendGet();
+    
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'Unsupported payment method for inquiry',
+                    'data' => [],
+                    'code' => 400,
+                ];
+            }
+
+            return [
+                'success' => true,
+                'message' => "Successfully fetch kbank payment information",
+                'data' => $chargeResponse,
+                'code' => 200,
+            ];
+        } catch (\Exception $error) {
+            Log::error('Error in K-Bank payment inquiry', [
+                'order_id' => $order->id,
+                'payment_method' => $method,
+                'reference_order' => $referenceOrder,
+                'exception' => $error,
+            ]);
+
+            return [
+                'success' => false,
+                'message' => $error->getMessage(),
+                'data' => $result['data'] ?? [],
+                'code' => 500,
             ];
         }
     }

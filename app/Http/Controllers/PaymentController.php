@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Requests\PaymentTransitionCreateRequest;
 use App\Models\Order;
 use App\Models\PaymentTransition;
+use App\Services\KbankPaymentService;
 
 class PaymentController extends Controller
 {
@@ -180,9 +181,83 @@ class PaymentController extends Controller
         return $this->jsonResponse('Successfully created payment transition', $payment);
     }
 
-    public function inquiryKBankPaymentTransition()
+    public function inquiryKBankPaymentTransition(Request $request, Order $order)
     {
+        $existingPayment = PaymentTransition::where('order_id', $order->id)->first();
+        $payment = [];
 
+        $issuePolicyResult = $order->issue_policy_result ?? [];
+        if (
+            !empty($existingPayment) and
+            $existingPayment->status == 'success' and
+            $order->payment_status != 'paid' and
+            is_array($issuePolicyResult) and
+            $issuePolicyResult['result'] == 'Fail'
+        ) {
+            $issueErrorMessage = trim((string)($issuePolicyResult['errorMessage'] ?? ''));
+
+            return $this->jsonError(
+                $issueErrorMessage !== '' ? $issueErrorMessage : 'Fail to Issue policy',
+                [],
+                null,
+                500
+            );
+        }
+
+        if (!empty($existingPayment) and $existingPayment->status == 'success' and $order->payment_status == 'paid') {
+            $payment = $existingPayment;
+            return $this->jsonResponse('Success to fetch K-Bank payment information', $payment, null, 200);
+        }
+
+        $apiKey = config('services.kbank.private_key');
+        $headers = [
+            'Content-Type: application/json',
+            'x-api-key: ' . $apiKey,
+            'Accept: application/json',
+        ];
+
+        $kbankPaymentService = new KbankPaymentService($order->payment_method);
+        $chargeResult = $kbankPaymentService->handlleInquiry($order);
+        $chargeResponse = [];
+
+        if (empty($chargeResult) or !$chargeResult['success']) {
+            return $this->jsonError(
+                $chargeResult['message'] ?? 'Fail to fetch K-Bank payment information',
+                [],
+                $chargeResult['data'] ?? null,
+                $chargeResult['code'] ?? 400
+            );
+        }
+
+        $chargeResponse = $chargeResult['data'];
+        if (!empty($chargeResponse) and !empty($chargeResponse['payment_link']['status']) and $chargeResponse['payment_link']['status'] == 'PAID') {
+            $paymentPayload = [
+                'charge_id' => $chargeResponse['payment_detail'][0]['id'],
+                'reference_order' => $order->order_unique_code,
+                'status' => $chargeResponse['payment_link']['status'] == 'PAID' ? 'success' : 'pending',
+                'transaction_state' => $chargeResponse['payment_detail'][0]['transaction_state'],
+                'amount' => $chargeResponse['payment_link']['amount'] ?? 0,
+                'payment_create_info' => [],
+                'inquiry_data_result' => json_encode($chargeResponse ?? [])
+            ];
+
+            $paymentTransitionRequest = PaymentTransitionCreateRequest::create(
+                route('payment-transitions-create', $order),
+                'POST',
+                $paymentPayload
+            );
+
+            $result = $this->createPaymentTransition($paymentTransitionRequest, $order);
+            if ($result->getStatusCode() >= 400) {
+                return $result;
+            }
+
+            $payment = PaymentTransition::where('order_id', $order->id)->first();
+
+            return $this->jsonResponse('Success to fetch K-Bank payment information', $payment, null, 200);
+        }
+
+        return $this->jsonResponse('Success to fetch K-Bank payment information', $payment, null, 200);
     }
 
     private function verifyChecksum(array $payload, array $createInfo): bool

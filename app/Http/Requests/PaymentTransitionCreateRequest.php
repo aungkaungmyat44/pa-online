@@ -9,8 +9,6 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class PaymentTransitionCreateRequest extends FormRequest
 {
-    private bool $invalidPaymentCreateInfoJson = false;
-
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -53,43 +51,12 @@ class PaymentTransitionCreateRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        $paymentCreateInfo = $this->input('payment_create_info', []);
-
-        if (is_string($paymentCreateInfo) and $paymentCreateInfo !== '') {
-            $decoded = json_decode($paymentCreateInfo, true);
-            if (json_last_error() === JSON_ERROR_NONE) {
-                $paymentCreateInfo = $decoded;
-            } else {
-                $this->invalidPaymentCreateInfoJson = true;
-                $paymentCreateInfo = [];
-            }
-        }
-
-        $amount = $this->input('amount');
-        $amountFloat = filter_var($amount, FILTER_VALIDATE_FLOAT);
-
         $this->merge([
             'reference_order' => $this->normalizeString($this->input('reference_order', '')),
             'charge_id' => $this->normalizeString($this->input('charge_id', '')),
             'status' => strtolower($this->normalizeString($this->input('status', ''))),
             'transaction_state' => $this->normalizeString($this->input('transaction_state', '')),
-            'amount' => $amountFloat !== false && $amountFloat > 0
-                ? number_format($amountFloat, 2, '.', '')
-                : $amount,
-            'payment_create_info' => $paymentCreateInfo,
         ]);
-    }
-
-    public function withValidator(Validator $validator): void
-    {
-        $validator->after(function (Validator $validator) {
-            if ($this->invalidPaymentCreateInfoJson) {
-                $validator->errors()->add(
-                    'payment_create_info',
-                    'payment_create_info must be valid JSON'
-                );
-            }
-        });
     }
 
     protected function failedValidation(Validator $validator): void

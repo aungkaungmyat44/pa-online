@@ -61,6 +61,9 @@ return [
         'create_link_url' => env('KBANK_CREATE_LINK_URL', 'https://dev-kpaymentgateway-services.kasikornbank.com/KPGW-Payment-Webapi/public/api/payment-link/create'),
         'link_merchant_id_1' => env('KBANK_LINK_MERCHANT_ID_1', '401926120244001'),
         'link_merchant_id_2' => env('KBANK_LINK_MERCHANT_ID_2', '401926158478001'),
-        'inquiry_payment_link_url' => env('KBANK_LINK_INQUIRY_URL', 'https://dev-kpaymentgateway-services.kasikornbank.com/KPGW-Payment-Webapi/public/api/payment-link')
+        'inquiry_payment_link_url' => env('KBANK_LINK_INQUIRY_URL', 'https://dev-kpaymentgateway-services.kasikornbank.com/KPGW-Payment-Webapi/public/api/payment-link'),
+        'master_inquiry_url' => env('KBANK_MASTER_INQUIRY_CHARGE_URL', 'https://dev-kpaymentgateway-services.kasikornbank.com/card/v2/charge/'),
+        'qr_inquiry_url' => env('KBANK_QR_INQUIRY_URL', 'https://dev-kpaymentgateway-services.kasikornbank.com/qr/v2/qr/'),
+        'link_inquiry_url' => env('KBANK_LINK_INQUIRY_URL', 'https://dev-kpaymentgateway-services.kasikornbank.com/KPGW-Payment-Webapi/public/api/payment-link/'),
     ],
 ];

@@ -31,6 +31,7 @@ Route::get('payment-issue/{order}', [PaymentController::class, 'paymentIssue'])-
 // API
 Route::get('districts', [PageController::class, 'districts'])->name('districts');
 Route::get('subdistricts', [PageController::class, 'subdistricts'])->name('subdistricts');
+Route::get('kbank-payments/{order}/inquiry', [PaymentController::class, 'inquiryKBankPaymentTransition'])->name('kbank-payment-inquiry');
 Route::post('payment-transitions/{order}/create', [PaymentController::class, 'createPaymentTransition'])->name('payment-transitions-create');
 
 // Route::post('review-information', [PageController::class, 'reviewInformation'])->name('review-information');
