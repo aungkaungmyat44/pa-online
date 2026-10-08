@@ -611,6 +611,11 @@ class PageController extends Controller
         return view('check-policy');
     }
 
+    public function checkPolicyForm(Request $request)
+    {
+         return view('check-policy-form');
+    }
+
     // Json Helpers
     public function getNameTitles()
     {
