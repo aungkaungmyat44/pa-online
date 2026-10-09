@@ -396,7 +396,7 @@ final class KbankPaymentService
                     ];
                 }
 
-                $chargeId = $pendingPayment['charge_id'];
+                $chargeId = $payment['charge_id'];
                 $date = date('Ymd', time());
                 $endpoint = $this->masterInquiryUrl . "$chargeId";
                 $httpService = new HttpService($endpoint, $headers, '', 'get');
@@ -427,7 +427,7 @@ final class KbankPaymentService
                     ];
                 }
 
-                $linkRef = $pendingPayment['link_ref'];
+                $linkRef = $payment['link_ref'];
                 $endpoint = $this->linkInquiryUrl . "$linkRef";
                 $httpService = new HttpService($endpoint, $headers, '', 'get');
                 $chargeResponse = $httpService->sendGet();
