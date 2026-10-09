@@ -389,7 +389,7 @@ final class KbankPaymentService
                                                     ->where('status', 'pending')
                                                     ->first();
 
-                if (empty($pendingPayment) or empty($pendingPayment['charge_id'])) {
+                if (!empty($pendingPayment)) {
                     return [
                         'success' => true,
                         'message' => 'Card Payment is waiting to start',
@@ -406,9 +406,9 @@ final class KbankPaymentService
     
             } else if ($method == self::QRCODE) {
                 $pendingPayment = PaymentTransition::where('order_id', $order->id)
-                    ->where('status', 'pending')
-                    ->first();
-                if (empty($pendingPayment) or empty($pendingPayment['qr_id'])) {
+                                                ->where('status', 'pending')
+                                                ->first();
+                if (!empty($pendingPayment)) {
                     return [
                         'success' => true,
                         'message' => 'QR Payment is waiting to start',
@@ -423,9 +423,9 @@ final class KbankPaymentService
                 
             } else if ($method == self::LINK) {
                 $pendingPayment = PaymentTransition::where('order_id', $order->id)
-                    ->where('status', 'pending')
-                    ->first();
-                if (empty($pendingPayment) or empty($pendingPayment['link_ref'])) {
+                                                    ->where('status', 'pending')
+                                                    ->first();
+                if (!empty($pendingPayment)) {
                     return [
                         'success' => true,
                         'message' => 'Link Payment is waiting to start',
