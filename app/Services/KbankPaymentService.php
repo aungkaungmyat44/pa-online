@@ -363,6 +363,7 @@ final class KbankPaymentService
     public function handleInquiry(Order $order) : array
     {
         // Fetch order details
+        Log::info('Order is : ' . json_encode($order));
         $method = $order->payment_method ?? 'card';
         $chargeResponse = [];
         $paymentPayload = [];
