@@ -123,8 +123,20 @@ class PaymentController extends Controller
         return redirect()->route('show-checkout');
     }
 
-    public function createPaymentTransition(PaymentTransitionCreateRequest $request, Order $order) 
+    public function createPaymentTransition(PaymentTransitionCreateRequest $request)
     {
+        $orderReferenceNumber = $request->input('reference_order');
+        $order = Order::where('order_unique_code', $orderReferenceNumber)->first();
+
+        if (empty($order)) {
+            return $this->jsonError(
+                'Order not found.',
+                ['reference_order' => 'The specified order could not be found.'],
+                null,
+                404
+            );
+        }
+
         // Fetch request get
         $requestType = $request->request_type ?? 'inquire';
         $data = $request->all();
@@ -348,12 +360,12 @@ class PaymentController extends Controller
     
             if (!empty($paymentPayload)) {
                 $paymentTransitionRequest = PaymentTransitionCreateRequest::create(
-                    route('payment-transitions-create', $order),
+                    route('payment-transitions-create'),
                     'POST',
                     $paymentPayload
                 );
                 Log::info(json_encode($paymentTransitionRequest));
-                $result = $this->createPaymentTransition($paymentTransitionRequest, $order);
+                $result = $this->createPaymentTransition($paymentTransitionRequest);
                 if ($result->getStatusCode() >= 400) {
                     return $result;
                 }
