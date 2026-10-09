@@ -66,4 +66,14 @@ return [
         'qr_inquiry_url' => env('KBANK_QR_INQUIRY_URL', 'https://dev-kpaymentgateway-services.kasikornbank.com/qr/v2/qr/'),
         'link_inquiry_url' => env('KBANK_LINK_INQUIRY_URL', 'https://dev-kpaymentgateway-services.kasikornbank.com/KPGW-Payment-Webapi/public/api/payment-link/'),
     ],
+
+    'payment_callback' => [
+        'max_request_age' => env('PAYMENT_CALLBACK_MAX_REQUEST_AGE', 60 * 60),
+        'apps' => [
+            'payment-service' => env(
+                'PAYMENT_CALLBACK_PAYMENT_SERVICE_SECRET',
+                'b7d84f2c1a9e6d3f5c8b2a7e1d4f9c6a8b3d2e7f1c5a9b4e6d8f2c1a7b3e5d9'
+            ),
+        ],
+    ],
 ];

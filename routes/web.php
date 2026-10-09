@@ -35,7 +35,7 @@ Route::get('payment-transitions/{order}/payment-issue', [PaymentController::clas
 Route::get('payment-transitions/{order}/receipt', [PaymentController::class, 'receipt'])->name('receipt');
 
 Route::post('payment-transitions/{order}/kbank/checkout', [PaymentController::class, 'kbankCheckout'])->name('kbank-checkout');
-Route::post('payment-transitions/create', [PaymentController::class, 'createPaymentTransition'])->name('payment-transitions-create');
+Route::post('payment-transitions/create', [PaymentController::class, 'createPaymentTransition'])->name('payment-transitions-create-web');
 
 // Check policy
 Route::get('check-policy', [PageController::class, 'checkPolicy'])->name('check-policy');

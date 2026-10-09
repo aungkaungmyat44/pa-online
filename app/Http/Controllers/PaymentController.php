@@ -360,8 +360,9 @@ class PaymentController extends Controller
     
             if (!empty($paymentPayload)) {
                 /* # Create payment transition after inquirying success from KBank
+                
                 $paymentTransitionRequest = PaymentTransitionCreateRequest::create(
-                    route('payment-transitions-create'),
+                    route('payment-transitions-create-web'),
                     'POST',
                     $paymentPayload
                 );
