@@ -163,11 +163,11 @@
                                 Language - TH <i data-feather="chevron-down" class="text-white"></i>
                             </a>
                             <div class="dropdown-menu" id="languageDropDownMenu">
-                                <a class="dropdown-item" href="http://192.6.1.94:8003/proc.php?action=products&amp;lang=th">
-                                    <img src="https://flagsapi.com/TH/flat/32.png" alt="Thai flag" class="mx-1">Thai
+                                <a class="dropdown-item" href="{{ $companyWebsiteUrl }}change-language/th">
+                                    <img src="https://flagsapi.com/TH/flat/32.png" alt="Thai flag" class="mx-1">ภาษาไทย
                                 </a>
-                                <a class="dropdown-item" href="http://192.6.1.94:8003/proc.php?action=products&amp;lang=en">
-                                    <img src="https://flagsapi.com/GB/flat/32.png" alt="English flag" class="mx-1">English
+                                <a class="dropdown-item" href="{{ $companyWebsiteUrl }}change-language/en">
+                                    <img src="https://flagsapi.com/GB/flat/32.png" alt="English flag" class="mx-1">ภาษาอังกฤษ
                                 </a>
                             </div>
                         </div>
@@ -248,6 +248,8 @@
                                         <a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance?show=1" class="list-group-item list-group-item-action">ประกันภัยรถยนต์ ประเภท 1,3,5</a>
                                         <a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance?show=2" class="list-group-item list-group-item-action">ประกันภัยรถยนต์ (พ.ร.บ.)</a>
                                         <a href="http://192.6.1.94:8003/proc.php?action=products&lang=th" class="list-group-item list-group-item-action">ซื้อประกันภัยรถยนต์ พ.ร.บ.</a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance/van" class="list-group-item list-group-item-action">ประกันรถตู้ SUPER</a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance/voluntary" class="list-group-item list-group-item-action">ประกันภัยรถยนต์ (ภาคสมัครใจ)</a>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -256,13 +258,14 @@
                                         <a href="{{ $companyWebsiteUrl }}{{ $lang }}/fire_insurance" class="list-group-item list-group-item-action">การประกันอัคคีภัย</a>
                                         <a href="{{ $companyWebsiteUrl }}{{ $lang }}/other_insurance" class="list-group-item list-group-item-action">การประกันภัยเบ็ดเตล็ด</a>
                                         <a href="{{ $companyWebsiteUrl }}{{ $lang }}/marine_cargo_insurance" class="list-group-item list-group-item-action">การประกันภัยทางทะเลและขนส่ง</a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/personal_accident_insurance/pa888" class="list-group-item list-group-item-action">ประกันอุบัติเหตุส่วนบุคคล (PA888)</a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/personal_accident_insurance/unnamed" class="list-group-item list-group-item-action">ประกันอุบัติเหตุส่วนบุคคล (ไม่ระบุชื่อ)</a>
                                     </div>
                                 </div>
                                 <div class="col-lg-4 border-start">
                                     <div class="list-group list-group-flush list-group-no-border list-group-sm">
                                         <a href="{{ $companyWebsiteUrl }}{{ $lang }}/shop" class="list-group-item list-group-item-action"><strong>สินค้าจำหน่ายตัวแทน</strong></a>
                                         <a href="{{ $companyWebsiteUrl }}{{ $lang }}/downloads" class="list-group-item list-group-item-action"><strong>ดาวน์โหลด</strong></a>
-                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/policy" class="list-group-item list-group-item-action"><strong>การตรวจสอบเลขกรมธรรม์</strong></a>
                                     </div>
                                 </div>
                             </div>
@@ -409,11 +412,32 @@
 									ผลิตภัณฑ์
 								</a>
 								<ul>
-									<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance">ประกันรถยนต์</a></li>
-									<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/fire_insurance">การประกันอัคคีภัย</a></li>
-									<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/other_insurance">การประกันภัยเบ็ดเตล็ด</a></li>
-									<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/marine_cargo_insurance">การประกันภัยทางทะเลและขนส่ง</a></li>
+									<li>
+										<a href="#" class="has-arrow">
+											ประกันรถยนต์
+										</a>
+										<ul>
+											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance?show=1">ประกันภัยรถยนต์ ประเภท 1,3,5</a></li>
+											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance?show=2">ประกันภัยรถยนต์ (พ.ร.บ.)</a></li>
+											<li><a href="http://192.6.1.94:8003/proc.php?action=products&lang=th">ซื้อประกันภัยรถยนต์ พ.ร.บ.</a></li>
+											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance/van">ประกันรถตู้ SUPER</a></li>
+											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance/voluntary">ประกันภัยรถยนต์ (ภาคสมัครใจ)</a></li>
+										</ul>
+									</li>
+									<li>
+										<a href="#" class="has-arrow">
+											ประกันภัยอื่นๆ
+										</a>
+										<ul>
+											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/fire_insurance">การประกันอัคคีภัย</a></li>
+											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/other_insurance">การประกันภัยเบ็ดเตล็ด</a></li>
+											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/marine_cargo_insurance">การประกันภัยทางทะเลและขนส่ง</a></li>
+											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/personal_accident_insurance/pa888">ประกันอุบัติเหตุส่วนบุคคล (PA888)</a></li>
+											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/personal_accident_insurance/unnamed">ประกันอุบัติเหตุส่วนบุคคล (ไม่ระบุชื่อ)</a></li>
+										</ul>
+									</li>
 									<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/shop">สินค้าจำหน่ายตัวแทน</a></li>
+									<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/downloads">ดาวน์โหลด</a></li>
 								</ul>
 							</li>
 							<li>

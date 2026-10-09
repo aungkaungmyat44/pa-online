@@ -133,7 +133,7 @@
 					<a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('home') }}">
 						<img src="{{ asset('assets/images/saha_logo.png') }}" alt="Sahamongkhon Compulsory Motor Insurance" width="48" height="48" class="mi-logo">
 						<div class="d-flex flex-column">
-							<h6 class="mi-brand-text mb-0">PA Online</h6>
+							<h6 class="mi-brand-text mb-0">PA Direct</h6>
 							<span class="mi-brand-subtext">Sahamongkhon Public Company Limited</span>
 						</div>
 					</a>
@@ -190,7 +190,7 @@
 						<div class="d-flex align-items-center gap-3 mb-3">
 							<img src="{{ asset('assets/images/saha_logo.png') }}" alt="Sahamongkhon Compulsory Motor Insurance" width="52" height="52" class="mi-footer-logo">
 							<div>
-								<h4 class="mi-footer-title mb-1">PA Online</h4>
+								<h4 class="mi-footer-title mb-1">PA Direct</h4>
 								<p class="mi-footer-text mb-0">Sahamongkhon Public Company Limited</p>
 							</div>
 						</div>

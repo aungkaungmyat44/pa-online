@@ -14,7 +14,7 @@ class OtpMail extends Mailable
 
     public function __construct(
         public array $data = [],
-        public string $subjectText = 'PA Online - OTP Code',
+        public string $subjectText = 'PA Direct - OTP Code',
     ) {}
 
     public function envelope(): Envelope

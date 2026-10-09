@@ -1,5 +1,5 @@
 @php
-    $brandName = trim((string) ($brandName ?? 'PA Online'));
+    $brandName = trim((string) ($brandName ?? 'PA Direct'));
     $headerTitle = trim((string) ($headerTitle ?? 'Sending OTP Code'));
     $recipientName = trim((string) ($recipientName ?? 'Customer'));
     $introText = trim((string) ($introText ?? 'Please check the information below.'));

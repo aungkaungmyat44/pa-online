@@ -29,7 +29,7 @@ return [
         ),
         'api_key' => env('ZEPTOMAIL_API_KEY'),
         'from_address' => env('MAIL_FROM_ADDRESS'),
-        'from_name' => env('MAIL_FROM_NAME', 'PA Online'),
+        'from_name' => env('MAIL_FROM_NAME', 'PA Direct'),
 
         // For your sendEmailSmtp() method
         'smtp_host' => env('ZEPTOMAIL_SMTP_HOST', 'smtp.zeptomail.com'),

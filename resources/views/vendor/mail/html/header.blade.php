@@ -5,7 +5,7 @@
         <a href="{{ $url }}" style="display: inline-block;">
             <img
                 src="{{ asset('assets/images/saha_logo.png') }}"
-                alt="PA Online"
+                alt="PA Direct"
                 style="width: 150px; height: auto; max-height: 80px;"
             >
         </a>

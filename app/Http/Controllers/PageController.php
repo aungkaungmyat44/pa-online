@@ -69,11 +69,11 @@ class PageController extends Controller
             now()->greaterThanOrEqualTo($customer->otp_expires_at)
         ) {
             $otp = $this->generateOtp();
-            $subject = 'PA Online - Sending OTP Code';
+            $subject = 'PA Direct - Sending OTP Code';
 
             $mailable = new OtpMail(
                 data: [
-                    'brandName' => 'PA Online',
+                    'brandName' => 'PA Direct',
                     'headerTitle' => 'Sending OTP Code',
                     'recipientName' => $customer->name ?? 'Customer',
                     'introText' => 'Please use the OTP code below to verify your account.',
