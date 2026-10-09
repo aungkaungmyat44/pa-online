@@ -359,6 +359,7 @@ class PaymentController extends Controller
             }
     
             if (!empty($paymentPayload)) {
+                /* # Create payment transition after inquirying success from KBank
                 $paymentTransitionRequest = PaymentTransitionCreateRequest::create(
                     route('payment-transitions-create'),
                     'POST',
@@ -369,6 +370,7 @@ class PaymentController extends Controller
                 if ($result->getStatusCode() >= 400) {
                     return $result;
                 }
+                */
     
                 $payment = PaymentTransition::where('order_id', $order->id)->first();
 
