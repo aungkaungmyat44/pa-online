@@ -384,12 +384,10 @@ final class KbankPaymentService
         }
 
         try {
-            if ($method == self::CARD) {
-                $pendingPayment = PaymentTransition::where('order_id', $order->id)
-                                                    ->where('status', 'pending')
-                                                    ->first();
+            $payment = PaymentTransition::where('order_id', $order->id)->first();
 
-                if (!empty($pendingPayment)) {
+            if ($method == self::CARD) {
+                if (empty($payment)) {
                     return [
                         'success' => true,
                         'message' => 'Card Payment is waiting to start',
@@ -397,7 +395,7 @@ final class KbankPaymentService
                         'code' => 200,
                     ];
                 }
-                
+
                 $chargeId = $pendingPayment['charge_id'];
                 $date = date('Ymd', time());
                 $endpoint = $this->masterInquiryUrl . "$chargeId";
@@ -405,10 +403,7 @@ final class KbankPaymentService
                 $chargeResponse = $httpService->sendGet();
     
             } else if ($method == self::QRCODE) {
-                $pendingPayment = PaymentTransition::where('order_id', $order->id)
-                                                ->where('status', 'pending')
-                                                ->first();
-                if (!empty($pendingPayment)) {
+                if (empty($payment)) {
                     return [
                         'success' => true,
                         'message' => 'QR Payment is waiting to start',
@@ -416,16 +411,14 @@ final class KbankPaymentService
                         'code' => 200,
                     ];
                 }
-                $qrId = $pendingPayment['qr_id'];
+
+                $qrId = $payment['qr_id'];
                 $endpoint = $this->qrInquiryUrl . "$qrId";
                 $httpService = new HttpService($endpoint, $headers, '', 'get');
                 $chargeResponse = $httpService->sendGet();
                 
             } else if ($method == self::LINK) {
-                $pendingPayment = PaymentTransition::where('order_id', $order->id)
-                                                    ->where('status', 'pending')
-                                                    ->first();
-                if (!empty($pendingPayment)) {
+                if (empty($payment)) {
                     return [
                         'success' => true,
                         'message' => 'Link Payment is waiting to start',
@@ -433,6 +426,7 @@ final class KbankPaymentService
                         'code' => 200,
                     ];
                 }
+
                 $linkRef = $pendingPayment['link_ref'];
                 $endpoint = $this->linkInquiryUrl . "$linkRef";
                 $httpService = new HttpService($endpoint, $headers, '', 'get');
