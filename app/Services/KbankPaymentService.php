@@ -391,7 +391,7 @@ final class KbankPaymentService
                 if (empty($pendingPayment) or empty($pendingPayment['charge_id'])) {
                     return [
                         'success' => true,
-                        'message' => 'Payment is waiting to start',
+                        'message' => 'Card Payment is waiting to start',
                         'data' => ['status' => 'pending'],
                         'code' => 200,
                     ];
@@ -410,7 +410,7 @@ final class KbankPaymentService
                 if (empty($pendingPayment) or empty($pendingPayment['qr_id'])) {
                     return [
                         'success' => true,
-                        'message' => 'Payment is waiting to start',
+                        'message' => 'QR Payment is waiting to start',
                         'data' => ['status' => 'pending'],
                         'code' => 200,
                     ];
@@ -427,7 +427,7 @@ final class KbankPaymentService
                 if (empty($pendingPayment) or empty($pendingPayment['link_ref'])) {
                     return [
                         'success' => true,
-                        'message' => 'Payment is waiting to start',
+                        'message' => 'Link Payment is waiting to start',
                         'data' => ['status' => 'pending'],
                         'code' => 200,
                     ];
