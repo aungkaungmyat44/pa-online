@@ -18,7 +18,7 @@
     $linkQrCode = $checkoutData['qrCodeSrc'] ?? "";
 
     $isLinkPayment = $paymentMethod === 'link';
-    $isQrPayment = in_array($paymentMethod, ['thai_qr', 'qr'], true);
+    $isQrPayment = in_array($paymentMethod, ['qr', 'qr'], true);
     $isCardPayment = $paymentMethod === 'card';
     $orderCreatedAtLabel = date('d M Y, H:i', strtotime($order->created_at));
 @endphp

@@ -18,10 +18,10 @@
             'image_alt' => 'โลโก้ Mastercard',
         ],
         [
-            'value' => 'thai_qr',
+            'value' => 'qr',
             'title' => 'ชำระเงินด้วย Thai QR',
             'description' => 'สแกน QR Code ผ่านแอปพลิเคชันธนาคารบนมือถือ',
-            'image' => 'assets/images/thai_qr.png',
+            'image' => 'assets/images/qr.png',
             'image_alt' => 'โลโก้ Thai QR',
         ],
         [

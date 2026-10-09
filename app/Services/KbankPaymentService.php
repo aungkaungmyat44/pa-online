@@ -15,7 +15,7 @@ final class KbankPaymentService
 
     // Payment methods
     public const CARD = 'card';
-    public const QRCODE = 'thai_qr';
+    public const QRCODE = 'qr';
     public const LINK = 'link';
 
     public string $publicKey;
@@ -214,7 +214,7 @@ final class KbankPaymentService
                 'merchant_id' => $this->linkMerchantId1,
                 "merchant_name" => $this->merchantName,
                 "merchant_location" => "online",
-                'source_of_fund' => ['card_full', 'thai_qr'],//'card_smartpay',
+                'source_of_fund' => ['card_full', 'qr'],//'card_smartpay',
                 // 'card_smartpay' => [
                 //     'merchant_id' => $this->linkMerchantId2,
                 //     'smartpay_id' => '0001',

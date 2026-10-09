@@ -332,7 +332,7 @@ class PaymentController extends Controller
 
         if (!empty($chargeResponse)) {
             $paymentPayload = [];
-            if ($isAuthorizedCharge and in_array($order->payment_method, ['card', 'thai_qr']) and !empty($chargeResponse['id'])) {
+            if ($isAuthorizedCharge and in_array($order->payment_method, ['card', 'qr']) and !empty($chargeResponse['id'])) {
                 $paymentPayload = [
                     'charge_id' => $chargeResponse['id'],
                     'reference_order' => $order->order_unique_code,
