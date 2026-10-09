@@ -282,7 +282,7 @@ class PaymentController extends Controller
             !empty($existingPayment) and
             $existingPayment->status == 'success' and
             $order->payment_status != 'paid' and
-            is_array($issuePolicyResult) and
+            !empty($issuePolicyResult) and
             $issuePolicyResult['result'] == 'Fail'
         ) {
             $issueErrorMessage = trim((string)($issuePolicyResult['errorMessage'] ?? ''));
