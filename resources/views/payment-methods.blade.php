@@ -87,13 +87,7 @@
                     </div>
 
                     <div class="health-question-actions">
-                        <button
-                            type="submit"
-                            class="otp-btn otp-btn-outline"
-                            formaction="{{ route('show-review-information') }}"
-                            formmethod="post"
-                            formnovalidate
-                        >ย้อนกลับ</button>
+                        <a href="{{ route('show-review-information') }}" class="otp-btn otp-btn-outline">ย้อนกลับ</a>
                         <button type="submit" class="check-premium-submit">ดำเนินการชำระเงิน</button>
                     </div>
                 </form>
