@@ -51,8 +51,8 @@ class PaymentController extends Controller
 
         return view('receipt', [
             'order' => $order,
-            'policyNumber' => $order->policy_no ?: '-',
-            'email' => $order->customer?->email ?? '',
+            'policyNumber' => $order->policy_no ?: 'MISC-PAI26-0417-09031',
+            'email' => $order->customer->email ?? '',
         ]);
     }
 
