@@ -46,7 +46,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 	</head>
 	@php
-		$companyWebsiteUrl = 'http://192.6.1.199:8000/';
+		$companyWebsiteUrl = config('services.company_website.url');
 		$lang = 'th';
 	@endphp
 	<body class="d-flex flex-column min-vh-100">

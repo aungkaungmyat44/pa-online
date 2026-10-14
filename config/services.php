@@ -76,4 +76,8 @@ return [
             ),
         ],
     ],
+
+    'company_website' => [
+        'url' => env('COMPANY_WEBSITE_URL'),
+    ],
 ];
