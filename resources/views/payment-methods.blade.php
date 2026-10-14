@@ -96,6 +96,9 @@
     </div>
 </section>
 
+@endsection
+
+@push('js')
 <script>
     $(function () {
         $('.payment-method-card').on('click keydown', function (event) {
@@ -113,4 +116,4 @@
         });
     });
 </script>
-@endsection
+@endpush

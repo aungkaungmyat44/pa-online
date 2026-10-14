@@ -151,209 +151,211 @@
             @endif
         </div>
     </div>
-
-    <script>
-        const IS_CARD_PAYMENT = @json($isCardPayment);
-        const IS_QR_PAYMENT = @json($isQrPayment);
-        const IS_LINK_PAYMENT = @json($isLinkPayment);
-
-        let RECEIPT_URL = "{{ route('receipt', $order) }}";
-        let PAYMENT_ISSUE_URL = "{{ route('payment-issue', $order) }}";
-        let INQUIRE_URL = "{{ route('kbank-payment-inquiry', $order) }}";
-        let HOME_PAGE_URL = "{{ route('home') }}";
-
-        async function getPayment() {
-            let fullUrl = INQUIRE_URL;
-            let data = {
-                'order_id': @json($orderIdValue)
-            };
-            console.log(data);
-            return await getData(fullUrl, data);
-        };
-
-        const PAYMENT_POLL_INTERVAL_MS = 60000;
-        const PAYMENT_REDIRECT_DELAY_MS = 300000;
-
-        const GENERIC_PAYMENT_ERROR = "Please try again later.";
-        const AUTO_START_FORM_IDS = [];
-        const AUTO_START_LINK_IDS = [];
-        let paymentPollTimer = null;
-        let paymentErrorHandled = false;
-
-        if (IS_CARD_PAYMENT) {
-            AUTO_START_FORM_IDS.push('checkoutForm');
-        }
-
-        if (IS_QR_PAYMENT) {
-            AUTO_START_FORM_IDS.push('qrCheckoutForm');
-        }
-
-        if (IS_LINK_PAYMENT && @json($linkUrl !== '')) {
-            AUTO_START_LINK_IDS.push('linkPaymentBtn');
-        }
-
-        function tryAutoStartPayment(formId) {
-            const checkoutForm = document.getElementById(formId);
-            if (!checkoutForm || checkoutForm.dataset.autoStarted === '1') {
-                return false;
-            }
-
-            const trigger = checkoutForm.querySelector('button:not([disabled]), input[type="submit"]:not([disabled]), input[type="button"]:not([disabled])');
-            if (!trigger) {
-                return false;
-            }
-
-            checkoutForm.dataset.autoStarted = '1';
-            trigger.click();
-            return true;
-        }
-
-        function tryAutoOpenLink(linkId) {
-            const paymentLink = document.getElementById(linkId);
-            if (!paymentLink || paymentLink.dataset.autoStarted === '1') {
-                return false;
-            }
-
-            paymentLink.dataset.autoStarted = '1';
-            window.open(paymentLink.href, paymentLink.target || '_blank', 'noopener');
-            return true;
-        }
-
-        async function copyText(text) {
-            if (navigator.clipboard && window.isSecureContext) {
-                await navigator.clipboard.writeText(text);
-                return true;
-            }
-
-            const textArea = document.createElement('textarea');
-            textArea.value = text;
-            textArea.setAttribute('readonly', 'readonly');
-            textArea.style.position = 'absolute';
-            textArea.style.left = '-9999px';
-            document.body.appendChild(textArea);
-            textArea.select();
-            const copied = document.execCommand('copy');
-            document.body.removeChild(textArea);
-
-            return copied;
-        }
-
-        function getPaymentErrorMessage(error) {
-            const response = error?.response;
-            if (response && typeof response === 'object') {
-                if (response.message) {
-                    return response.message;
-                }
-
-                if (typeof response.error === 'string') {
-                    return response.error;
-                }
-
-                return GENERIC_PAYMENT_ERROR;
-            }
-
-            if (typeof response === 'string' && response.trim() !== '') {
-                try {
-                    const parsedResponse = JSON.parse(response);
-                    if (parsedResponse && typeof parsedResponse === 'object') {
-                        return parsedResponse.message || parsedResponse.error || GENERIC_PAYMENT_ERROR;
-                    }
-                } catch (parseError) {
-                    return response;
-                }
-            }
-
-            return error?.error || GENERIC_PAYMENT_ERROR;
-        }
-
-        function handlePaymentError(error) {
-            if (paymentErrorHandled) {
-                return;
-            }
-
-            const shouldShowPaymentIssue = error?.response?.data?.payment_issue === true;
-            if (!shouldShowPaymentIssue) {
-                return;
-            }
-
-            paymentErrorHandled = true;
-            if (paymentPollTimer !== null) {
-                clearInterval(paymentPollTimer);
-                paymentPollTimer = null;
-            }
-            const message = getPaymentErrorMessage(error);
-            const issueUrl = new URL(PAYMENT_ISSUE_URL, window.location.origin);
-            issueUrl.searchParams.set('message', message);
-            window.location.href = issueUrl.toString();
-        }
-
-        async function pollPaymentTransition() {
-            try {
-                const response = await getPayment();
-                const payment = response?.data;
-                const status = typeof payment?.status === 'string' ? payment.status.toLowerCase() : '';
-
-                if (status === 'success' && paymentPollTimer !== null) {
-                    clearInterval(paymentPollTimer);
-                    paymentPollTimer = null;
-                    window.location.href = RECEIPT_URL;
-                }
-
-            } catch (error) {
-                console.error('Polling payment transition failed', error);
-                handlePaymentError(error);
-            }
-        }
-
-        function scheduleRedirect() {
-            window.location.href = HOME_PAGE_URL;
-        }
-
-        $(document).ready(function() {
-            const copyLinkBtn = document.getElementById('copyLinkBtn');
-            if (copyLinkBtn) {
-                copyLinkBtn.addEventListener('click', async function () {
-                    const originalText = copyLinkBtn.innerHTML;
-                    const linkUrl = copyLinkBtn.dataset.linkUrl || '';
-                    if (!linkUrl) {
-                        return;
-                    }
-
-                    try {
-                        await copyText(linkUrl);
-                        copyLinkBtn.innerHTML = '<i class="bi bi-check2 me-1"></i>Copied';
-                    } catch (error) {
-                        copyLinkBtn.innerHTML = '<i class="bi bi-x-circle me-1"></i>Copy failed';
-                    }
-
-                    setTimeout(function () {
-                        copyLinkBtn.innerHTML = originalText;
-                    }, 1800);
-                });
-            }
-
-            if (AUTO_START_FORM_IDS.length > 0 || AUTO_START_LINK_IDS.length > 0) {
-                let autoStartAttempts = 0;
-                const autoStartTimer = setInterval(function () {
-                    autoStartAttempts += 1;
-                    const startedForm = AUTO_START_FORM_IDS.some(function (formId) {
-                        return tryAutoStartPayment(formId);
-                    });
-                    const startedLink = AUTO_START_LINK_IDS.some(function (linkId) {
-                        return tryAutoOpenLink(linkId);
-                    });
-
-                    if (startedForm || startedLink || autoStartAttempts >= 20) {
-                        clearInterval(autoStartTimer);
-                    }
-                }, 500);
-            }
-
-            pollPaymentTransition();
-            paymentPollTimer = setInterval(pollPaymentTransition, PAYMENT_POLL_INTERVAL_MS);
-
-            setTimeout(scheduleRedirect, PAYMENT_REDIRECT_DELAY_MS);
-        });
-    </script>
 </section>
 @endsection
+
+@push('js')
+<script>
+    const IS_CARD_PAYMENT = @json($isCardPayment);
+    const IS_QR_PAYMENT = @json($isQrPayment);
+    const IS_LINK_PAYMENT = @json($isLinkPayment);
+
+    let RECEIPT_URL = "{{ route('receipt', $order) }}";
+    let PAYMENT_ISSUE_URL = "{{ route('payment-issue', $order) }}";
+    let INQUIRE_URL = "{{ route('kbank-payment-inquiry', $order) }}";
+    let HOME_PAGE_URL = "{{ route('home') }}";
+
+    async function getPayment() {
+        let fullUrl = INQUIRE_URL;
+        let data = {
+            'order_id': @json($orderIdValue)
+        };
+        console.log(data);
+        return await getData(fullUrl, data);
+    };
+
+    const PAYMENT_POLL_INTERVAL_MS = 60000;
+    const PAYMENT_REDIRECT_DELAY_MS = 300000;
+
+    const GENERIC_PAYMENT_ERROR = "Please try again later.";
+    const AUTO_START_FORM_IDS = [];
+    const AUTO_START_LINK_IDS = [];
+    let paymentPollTimer = null;
+    let paymentErrorHandled = false;
+
+    if (IS_CARD_PAYMENT) {
+        AUTO_START_FORM_IDS.push('checkoutForm');
+    }
+
+    if (IS_QR_PAYMENT) {
+        AUTO_START_FORM_IDS.push('qrCheckoutForm');
+    }
+
+    if (IS_LINK_PAYMENT && @json($linkUrl !== '')) {
+        AUTO_START_LINK_IDS.push('linkPaymentBtn');
+    }
+
+    function tryAutoStartPayment(formId) {
+        const checkoutForm = document.getElementById(formId);
+        if (!checkoutForm || checkoutForm.dataset.autoStarted === '1') {
+            return false;
+        }
+
+        const trigger = checkoutForm.querySelector('button:not([disabled]), input[type="submit"]:not([disabled]), input[type="button"]:not([disabled])');
+        if (!trigger) {
+            return false;
+        }
+
+        checkoutForm.dataset.autoStarted = '1';
+        trigger.click();
+        return true;
+    }
+
+    function tryAutoOpenLink(linkId) {
+        const paymentLink = document.getElementById(linkId);
+        if (!paymentLink || paymentLink.dataset.autoStarted === '1') {
+            return false;
+        }
+
+        paymentLink.dataset.autoStarted = '1';
+        window.open(paymentLink.href, paymentLink.target || '_blank', 'noopener');
+        return true;
+    }
+
+    async function copyText(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+            return true;
+        }
+
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.setAttribute('readonly', 'readonly');
+        textArea.style.position = 'absolute';
+        textArea.style.left = '-9999px';
+        document.body.appendChild(textArea);
+        textArea.select();
+        const copied = document.execCommand('copy');
+        document.body.removeChild(textArea);
+
+        return copied;
+    }
+
+    function getPaymentErrorMessage(error) {
+        const response = error?.response;
+        if (response && typeof response === 'object') {
+            if (response.message) {
+                return response.message;
+            }
+
+            if (typeof response.error === 'string') {
+                return response.error;
+            }
+
+            return GENERIC_PAYMENT_ERROR;
+        }
+
+        if (typeof response === 'string' && response.trim() !== '') {
+            try {
+                const parsedResponse = JSON.parse(response);
+                if (parsedResponse && typeof parsedResponse === 'object') {
+                    return parsedResponse.message || parsedResponse.error || GENERIC_PAYMENT_ERROR;
+                }
+            } catch (parseError) {
+                return response;
+            }
+        }
+
+        return error?.error || GENERIC_PAYMENT_ERROR;
+    }
+
+    function handlePaymentError(error) {
+        if (paymentErrorHandled) {
+            return;
+        }
+
+        const shouldShowPaymentIssue = error?.response?.data?.payment_issue === true;
+        if (!shouldShowPaymentIssue) {
+            return;
+        }
+
+        paymentErrorHandled = true;
+        if (paymentPollTimer !== null) {
+            clearInterval(paymentPollTimer);
+            paymentPollTimer = null;
+        }
+        const message = getPaymentErrorMessage(error);
+        const issueUrl = new URL(PAYMENT_ISSUE_URL, window.location.origin);
+        issueUrl.searchParams.set('message', message);
+        window.location.href = issueUrl.toString();
+    }
+
+    async function pollPaymentTransition() {
+        try {
+            const response = await getPayment();
+            const payment = response?.data;
+            const status = typeof payment?.status === 'string' ? payment.status.toLowerCase() : '';
+
+            if (status === 'success' && paymentPollTimer !== null) {
+                clearInterval(paymentPollTimer);
+                paymentPollTimer = null;
+                window.location.href = RECEIPT_URL;
+            }
+
+        } catch (error) {
+            console.error('Polling payment transition failed', error);
+            handlePaymentError(error);
+        }
+    }
+
+    function scheduleRedirect() {
+        window.location.href = HOME_PAGE_URL;
+    }
+
+    $(document).ready(function() {
+        const copyLinkBtn = document.getElementById('copyLinkBtn');
+        if (copyLinkBtn) {
+            copyLinkBtn.addEventListener('click', async function () {
+                const originalText = copyLinkBtn.innerHTML;
+                const linkUrl = copyLinkBtn.dataset.linkUrl || '';
+                if (!linkUrl) {
+                    return;
+                }
+
+                try {
+                    await copyText(linkUrl);
+                    copyLinkBtn.innerHTML = '<i class="bi bi-check2 me-1"></i>Copied';
+                } catch (error) {
+                    copyLinkBtn.innerHTML = '<i class="bi bi-x-circle me-1"></i>Copy failed';
+                }
+
+                setTimeout(function () {
+                    copyLinkBtn.innerHTML = originalText;
+                }, 1800);
+            });
+        }
+
+        if (AUTO_START_FORM_IDS.length > 0 || AUTO_START_LINK_IDS.length > 0) {
+            let autoStartAttempts = 0;
+            const autoStartTimer = setInterval(function () {
+                autoStartAttempts += 1;
+                const startedForm = AUTO_START_FORM_IDS.some(function (formId) {
+                    return tryAutoStartPayment(formId);
+                });
+                const startedLink = AUTO_START_LINK_IDS.some(function (linkId) {
+                    return tryAutoOpenLink(linkId);
+                });
+
+                if (startedForm || startedLink || autoStartAttempts >= 20) {
+                    clearInterval(autoStartTimer);
+                }
+            }, 500);
+        }
+
+        pollPaymentTransition();
+        paymentPollTimer = setInterval(pollPaymentTransition, PAYMENT_POLL_INTERVAL_MS);
+
+        setTimeout(scheduleRedirect, PAYMENT_REDIRECT_DELAY_MS);
+    });
+</script>
+@endpush

@@ -228,6 +228,10 @@
         </div>
     </div>
 </section>
+
+@endsection
+
+@push('js')
 <script>
     $(function () {
         const informationForm = $('#informationForm');
@@ -422,4 +426,4 @@
         }
     });
 </script>
-@endsection
+@endpush

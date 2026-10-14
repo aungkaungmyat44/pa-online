@@ -9,12 +9,7 @@
         ? old($key)
         : data_get($customer, $key, $default);
 @endphp
-<style>
-    .select2-selection.is-invalid {
-        border-color: #dc3545 !important;
-        box-shadow: 0 0 0 .2rem rgb(220 53 69 / .25);
-    }
-</style>
+
 <section id="check-premium-section">
     <div class="container">
         <div class="row">
@@ -131,6 +126,19 @@
         </div>
     </div>
 </div>
+
+@endsection
+
+@push('css')
+    <style>
+        .select2-selection.is-invalid {
+            border-color: #dc3545 !important;
+            box-shadow: 0 0 0 .2rem rgb(220 53 69 / .25);
+        }
+    </style>
+@endpush
+
+@push('js')
 <script>
     $(function () {
         const checkPremiumForm = $('#checkPremiumForm');
@@ -212,4 +220,4 @@
         });
     });
 </script>
-@endsection
+@endpush

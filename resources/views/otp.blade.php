@@ -56,6 +56,9 @@
     </div>
 </section>
 
+@endsection
+
+@push('js')
 <script>
     (function () {
         const form = document.getElementById('otpForm');
@@ -185,4 +188,4 @@
         inputs[0].focus();
     })();
 </script>
-@endsection
+@endpush

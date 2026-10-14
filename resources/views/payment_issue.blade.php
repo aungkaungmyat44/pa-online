@@ -19,10 +19,6 @@
 
 @section('content')
 <section class="py-4 payment-issue-page">
-    <style>
-        .payment-issue-shell{max-width:760px;margin:0 auto;background:#fff;border:1px solid #e4ebf3;border-radius:16px;box-shadow:0 16px 36px rgb(15 23 42 / .10);overflow:hidden}.payment-issue-head{padding:1.35rem 1.5rem;background:#f8fbff;border-bottom:1px solid #e4ebf3}.payment-issue-head h1{margin:0;color:#1f2937;font-size:1.45rem;font-weight:700}.payment-issue-head p{margin:.35rem 0 0;color:#64748b}.payment-issue-body{padding:1.5rem}.payment-issue-meta{width:100%;border-collapse:collapse;margin:1rem 0}.payment-issue-meta td{padding:.55rem 0;border-bottom:1px solid #eef2f7;color:#334155}.payment-issue-meta td:first-child{width:210px;color:#64748b}.payment-issue-note{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem;color:#334155;line-height:1.65}.payment-issue-actions{display:flex;gap:.75rem;flex-wrap:wrap;justify-content:flex-end;margin-top:1.25rem}
-    </style>
-
     <div class="container">
         <div class="payment-issue-shell">
             <div class="payment-issue-head">
@@ -77,3 +73,9 @@
     </div>
 </section>
 @endsection
+
+@push('css')
+<style>
+    .payment-issue-shell{max-width:760px;margin:0 auto;background:#fff;border:1px solid #e4ebf3;border-radius:16px;box-shadow:0 16px 36px rgb(15 23 42 / .10);overflow:hidden}.payment-issue-head{padding:1.35rem 1.5rem;background:#f8fbff;border-bottom:1px solid #e4ebf3}.payment-issue-head h1{margin:0;color:#1f2937;font-size:1.45rem;font-weight:700}.payment-issue-head p{margin:.35rem 0 0;color:#64748b}.payment-issue-body{padding:1.5rem}.payment-issue-meta{width:100%;border-collapse:collapse;margin:1rem 0}.payment-issue-meta td{padding:.55rem 0;border-bottom:1px solid #eef2f7;color:#334155}.payment-issue-meta td:first-child{width:210px;color:#64748b}.payment-issue-note{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem;color:#334155;line-height:1.65}.payment-issue-actions{display:flex;gap:.75rem;flex-wrap:wrap;justify-content:flex-end;margin-top:1.25rem}
+</style>
+@endpush

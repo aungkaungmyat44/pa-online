@@ -64,6 +64,9 @@
     </div>
 </section>
 
+@endsection
+
+@push('js')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     document.addEventListener('DOMContentLoaded', async function () {
@@ -106,4 +109,4 @@
         }
     });
 </script>
-@endsection
+@endpush
