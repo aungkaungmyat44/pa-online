@@ -1,7 +1,7 @@
 <!doctype html>
-<html lang="th">
+<html lang="{{ app()->getLocale() }}">
 	<head>
-		<meta http-equiv="Content-Language" content="th">
+		<meta http-equiv="Content-Language" content="{{ app()->getLocale() }}">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<!-- View Port -->
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -47,7 +47,21 @@
 	</head>
 	@php
 		$companyWebsiteUrl = config('services.company_website.url');
-		$lang = 'th';
+		$lang = app()->getLocale();
+		$currentRoute = request()->route();
+		$languageUrl = function (string $locale) use ($currentRoute) {
+			if (! $currentRoute?->getName()) {
+				return url('/'.$locale);
+			}
+
+			$parameters = array_merge(
+				request()->query(),
+				$currentRoute->parameters(),
+				['locale' => $locale],
+			);
+
+			return route($currentRoute->getName(), $parameters);
+		};
 	@endphp
 	<body class="d-flex flex-column min-vh-100">
 		<!-- Bootstrap 5.0.2 -->
@@ -154,20 +168,20 @@
 						</a>
 					</nav>
                     <nav class="nav nav-lang ms-auto d-flex align-items-center">
-                        <a class="nav-link" href="https://vlnonline.sahainsurance.co.th/" target="_blank">สมัครใจ Online</a>
+                        <a class="nav-link" href="https://vlnonline.sahainsurance.co.th/" target="_blank">{{ __('navigation.voluntary_online') }}</a>
                         <a class="nav-link" style="color:white">|</a>
-                        <a class="nav-link" href="https://cplonline.sahainsurance.co.th/" target="_blank">พ.ร.บ. Online</a>
+                        <a class="nav-link" href="https://cplonline.sahainsurance.co.th/" target="_blank">{{ __('navigation.compulsory_online') }}</a>
                         <a class="nav-link" style="color:white">|</a>
                         <div class="nav-item dropdown dropdown-hover text-white" id="language">
                             <a class="nav-link dropdown-toggle forwardable" data-toggle="dropdown" id="languageDropDownBtn" href="javascript:void(0);" role="button" aria-haspopup="true" aria-expanded="false">
-                                Language - TH <i data-feather="chevron-down" class="text-white"></i>
+                                {{ __('navigation.language') }} <i data-feather="chevron-down" class="text-white"></i>
                             </a>
                             <div class="dropdown-menu" id="languageDropDownMenu">
-                                <a class="dropdown-item" href="{{ $companyWebsiteUrl }}change-language/th">
-                                    <img src="https://flagsapi.com/TH/flat/32.png" alt="Thai flag" class="mx-1">ภาษาไทย
+                                <a class="dropdown-item" href="{{ $languageUrl('th') }}">
+                                    <img src="https://flagsapi.com/TH/flat/32.png" alt="Thai flag" class="mx-1">{{ __('navigation.thai') }}
                                 </a>
-                                <a class="dropdown-item" href="{{ $companyWebsiteUrl }}change-language/en">
-                                    <img src="https://flagsapi.com/GB/flat/32.png" alt="English flag" class="mx-1">ภาษาอังกฤษ
+                                <a class="dropdown-item" href="{{ $languageUrl('en') }}">
+                                    <img src="https://flagsapi.com/GB/flat/32.png" alt="English flag" class="mx-1">{{ __('navigation.english') }}
                                 </a>
                             </div>
                         </div>
@@ -182,54 +196,54 @@
                 </a>
                 <div class="clearfix">
                     <div class="logo-img">
-                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/" rel="home" title="บริษัท สหมงคลประกันภัย จำกัด (มหาชน)" class="active">
-                            <img class="nav-logo" src="{{ asset('sitesaha/assets/img/logo-upp-header.png') }}" alt="บริษัท สหมงคลประกันภัย จำกัด (มหาชน)" id="logo">
+                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/" rel="home" title="{{ __('navigation.logo_alt') }}" class="active">
+                            <img class="nav-logo" src="{{ asset('sitesaha/assets/img/logo-upp-header.png') }}" alt="{{ __('navigation.logo_alt') }}" id="logo">
                         </a>
                     </div>
                 </div>
                 <ul class="nav nav-main ms-auto d-none d-lg-flex">
                     <li class="nav-item dropdown dropdown-hover">
                         <a class="nav-link dropdown-toggle forwardable" data-toggle="dropdown" href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts" role="button" aria-haspopup="true" aria-expanded="false">
-                            รู้จักเรา <i data-feather="chevron-down"></i>
+                            {{ __('navigation.about_us') }} <i data-feather="chevron-down"></i>
                         </a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts/vision">วิสัยทัศน์และพันธกิจ</a>
-                            <a class="dropdown-item" href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts/financialstatus">ฐานะทางการเงิน</a>
-                            <a class="dropdown-item" href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts/financialinfo">งบการเงิน</a>
-                            <a class="dropdown-item" href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts/report">รายงานประจำปี</a>
-                            <a class="dropdown-item" href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts">เกี่ยวกับเรา</a>
-                            <a class="dropdown-item" href="{{ $companyWebsiteUrl }}{{ $lang }}/pdpa">การคุ้มครองข้อมูลส่วนบุคคล</a>
+                            <a class="dropdown-item" href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts/vision">{{ __('navigation.vision_mission') }}</a>
+                            <a class="dropdown-item" href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts/financialstatus">{{ __('navigation.financial_status') }}</a>
+                            <a class="dropdown-item" href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts/financialinfo">{{ __('navigation.financial_statements') }}</a>
+                            <a class="dropdown-item" href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts/report">{{ __('navigation.annual_report') }}</a>
+                            <a class="dropdown-item" href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts">{{ __('navigation.about_us') }}</a>
+                            <a class="dropdown-item" href="{{ $companyWebsiteUrl }}{{ $lang }}/pdpa">{{ __('navigation.personal_data_protection') }}</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown dropdown-hover dropdown-mega">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                            บริการลูกค้า
+                            {{ __('navigation.customer_service') }}
                         <i data-feather="chevron-down"></i>
                         </a>
                         <div class="dropdown-menu">
                             <div class="row">
                                 <div class="col-lg-4">
                                     <div class="list-group list-group-flush list-group-no-border list-group-sm">
-                                        <a href="#" class="list-group-item list-group-item-action"><strong>บริการด้านสินไหมรถยนต์</strong></a>
-                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/download/dl/document-required-for-claiming-insurance" class="list-group-item list-group-item-action">- เอกสารเบิกค่าสินไหมทดแทน</a>
-                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/service/view/58" class="list-group-item list-group-item-action">- บริการด้านสินไหมรถยนต์</a>
-                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/service/view/59" class="list-group-item list-group-item-action">- ขั้นตอนดำเนินการด้านสินไหม</a>
+                                        <a href="#" class="list-group-item list-group-item-action"><strong>{{ __('navigation.motor_claims') }}</strong></a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/download/dl/document-required-for-claiming-insurance" class="list-group-item list-group-item-action">- {{ __('navigation.motor_claims_documents') }}</a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/service/view/58" class="list-group-item list-group-item-action">- {{ __('navigation.motor_claims_service') }}</a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/service/view/59" class="list-group-item list-group-item-action">- {{ __('navigation.claims_process') }}</a>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="list-group list-group-flush list-group-no-border list-group-sm">
-                                        <a href="#" class="list-group-item list-group-item-action"><strong>บริการด้านสินไหม Non-motor</strong></a>
-                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/download/dl/steps-for-notifying-non-motor-claim" class="list-group-item list-group-item-action">- เอกสารเบิกค่าสินไหมทดแทน Non-motor</a>
-                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/service/view/60" class="list-group-item list-group-item-action">- วิธีปฎิบัติเมื่อเกิดอุบัติเหตุหรือเกิดความเสียหาย</a>
-                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/service/view/61" class="list-group-item list-group-item-action">- ขั้นตอนดำเนินการด้านสินไหม</a>
+                                        <a href="#" class="list-group-item list-group-item-action"><strong>{{ __('navigation.non_motor_claims') }}</strong></a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/download/dl/steps-for-notifying-non-motor-claim" class="list-group-item list-group-item-action">- {{ __('navigation.non_motor_claims_documents') }}</a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/service/view/60" class="list-group-item list-group-item-action">- {{ __('navigation.accident_instructions') }}</a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/service/view/61" class="list-group-item list-group-item-action">- {{ __('navigation.claims_process') }}</a>
                                     </div>
                                 </div>
                                 <div class="col-lg-4 border-start">
                                     <div class="list-group list-group-flush list-group-no-border list-group-sm">
-                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/garage" class="list-group-item list-group-item-action"><strong>รายชื่ออู่ซ่อมรถ</strong></a>
-                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/hospital" class="list-group-item list-group-item-action"><strong>รายชื่อสถานพยาบาล, คลินิก</strong></a>
-                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/accident" class="list-group-item list-group-item-action"><strong>ศูนย์รับแจ้งอุบัติเหตุ</strong></a>
-                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/Service_Level_Agreement" class="list-group-item list-group-item-action"><strong>ระยะเวลาการให้บริการของบริษัทประกันวินาศภัย (Service Level Agreement : SLA)</strong></a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/garage" class="list-group-item list-group-item-action"><strong>{{ __('navigation.garage_list') }}</strong></a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/hospital" class="list-group-item list-group-item-action"><strong>{{ __('navigation.hospital_list') }}</strong></a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/accident" class="list-group-item list-group-item-action"><strong>{{ __('navigation.accident_center') }}</strong></a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/Service_Level_Agreement" class="list-group-item list-group-item-action"><strong>{{ __('navigation.service_level_agreement') }}</strong></a>
                                     </div>
                                 </div>
                             </div>
@@ -237,35 +251,35 @@
                     </li>
                     <li class="nav-item dropdown dropdown-hover dropdown-mega">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                            ผลิตภัณฑ์
+                            {{ __('navigation.products') }}
                         <i data-feather="chevron-down"></i>
                         </a>
                         <div class="dropdown-menu">
                             <div class="row">
                                 <div class="col-lg-4">
                                     <div class="list-group list-group-flush list-group-no-border list-group-sm">
-                                        <a href="#" class="list-group-item list-group-item-action"><strong>ประกันรถยนต์</strong></a>
-                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance?show=1" class="list-group-item list-group-item-action">ประกันภัยรถยนต์ ประเภท 1,3,5</a>
-                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance?show=2" class="list-group-item list-group-item-action">ประกันภัยรถยนต์ (พ.ร.บ.)</a>
-                                        <a href="http://192.6.1.94:8003/proc.php?action=products&lang=th" class="list-group-item list-group-item-action">ซื้อประกันภัยรถยนต์ พ.ร.บ.</a>
-                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance/van" class="list-group-item list-group-item-action">ประกันรถตู้ SUPER</a>
-                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance/voluntary" class="list-group-item list-group-item-action">ประกันภัยรถยนต์ (ภาคสมัครใจ)</a>
+                                        <a href="#" class="list-group-item list-group-item-action"><strong>{{ __('navigation.motor_insurance') }}</strong></a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance?show=1" class="list-group-item list-group-item-action">{{ __('navigation.motor_insurance_types') }}</a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance?show=2" class="list-group-item list-group-item-action">{{ __('navigation.compulsory_motor') }}</a>
+                                        <a href="http://192.6.1.94:8003/proc.php?action=products&lang={{ $lang }}" class="list-group-item list-group-item-action">{{ __('navigation.buy_compulsory_motor') }}</a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance/van" class="list-group-item list-group-item-action">{{ __('navigation.super_van') }}</a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance/voluntary" class="list-group-item list-group-item-action">{{ __('navigation.voluntary_motor') }}</a>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="list-group list-group-flush list-group-no-border list-group-sm">
-                                        <a href="#" class="list-group-item list-group-item-action"><strong>ประกันภัยอื่นๆ</strong></a>
-                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/fire_insurance" class="list-group-item list-group-item-action">การประกันอัคคีภัย</a>
-                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/other_insurance" class="list-group-item list-group-item-action">การประกันภัยเบ็ดเตล็ด</a>
-                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/marine_cargo_insurance" class="list-group-item list-group-item-action">การประกันภัยทางทะเลและขนส่ง</a>
-                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/personal_accident_insurance/pa888" class="list-group-item list-group-item-action">ประกันอุบัติเหตุส่วนบุคคล (PA888)</a>
-                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/personal_accident_insurance/unnamed" class="list-group-item list-group-item-action">ประกันอุบัติเหตุส่วนบุคคล (ไม่ระบุชื่อ)</a>
+                                        <a href="#" class="list-group-item list-group-item-action"><strong>{{ __('navigation.other_insurance') }}</strong></a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/fire_insurance" class="list-group-item list-group-item-action">{{ __('navigation.fire_insurance') }}</a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/other_insurance" class="list-group-item list-group-item-action">{{ __('navigation.miscellaneous_insurance') }}</a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/marine_cargo_insurance" class="list-group-item list-group-item-action">{{ __('navigation.marine_insurance') }}</a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/personal_accident_insurance/pa888" class="list-group-item list-group-item-action">{{ __('navigation.pa888') }}</a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/personal_accident_insurance/unnamed" class="list-group-item list-group-item-action">{{ __('navigation.unnamed_pa') }}</a>
                                     </div>
                                 </div>
                                 <div class="col-lg-4 border-start">
                                     <div class="list-group list-group-flush list-group-no-border list-group-sm">
-                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/shop" class="list-group-item list-group-item-action"><strong>สินค้าจำหน่ายตัวแทน</strong></a>
-                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/downloads" class="list-group-item list-group-item-action"><strong>ดาวน์โหลด</strong></a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/shop" class="list-group-item list-group-item-action"><strong>{{ __('navigation.shop') }}</strong></a>
+                                        <a href="{{ $companyWebsiteUrl }}{{ $lang }}/downloads" class="list-group-item list-group-item-action"><strong>{{ __('navigation.downloads') }}</strong></a>
                                     </div>
                                 </div>
                             </div>
@@ -273,16 +287,17 @@
                     </li>
                     <li class="nav-item dropdown dropdown-hover">
                         <a class="nav-link dropdown-toggle forwardable" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                            ตัวแทน/นายหน้า                        <i data-feather="chevron-down"></i>
+                            {{ __('navigation.agent_broker') }} <i data-feather="chevron-down"></i>
                         </a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{{ $companyWebsiteUrl }}{{ $lang }}/agent">การสมัครตัวแทน</a>
-                            <a class="dropdown-item" href="{{ $companyWebsiteUrl }}{{ $lang }}/service/view/62">การชำระค่าเบี้ยประกัน</a>
+                            <a class="dropdown-item" href="{{ $companyWebsiteUrl }}{{ $lang }}/agent">{{ __('navigation.agent_application') }}</a>
+                            <a class="dropdown-item" href="{{ $companyWebsiteUrl }}{{ $lang }}/service/view/62">{{ __('navigation.premium_payment') }}</a>
                         </div>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ $companyWebsiteUrl }}{{ $lang }}/contacts">
-                        ติดต่อเรา                    </a>
+                        {{ __('navigation.contact_us') }}
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -304,56 +319,56 @@
 			<div class="container">
 				<div class="row no-gutters">
 					<div class="col-sm-6 col-lg-3 text-center px-3">
-						<img src="{{ asset('sitesaha/assets/img/logo-upp2025.svg') }}" alt="บริษัท สหมงคลประกันภัย จำกัด (มหาชน)" height="200">
+						<img src="{{ asset('sitesaha/assets/img/logo-upp2025.svg') }}" alt="{{ __('navigation.logo_alt') }}" height="200">
 					</div>
 					<div class="col-6 col-lg-3">
-						<h6 class="bold">เกี่ยวกับเรา UPP</h6>
+						<h6 class="bold">{{ __('navigation.footer_about_heading') }}</h6>
 						<div class="list-group list-group-flush list-group-no-border list-group-sm">
-							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts" class="list-group-item list-group-item-action">- ประวัติศาสตร์</a>
-							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts/vision" class="list-group-item list-group-item-action">- วิสัยทัศน์และพันธกิจ</a>
-							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts/financialstatus" class="list-group-item list-group-item-action">- ฐานะทางการเงิน</a>
-							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts/financialinfo" class="list-group-item list-group-item-action">- งบการเงิน</a>
-							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts/report" class="list-group-item list-group-item-action">- รายงานประจำปี</a>
-							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/pdpa" class="list-group-item list-group-item-action">- การคุ้มครองข้อมูลส่วนบุคคล</a>
-							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/career" class="list-group-item list-group-item-action">- สมัครงาน</a>
-							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/contacts" class="list-group-item list-group-item-action">- ที่ตั้งสำนักงาน</a>
-							<a href="https://outlook.office.com/" target="_blank" class="list-group-item list-group-item-action">- เว็บเมล</a>
-							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/downloads" class="list-group-item list-group-item-action">- ดาวน์โหลด</a>
+							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts" class="list-group-item list-group-item-action">- {{ __('navigation.history') }}</a>
+							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts/vision" class="list-group-item list-group-item-action">- {{ __('navigation.vision_mission') }}</a>
+							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts/financialstatus" class="list-group-item list-group-item-action">- {{ __('navigation.financial_status') }}</a>
+							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts/financialinfo" class="list-group-item list-group-item-action">- {{ __('navigation.financial_statements') }}</a>
+							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts/report" class="list-group-item list-group-item-action">- {{ __('navigation.annual_report') }}</a>
+							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/pdpa" class="list-group-item list-group-item-action">- {{ __('navigation.personal_data_protection') }}</a>
+							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/career" class="list-group-item list-group-item-action">- {{ __('navigation.career') }}</a>
+							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/contacts" class="list-group-item list-group-item-action">- {{ __('navigation.office_location') }}</a>
+							<a href="https://outlook.office.com/" target="_blank" class="list-group-item list-group-item-action">- {{ __('navigation.webmail') }}</a>
+							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/downloads" class="list-group-item list-group-item-action">- {{ __('navigation.downloads') }}</a>
 						</div>
 					</div>
 					<div class="col-6 col-lg-3">
-						<h6 class="bold">ผลิตภัณฑ์</h6>
+						<h6 class="bold">{{ __('navigation.product') }}</h6>
 						<div class="list-group list-group-flush list-group-no-border list-group-sm mb-4">
-							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance" class="list-group-item list-group-item-action">ประกันรถยนต์</a>
-							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/fire_insurance" class="list-group-item list-group-item-action">การประกันอัคคีภัย</a>
-							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/other_insurance" class="list-group-item list-group-item-action">การประกันภัยเบ็ดเตล็ด</a>
-							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/marine_cargo_insurance" class="list-group-item list-group-item-action">การประกันภัยทางทะเลและขนส่ง</a>
+							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance" class="list-group-item list-group-item-action">{{ __('navigation.motor_insurance') }}</a>
+							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/fire_insurance" class="list-group-item list-group-item-action">{{ __('navigation.fire_insurance') }}</a>
+							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/other_insurance" class="list-group-item list-group-item-action">{{ __('navigation.miscellaneous_insurance') }}</a>
+							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/marine_cargo_insurance" class="list-group-item list-group-item-action">{{ __('navigation.marine_insurance') }}</a>
 						</div>
-						<h6 class="bold">บริการลูกค้า</h6>
+						<h6 class="bold">{{ __('navigation.customer_service') }}</h6>
 						<div class="list-group list-group-flush list-group-no-border list-group-sm mb-5">
-							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/download/dl/document-required-for-claiming-insurance" class="list-group-item list-group-item-action">- เอกสารด้านสินไหมรถยนต์</a>
-							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/download/dl/steps-for-notifying-non-motor-claim" class="list-group-item list-group-item-action">- เอกสารด้านสินไหม Non-motor</a>
-							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/appeal" class="list-group-item list-group-item-action">- รับเรื่องร้องเรียน</a>
-							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/garage" class="list-group-item list-group-item-action">- รายชื่ออู่ซ่อมรถ</a>
+							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/download/dl/document-required-for-claiming-insurance" class="list-group-item list-group-item-action">- {{ __('navigation.motor_insurance_documents') }}</a>
+							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/download/dl/steps-for-notifying-non-motor-claim" class="list-group-item list-group-item-action">- {{ __('navigation.non_motor_documents_short') }}</a>
+							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/appeal" class="list-group-item list-group-item-action">- {{ __('navigation.complaints_center') }}</a>
+							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/garage" class="list-group-item list-group-item-action">- {{ __('navigation.garage_list') }}</a>
 						</div>
 					</div>
 					<div class="col-sm-6 col-lg-3">
-						<h6 class="bold">ข่าวสารและโปรโมชั่น</h6>
+						<h6 class="bold">{{ __('navigation.news_promotions') }}</h6>
 						<div class="list-group list-group-flush list-group-no-border list-group-sm mb-4">
-							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/news" class="list-group-item list-group-item-action">- ข่าวประชาสัมพันธ์</a>
-							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/shop" class="list-group-item list-group-item-action">- สินค้าจำหน่ายตัวแทน</a>
+							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/news" class="list-group-item list-group-item-action">- {{ __('navigation.news_announcements') }}</a>
+							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/shop" class="list-group-item list-group-item-action">- {{ __('navigation.shop') }}</a>
 						</div>
-						<h6 class="bold">ตัวแทน/นายหน้า</h6>
+						<h6 class="bold">{{ __('navigation.agent_broker') }}</h6>
 						<div class="list-group list-group-flush list-group-no-border list-group-sm mb-4">
-							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/agent" class="list-group-item list-group-item-action">- การสมัครตัวแทน</a>
-							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/service/view/62" class="list-group-item list-group-item-action">- การชำระค่าเบี้ยประกัน</a>
+							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/agent" class="list-group-item list-group-item-action">- {{ __('navigation.agent_application') }}</a>
+							<a href="{{ $companyWebsiteUrl }}{{ $lang }}/service/view/62" class="list-group-item list-group-item-action">- {{ __('navigation.premium_payment') }}</a>
 						</div>
-						<a href="https://smart.oic.or.th/EService/Menu1" target="_blank" class="hightlighed"><h6>ตรวจสอบข้อมูลของตัวแทน/นายหน้า</h6></a>
-						<a href="{{ $companyWebsiteUrl }}{{ $lang }}/tax" target="_blank" class="hightlighed"><h6>หนังสือรับรองการหักภาษี ณ ที่จ่าย</h6></a>
-						<a href="{{ $companyWebsiteUrl }}{{ $lang }}/policy" target="_blank" class="hightlighed"><h6>ตรวจสอบเลขกรมธรรม์ พ.ร.บ</h6></a>
-						<a href="http://192.6.1.94:8003/proc.php?action=check_policy_form&lang=th" target="_blank" class="hightlighed">
+						<a href="https://smart.oic.or.th/EService/Menu1" target="_blank" class="hightlighed"><h6>{{ __('navigation.agent_broker_verification') }}</h6></a>
+						<a href="{{ $companyWebsiteUrl }}{{ $lang }}/tax" target="_blank" class="hightlighed"><h6>{{ __('navigation.withholding_tax_certificate') }}</h6></a>
+						<a href="{{ $companyWebsiteUrl }}{{ $lang }}/policy" target="_blank" class="hightlighed"><h6>{{ __('navigation.verify_compulsory_policy') }}</h6></a>
+						<a href="http://192.6.1.94:8003/proc.php?action=check_policy_form&lang={{ $lang }}" target="_blank" class="hightlighed">
 							<h6>
-								ตรวจสอบกรมธรรม์ภาคบังคับอีกครั้ง
+								{{ __('navigation.recheck_compulsory_policy') }}
 							</h6>
 						</a>
 					</div>
@@ -361,11 +376,11 @@
 			</div>
 		</div>
 		<div class="copyright font-sarabun">
-			<p>บริษัท สหมงคลประกันภัย จำกัด (มหาชน) เลขที่ 7 ซอยสาทร 11 ถนนสาทร แขวงยานนาวา เขตสาทร กรุงเทพ ฯ 10120 โทรศัพท์ 02-68-77777</p>
-			<p>SAHAMONGKHON INSURANCE PUBLIC COMPANY LIMITED No.7 Soi Sathorn 11, Sathorn Road, Yannawa Sub - district, Sathorn District, Bangkok 10120 Tel. 02-68-77777</p>
+			<p>{{ __('navigation.address_th') }}</p>
+			<p>{{ __('navigation.address_en') }}</p>
 			<a class="nav-link pr-2 pl-0" href="https://www.facebook.com/UnionProspersInsurance/" target="_blank">
 				<i data-feather="facebook"></i>
-				Official Facebook
+				{{ __('navigation.official_facebook') }}
 			</a>
 		</div>
 		<div class="modal modal-left modal-menu font-sarabun" id="menuModal" tabindex="-1" role="dialog" aria-label="menuModel" aria-hidden="true">
@@ -374,7 +389,7 @@
 					<div class="modal-header shadow">
 						<a class="h5 mb-0 d-flex align-items-center" href="{{ $companyWebsiteUrl }}{{ $lang }}/">
 							<strong>
-								เมนู
+								{{ __('navigation.menu') }}
 							</strong>
 						</a>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -386,85 +401,85 @@
 							<li class="no-sub mm-active">
 								<a href="{{ $companyWebsiteUrl }}{{ $lang }}/">
 									<i class="feather-home"></i> 
-									หน้าหลัก
+									{{ __('navigation.home') }}
 								</a>
 							</li>
 							<li>
 								<a href="#" class="has-arrow">
 									<i class="feather-at-sign"></i> 
-									รู้จักเรา
+									{{ __('navigation.about_us') }}
 								</a>
 								<ul>
 									<li>
 										<a href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts">
-										เกี่ยวกับเรา
+										{{ __('navigation.about_us') }}
 										</a>
 									</li>
-									<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts/vision">วิสัยทัศน์และพันธกิจ</a></li>
-									<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts/financialstatus">ฐานะทางการเงิน</a></li>
-									<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts/financialinfo">งบการเงิน</a></li>
-									<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/pdpa">การคุ้มครองข้อมูลส่วนบุคคล</a></li>
+									<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts/vision">{{ __('navigation.vision_mission') }}</a></li>
+									<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts/financialstatus">{{ __('navigation.financial_status') }}</a></li>
+									<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/abouts/financialinfo">{{ __('navigation.financial_statements') }}</a></li>
+									<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/pdpa">{{ __('navigation.personal_data_protection') }}</a></li>
 								</ul>
 							</li>
 							<li>
 								<a href="#" class="has-arrow">
 									<i class="feather-shopping-bag"></i> 
-									ผลิตภัณฑ์
+									{{ __('navigation.products') }}
 								</a>
 								<ul>
 									<li>
 										<a href="#" class="has-arrow">
-											ประกันรถยนต์
+											{{ __('navigation.motor_insurance') }}
 										</a>
 										<ul>
-											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance?show=1">ประกันภัยรถยนต์ ประเภท 1,3,5</a></li>
-											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance?show=2">ประกันภัยรถยนต์ (พ.ร.บ.)</a></li>
-											<li><a href="http://192.6.1.94:8003/proc.php?action=products&lang=th">ซื้อประกันภัยรถยนต์ พ.ร.บ.</a></li>
-											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance/van">ประกันรถตู้ SUPER</a></li>
-											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance/voluntary">ประกันภัยรถยนต์ (ภาคสมัครใจ)</a></li>
+											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance?show=1">{{ __('navigation.motor_insurance_types') }}</a></li>
+											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance?show=2">{{ __('navigation.compulsory_motor') }}</a></li>
+											<li><a href="http://192.6.1.94:8003/proc.php?action=products&lang={{ $lang }}">{{ __('navigation.buy_compulsory_motor') }}</a></li>
+											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance/van">{{ __('navigation.super_van') }}</a></li>
+											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance/voluntary">{{ __('navigation.voluntary_motor') }}</a></li>
 										</ul>
 									</li>
 									<li>
 										<a href="#" class="has-arrow">
-											ประกันภัยอื่นๆ
+											{{ __('navigation.other_insurance') }}
 										</a>
 										<ul>
-											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/fire_insurance">การประกันอัคคีภัย</a></li>
-											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/other_insurance">การประกันภัยเบ็ดเตล็ด</a></li>
-											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/marine_cargo_insurance">การประกันภัยทางทะเลและขนส่ง</a></li>
-											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/personal_accident_insurance/pa888">ประกันอุบัติเหตุส่วนบุคคล (PA888)</a></li>
-											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/personal_accident_insurance/unnamed">ประกันอุบัติเหตุส่วนบุคคล (ไม่ระบุชื่อ)</a></li>
+											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/fire_insurance">{{ __('navigation.fire_insurance') }}</a></li>
+											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/other_insurance">{{ __('navigation.miscellaneous_insurance') }}</a></li>
+											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/marine_cargo_insurance">{{ __('navigation.marine_insurance') }}</a></li>
+											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/personal_accident_insurance/pa888">{{ __('navigation.pa888') }}</a></li>
+											<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/personal_accident_insurance/unnamed">{{ __('navigation.unnamed_pa') }}</a></li>
 										</ul>
 									</li>
-									<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/shop">สินค้าจำหน่ายตัวแทน</a></li>
-									<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/downloads">ดาวน์โหลด</a></li>
+									<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/shop">{{ __('navigation.shop') }}</a></li>
+									<li><a href="{{ $companyWebsiteUrl }}{{ $lang }}/downloads">{{ __('navigation.downloads') }}</a></li>
 								</ul>
 							</li>
 							<li>
 								<a href="#" class="has-arrow">
 									<i class="feather-layers"></i> 
-									บริการลูกค้า
+									{{ __('navigation.customer_service') }}
 								</a>
 								<ul>
 									<li>
 										<a href="#" class="has-arrow">
 											<i class="feather-layers"></i> 
-											บริการด้านสินไหมรถยนต์
+											{{ __('navigation.motor_claims') }}
 										</a>
 										<ul>
 											<li>
 												<a href="{{ $companyWebsiteUrl }}{{ $lang }}/download/dl/document-required-for-claiming-insurance">-
-													เอกสารเบิกค่าสินไหมทดแทน
+													{{ __('navigation.motor_claims_documents') }}
 												</a>
 											</li>
 											<li>
 												<a href="{{ $companyWebsiteUrl }}{{ $lang }}/service/ขั้นตอนดำเนินการด้านสินไหม_58.html">-
-													บริการด้านสินไหมรถยนต์
+													{{ __('navigation.motor_claims_service') }}
 												</a>
 											</li>
 											<li>
 												<a href="{{ $companyWebsiteUrl }}{{ $lang }}/service/บริการด้านสินไหมรถยนต์_59.html">-
-													ขั้นตอนดำเนินการด้านสินไหม
+													{{ __('navigation.claims_process') }}
 												</a>
 											</li>
 										</ul>
@@ -472,22 +487,22 @@
 									<li>
 										<a href="#" class="has-arrow">
 											<i class="feather-layers"></i> 
-											บริการด้านสินไหม Non-motor
+											{{ __('navigation.non_motor_claims') }}
 										</a>
 										<ul>
 											<li>
 												<a href="{{ $companyWebsiteUrl }}{{ $lang }}/download/dl/steps-for-notifying-non-motor-claim">-
-													เอกสารเบิกค่าสินไหมทดแทน Non-motor
+													{{ __('navigation.non_motor_claims_documents') }}
 												</a>
 											</li>
 											<li>
 												<a href="{{ $companyWebsiteUrl }}{{ $lang }}/service/วิธีปฎิบัติเมื่อเกิดอุบัติเหตุหรือเกิดความเสียหาย_60.html">
-													- วิธีปฎิบัติเมื่อเกิดอุบัติเหตุหรือเกิดความเสียหาย
+													- {{ __('navigation.accident_instructions') }}
 												</a>
 											</li>
 											<li>
 												<a href="{{ $companyWebsiteUrl }}{{ $lang }}/service/ขั้นตอนดำเนินการด้านสินไหม_61.html">
-													- ขั้นตอนดำเนินการด้านสินไหม
+													- {{ __('navigation.claims_process') }}
 												</a>
 											</li>
 										</ul>
@@ -497,17 +512,17 @@
 							<li>
 								<a href="#" class="has-arrow">
 									<i class="feather-users"></i> 
-									ตัวแทน/นายหน้า
+									{{ __('navigation.agent_broker') }}
 								</a>
 								<ul>
 									<li>
 										<a href="{{ $companyWebsiteUrl }}{{ $lang }}/agent">
-											การสมัครตัวแทน
+											{{ __('navigation.agent_application') }}
 										</a>
 									</li>
 									<li>
 										<a href="{{ $companyWebsiteUrl }}{{ $lang }}/service/view/62">
-											การชำระค่าเบี้ยประกัน
+											{{ __('navigation.premium_payment') }}
 										</a>
 									</li>
 								</ul>
@@ -515,73 +530,73 @@
 							<li>
 								<a href="{{ $companyWebsiteUrl }}{{ $lang }}/appeal">
 									<i class="feather-radio"></i> 
-									รับเรื่องร้องเรียน
+									{{ __('navigation.complaints_center') }}
 								</a>
 							</li>
 							<li>
 								<a href="{{ $companyWebsiteUrl }}{{ $lang }}/garage">
 									<i class="feather-settings"></i> 
-									รายชื่ออู่ซ่อมรถ
+									{{ __('navigation.garage_list') }}
 								</a>
 							</li>
 							<li>
 								<a href="{{ $companyWebsiteUrl }}{{ $lang }}/hospital">
 									<i class="feather-settings"></i> 
-									รายชื่อสถานพยาบาล, คลินิก
+									{{ __('navigation.hospital_list') }}
 								</a>
 							</li>
 							<li>
 								<a href="{{ $companyWebsiteUrl }}{{ $lang }}/accident">
 									<i class="feather-settings"></i> 
-									ศูนย์รับแจ้งอุบัติเหตุ
+									{{ __('navigation.accident_center') }}
 								</a>
 							</li>
 							<li>
 								<a href="{{ $companyWebsiteUrl }}{{ $lang }}/Service_Level_Agreement">
 									<i class="feather-settings"></i>
-									ระยะเวลาการให้บริการของบริษัทประกันวินาศภัย  (Service Level Agreement : SLA)
+									{{ __('navigation.service_level_agreement') }}
 								</a>
 							</li>
 							<li>
 								<a href="https://smart.oic.or.th/EService/Menu1" target="_blank">
 									<i class="feather-corner-up-right"></i> 
-									ตรวจสอบข้อมูลของตัวแทน/นายหน้า
+									{{ __('navigation.agent_broker_verification') }}
 								</a>
 							</li>
 							<li>
 								<a href="{{ $companyWebsiteUrl }}{{ $lang }}/contacts">
 									<i class="feather-at-sign"></i> 
-									ติดต่อเรา
+									{{ __('navigation.contact_us') }}
 								</a>
 							</li>
 							<li>
 								<a href="https://outlook.office.com/" target="_blank">
 									<i class="feather-pocket"></i> 
-									เว็บเมล
+									{{ __('navigation.webmail') }}
 								</a>
 							</li>
 							<li>
 								<a href="{{ $companyWebsiteUrl }}{{ $lang }}/downloads">
 									<i class="feather-download-cloud"></i> 
-									ดาวน์โหลด
+									{{ __('navigation.downloads') }}
 								</a>
 							</li>
 							<li>
 								<a href="{{ $companyWebsiteUrl }}{{ $lang }}/tax">
 									<i class="feather-corner-up-right"></i> 
-									หนังสือรับรองการหักภาษี ณ ที่จ่าย ( จ่าย )
+									{{ __('navigation.withholding_tax_certificate_paid') }}
 								</a>
 							</li>
 							<li>
 								<a href="{{ $companyWebsiteUrl }}{{ $lang }}/policy">
 									<i class="feather-corner-up-right"></i> 
-									การตรวจสอบเลขกรมธรรม์
+									{{ __('navigation.policy_number_verification') }}
 								</a>
 							</li>
 							<li>
-								<a href="http://192.6.1.94:8003/proc.php?action=check_policy_form&lang=th">
+								<a href="http://192.6.1.94:8003/proc.php?action=check_policy_form&lang={{ $lang }}">
 									<i class="feather-corner-up-right"></i> 
-									ตรวจสอบกรมธรรม์ภาคบังคับอีกครั้ง
+									{{ __('navigation.recheck_compulsory_policy') }}
 								</a>
 							</li>
 						</ul>

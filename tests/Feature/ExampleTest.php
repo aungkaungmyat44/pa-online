@@ -10,10 +10,13 @@ class ExampleTest extends TestCase
     /**
      * A basic test example.
      */
-    public function test_the_application_returns_a_successful_response(): void
+    public function test_the_root_redirects_to_the_default_language(): void
     {
-        $response = $this->get('/');
+        $locale = in_array(config('app.locale'), ['th', 'en'], true)
+            ? config('app.locale')
+            : 'th';
 
-        $response->assertStatus(200);
+        $this->get('/')
+            ->assertRedirect(route('home', ['locale' => $locale]));
     }
 }
