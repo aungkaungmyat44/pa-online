@@ -6,24 +6,32 @@
     $amount = $payment->amount ?? $order->total_amount;
     $currency = $payment->currency ?? 'THB';
     $paidAt = $order->paid_at ?? $payment->updated_at;
-    $paidAt = date('Y-m-d H:i A');
+    $paidAtLabel = $paidAt ? \Illuminate\Support\Carbon::parse($paidAt)->locale(app()->getLocale())->translatedFormat('d M Y, H:i') : '';
     $errorMessage = trim((string)($message ?? ''));
     $homeUrl = url('home');
     $supportEmail = 'info@sahainsurance.co.th';
     $supportPhone = '02-68-77777';
+    $paymentStatusLabel = $paymentStatus !== '' ? __('content.payment_issue_page.statuses.' . strtolower($paymentStatus), [], app()->getLocale()) : '-';
+    if ($paymentStatusLabel === 'content.payment_issue_page.statuses.' . strtolower($paymentStatus)) {
+        $paymentStatusLabel = ucfirst($paymentStatus);
+    }
+    $paymentMethodLabel = $paymentMethod !== '' ? __('content.payment_issue_page.methods.' . strtolower($paymentMethod), [], app()->getLocale()) : '-';
+    if ($paymentMethodLabel === 'content.payment_issue_page.methods.' . strtolower($paymentMethod)) {
+        $paymentMethodLabel = strtoupper($paymentMethod);
+    }
 ?>
 
 @extends('layout.master')
 
-@section('title', 'ดำเนินการชำระเงิน')
+@section('title', __('content.payment_issue_page.title'))
 
 @section('content')
 <section class="py-4 payment-issue-page">
     <div class="container">
         <div class="payment-issue-shell">
             <div class="payment-issue-head">
-                <h1>Payment received, policy pending</h1>
-                <p>Your payment has been recorded, but the policy could not be issued automatically.</p>
+                <h1>{{ __('content.payment_issue_page.heading') }}</h1>
+                <p>{{ __('content.payment_issue_page.description') }}</p>
             </div>
             <div class="payment-issue-body">
                 <div class="alert alert-warning" role="alert">
@@ -32,40 +40,40 @@
 
                 <table class="payment-issue-meta">
                     <tr>
-                        <td>Order reference</td>
+                        <td>{{ __('content.payment_issue_page.order_reference') }}</td>
                         <td><strong>{{ $orderReference }}</strong></td>
                     </tr>
                     <tr>
-                        <td>Payment reference</td>
+                        <td>{{ __('content.payment_issue_page.payment_reference') }}</td>
                         <td>{{ $paymentReference }}</td>
                     </tr>
                     <tr>
-                        <td>Payment status</td>
-                        <td>{{ $paymentStatus !== '' ? ucfirst($paymentStatus) : '-' }}</td>
+                        <td>{{ __('content.payment_issue_page.payment_status') }}</td>
+                        <td>{{ $paymentStatusLabel }}</td>
                     </tr>
                     <tr>
-                        <td>Payment method</td>
-                        <td>{{ $paymentMethod !== '' ? strtoupper($paymentMethod) : '-' }}</td>
+                        <td>{{ __('content.payment_issue_page.payment_method') }}</td>
+                        <td>{{ $paymentMethodLabel }}</td>
                     </tr>
                     <tr>
-                        <td>Amount</td>
+                        <td>{{ __('content.payment_issue_page.amount') }}</td>
                         <td>{{ number_format($amount, 2) }} {{ $currency }}</td>
                     </tr>
                     <tr>
-                        <td>Last updated</td>
-                        <td>{{ $paidAt !== '' ? $paidAt : '-' }}</td>
+                        <td>{{ __('content.payment_issue_page.last_updated') }}</td>
+                        <td>{{ $paidAtLabel !== '' ? $paidAtLabel : '-' }}</td>
                     </tr>
                 </table>
 
                 <div class="payment-issue-note">
-                    We apologize for the inconvenience. Your payment has been received, but the policy issuance is still being verified by our system. Our team will review this transaction and complete the policy process as soon as possible.
+                    {{ __('content.payment_issue_page.apology') }}
                     <br><br>
-                    {!! sprintf('Please contact Sahamongkhon Insurance for assistance and provide the order reference above. Tel: %s or email %s.', '<strong>' . e($supportPhone) . '</strong>', '<a href="mailto:' . e($supportEmail) . '">' . e($supportEmail) . '</a>') !!}
+                    {!! sprintf(e(__('content.payment_issue_page.contact')), '<strong>' . e($supportPhone) . '</strong>', '<a href="mailto:' . e($supportEmail) . '">' . e($supportEmail) . '</a>') !!}
                 </div>
 
                 <div class="payment-issue-actions">
                     <a href="{{ $homeUrl }}" class="defaultBtn primaryBtn btn">
-                        Back to home <i class="bi bi-arrow-right ms-1"></i>
+                        {{ __('content.payment_issue_page.back_home') }} <i class="bi bi-arrow-right ms-1"></i>
                     </a>
                 </div>
             </div>

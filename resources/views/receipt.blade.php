@@ -1,6 +1,6 @@
 @extends('layout.master')
 
-@section('title', 'ใบรับกรมธรรม์')
+@section('title', __('content.receipt.title'))
 
 @section('content')
 @php
@@ -17,24 +17,24 @@
                         <i class="bi bi-check2-circle"></i>
                     </div>
 
-                    <p class="receipt-kicker">ขอบคุณสำหรับการซื้อประกันภัย</p>
-                    <h1>ออกกรมธรรม์เรียบร้อยแล้ว</h1>
+                    <p class="receipt-kicker">{{ __('content.receipt.thank_you') }}</p>
+                    <h1>{{ __('content.receipt.issued') }}</h1>
 
                     <div class="receipt-policy-box">
-                        <span>เลขที่กรมธรรม์ :</span>
+                        <span>{{ __('content.receipt.policy_number') }}</span>
                         <strong>{{ $policyNumber }}</strong>
                     </div>
 
                     <div class="alert alert-success receipt-alert" role="alert">
-                        ระบบได้ส่งกรมธรรม์ไปยังอีเมลของท่านแล้ว {{ $email }}
+                        {{ __('content.receipt.sent_to_email') }} {{ $email }}
                     </div>
 
-                    <p class="receipt-text">ท่านสามารถตรวจสอบกรมธรรม์ได้จากปุ่มด้านล่าง</p>
+                    <p class="receipt-text">{{ __('content.receipt.check_below') }}</p>
 
                     <div class="receipt-actions">
-                        <a href="{{ route('home') }}" class="otp-btn otp-btn-outline">หน้าแรก</a>
+                        <a href="{{ route('home') }}" class="otp-btn otp-btn-outline">{{ __('content.receipt.home') }}</a>
                         <a href="{{ route('check-policy', ['policy_number' => $policyNumber]) }}" class="check-premium-submit receipt-policy-btn">
-                            ตรวจสอบกรมธรรม์
+                            {{ __('content.receipt.check_policy') }}
                         </a>
                     </div>
                 </div>
