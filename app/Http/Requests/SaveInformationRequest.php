@@ -59,10 +59,10 @@ class SaveInformationRequest extends FormRequest
             $dateOfBirth = Carbon::parse($this->input('date_of_birth'))->startOfDay();
             $age = $dateOfBirth->age;
 
-            if ($age < 1 || $age > 75) {
+            if ($age < 16  or $age > 60) {
                 $validator->errors()->add(
                     'date_of_birth',
-                    'Age must be between 1 and 75 years.'
+                    'Age must be between 16 and 60 years.'
                 );
             }
         });

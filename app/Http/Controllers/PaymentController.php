@@ -23,12 +23,13 @@ class PaymentController extends Controller
             $message = trim((string)($issuePolicyResult['errorMessage'] ?? ''));
         }
 
+        $fallbackMessage = __('content.payment_issue.policy_issue_fallback', []); // Original: We received your payment, but the policy could not be issued automatically.
         if ($message === '') {
-            $message = "We received your payment, but the policy could not be issued automatically.";
+            $message = $fallbackMessage;
         }
         
         return view('payment_issue', [
-            'title' => "We received your payment, but the policy could not be issued automatically.",
+            'title' => $fallbackMessage,
             'order' => $order,
             'payment' => $paymentTransition,
             'issuePolicyResult' => $issuePolicyResult,
@@ -43,7 +44,7 @@ class PaymentController extends Controller
 
         if (empty($orderId) or (int) $orderId !== $order->id) {
             return $this->redirectRoute('check-premium', errors: [
-                'order' => 'Order session timeout. Please start again.',
+                'order' => __('content.payment_issue.order_session_timeout', []), // Original: Order session timeout. Please start again.
             ]);
         }
 
@@ -66,7 +67,7 @@ class PaymentController extends Controller
         
         if (empty($token)) {
             return $this->redirectRoute('home', errors: [
-                'payment' => 'Please select a plan first!',
+                'payment' => __('content.payment_issue.plan_required', []), // Original: Please select a plan first!
             ]);
         }
     
@@ -103,7 +104,7 @@ class PaymentController extends Controller
         // Handle fail response
         if (empty($status) or $status != 'success') {
             return $this->redirectRoute('home', errors: [
-                'payment' => 'Failed to checkout with KBank',
+                'payment' => __('content.payment_issue.kbank_checkout_failed', []), // Original: Failed to checkout with KBank
             ]);
         }
 
@@ -112,7 +113,7 @@ class PaymentController extends Controller
             $redirectUrl = ($response['redirect_url'] ?? '');
             if ($redirectUrl === '') {
                 return $this->redirectRoute('home', errors: [
-                    'payment' => 'KBank redirect URL is missing',
+                    'payment' => __('content.payment_issue.kbank_redirect_url_missing', []), // Original: KBank redirect URL is missing
                 ]);
             }
 
@@ -131,7 +132,7 @@ class PaymentController extends Controller
         if (empty($order)) {
             return $this->jsonError(
                 'Order not found.',
-                ['reference_order' => 'The specified order could not be found.'],
+                ['reference_order' => __('content.payment_issue.order_not_found', [])], // Original: The specified order could not be found.
                 null,
                 404
             );
@@ -153,7 +154,7 @@ class PaymentController extends Controller
 
             return $this->jsonError(
                 'KBank checksum verification failed.',
-                ['checksum' => 'Invalid payment checksum.'],
+                ['checksum' => __('content.payment_issue.invalid_checksum', [])], // Original: Invalid payment checksum.
                 $data,
                 422
             );
@@ -223,7 +224,7 @@ class PaymentController extends Controller
                     'paid_at' => date('Y-m-d H:i:s', time())
                 ]);
     
-                return $this->jsonResponse('Successfully created payment transition', $payment);
+                return $this->jsonResponse(__('content.payment_issue.payment_transition_created', []), $payment); // Original: Successfully created payment transition
             }
 
             // When payment is still pending, then need to update the latest result
@@ -269,7 +270,7 @@ class PaymentController extends Controller
             ]);
         }
 
-        return $this->jsonResponse('Successfully created payment transition', $payment);
+        return $this->jsonResponse(__('content.payment_issue.payment_transition_created', []), $payment); // Original: Successfully created payment transition
     }
 
     public function inquiryKBankPaymentTransition(Request $request, Order $order)
@@ -288,7 +289,7 @@ class PaymentController extends Controller
             $issueErrorMessage = trim((string)($issuePolicyResult['errorMessage'] ?? ''));
 
             return $this->jsonError(
-                $issueErrorMessage !== '' ? $issueErrorMessage : 'Fail to Issue policy',
+                $issueErrorMessage !== '' ? $issueErrorMessage : __('content.payment_issue.policy_issue_failed', []), // Original: Fail to Issue policy
                 [],
                 ['payment_issue' => true],
                 500
@@ -297,7 +298,7 @@ class PaymentController extends Controller
 
         if (!empty($existingPayment) and $existingPayment->status == 'success' and $order->payment_status == 'paid') {
             $payment = $existingPayment;
-            return $this->jsonResponse('Success to fetch K-Bank payment information', $payment, null, 200);
+            return $this->jsonResponse(__('content.payment_issue.kbank_payment_info_fetched', []), $payment, null, 200); // Original: Success to fetch K-Bank payment information
         }
 
         $apiKey = config('services.kbank.private_key');
@@ -313,7 +314,7 @@ class PaymentController extends Controller
 
         if (empty($chargeResult) or !$chargeResult['success']) {
             return $this->jsonError(
-                $chargeResult['message'] ?? 'Fail to fetch K-Bank payment information',
+                $chargeResult['message'] ?? __('content.payment_issue.kbank_payment_info_fetch_failed', []), // Original: Fail to fetch K-Bank payment information
                 [],
                 $chargeResult['data'] ?? null,
                 $chargeResult['code'] ?? 400
@@ -375,11 +376,11 @@ class PaymentController extends Controller
     
                 $payment = PaymentTransition::where('order_id', $order->id)->first();
 
-                return $this->jsonResponse('Success to fetch K-Bank payment information', $payment, null, 200);
+                return $this->jsonResponse(__('content.payment_issue.kbank_payment_info_fetched', []), $payment, null, 200); // Original: Success to fetch K-Bank payment information
             }
         }
 
-        return $this->jsonResponse('Success to fetch K-Bank payment information', $payment, null, 200);
+        return $this->jsonResponse(__('content.payment_issue.kbank_payment_info_fetched', []), $payment, null, 200); // Original: Success to fetch K-Bank payment information
     }
 
     private function verifyChecksum(array $payload, array $createInfo): bool

@@ -37,15 +37,15 @@ class PaymentTransitionCreateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'reference_order.required' => 'reference_order is required',
-            'charge_id.required' => 'charge_id is required',
-            'status.required' => 'status must be either success or fail',
-            'status.in' => 'status must be either success or fail',
-            'transaction_state.required' => 'transaction_state is required',
-            'amount.required' => 'amount is required',
-            'amount.numeric' => 'amount must be a positive number',
-            'amount.gt' => 'amount must be a positive number',
-            'payment_create_info.array' => 'payment_create_info must be an array',
+            'reference_order.required' => 'Reference order is required',
+            'charge_id.required' => 'Charge Id is required',
+            'status.required' => 'Status must be either success or fail',
+            'status.in' => 'Status must be either success or fail',
+            'transaction_state.required' => 'Transation State is required',
+            'amount.required' => 'Amount is required',
+            'amount.numeric' => 'Amount must be a positive number',
+            'amount.gt' => 'Amount must be a positive number',
+            'payment_create_info.array' => 'Payment create info must be an array',
         ];
     }
 
