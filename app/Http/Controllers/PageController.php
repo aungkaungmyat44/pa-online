@@ -67,19 +67,19 @@ class PageController extends Controller
             now()->greaterThanOrEqualTo($customer->otp_expires_at)
         ) {
             $otp = $this->generateOtp();
-            $subject = 'PA Direct - Sending OTP Code';
+            $subject = __('content.otp.email.subject');
 
             $mailable = new OtpMail(
                 data: [
                     'brandName' => 'PA Direct',
-                    'headerTitle' => 'Sending OTP Code',
-                    'recipientName' => $customer->name ?? 'Customer',
-                    'introText' => 'Please use the OTP code below to verify your account.',
-                    'detailLabel' => 'OTP Code',
+                    'headerTitle' => __('content.otp.email.header_title'),
+                    'recipientName' => $customer->name ?? __('content.otp.email.recipient_fallback'),
+                    'introText' => __('content.otp.email.intro'),
+                    'detailLabel' => __('content.otp.email.detail_label'),
                     'detailValue' => $otp,
-                    'bodyMessage' => 'This code expires in 2 minutes. Do not share this code with anyone.',
-                    'footerText' => 'Ignore this email if you did not request an OTP code.',
-                    'autoReplyText' => 'Please do not reply to this email. This is an automated message.',
+                    'bodyMessage' => __('content.otp.email.body'),
+                    'footerText' => __('content.otp.email.footer'),
+                    'autoReplyText' => __('content.otp.email.auto_reply'),
                 ],
                 subjectText: $subject,
             );

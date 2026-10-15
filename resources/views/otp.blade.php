@@ -1,6 +1,6 @@
 @extends('layout.master')
 
-@section('title', 'ยืนยัน OTP')
+@section('title', __('content.otp.title'))
 
 @section('content')
 @php
@@ -19,8 +19,8 @@
         </div>
 
         <div class="otp-shell">
-            <h1>ยืนยัน OTP</h1>
-            <p>กรอกรหัส OTP 6 หลักที่ส่งไปยังอีเมลของคุณเพื่อดำเนินการต่อ</p>
+            <h1>{{ __('content.otp.heading') }}</h1>
+            <p>{{ __('content.otp.instructions') }}</p>
 
             <div class="otp-email">
                 <i class="bi bi-envelope-at me-1"></i>
@@ -36,21 +36,18 @@
                 <input type="hidden" name="otp_code" id="otp_code" value="">
 
                 <div class="otp-inputs">
-                    <input class="form-control otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" aria-label="รหัส OTP หลักที่ 1">
-                    <input class="form-control otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" aria-label="รหัส OTP หลักที่ 2">
-                    <input class="form-control otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" aria-label="รหัส OTP หลักที่ 3">
-                    <input class="form-control otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" aria-label="รหัส OTP หลักที่ 4">
-                    <input class="form-control otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" aria-label="รหัส OTP หลักที่ 5">
-                    <input class="form-control otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" aria-label="รหัส OTP หลักที่ 6">
+                    @foreach (range(1, 6) as $digit)
+                        <input class="form-control otp-input" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]*" aria-label="{{ __('content.otp.digit_label', ['number' => $digit]) }}">
+                    @endforeach
                 </div>
 
                 <div class="otp-actions">
-                    <button type="submit" id="otpSubmitBtn" class="otp-btn otp-btn-primary" disabled>ยืนยัน OTP</button>
-                    <button type="button" id="otpResendBtn" class="otp-btn otp-btn-secondary">ส่ง OTP อีกครั้ง</button>
-                    <a href="{{ route('check-premium') }}" class="otp-btn otp-btn-outline">ย้อนกลับ</a>
+                    <button type="submit" id="otpSubmitBtn" class="otp-btn otp-btn-primary" disabled>{{ __('content.otp.verify') }}</button>
+                    <button type="button" id="otpResendBtn" class="otp-btn otp-btn-secondary">{{ __('content.otp.resend') }}</button>
+                    <a href="{{ route('check-premium') }}" class="otp-btn otp-btn-outline">{{ __('content.otp.back') }}</a>
                 </div>
 
-                <p class="otp-note">หากไม่ได้รับรหัส OTP กรุณาตรวจสอบโฟลเดอร์ Spam หรือ Junk</p>
+                <p class="otp-note">{{ __('content.otp.spam_note') }}</p>
             </form>
         </div>
     </div>
