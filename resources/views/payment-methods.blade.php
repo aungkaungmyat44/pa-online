@@ -1,35 +1,37 @@
 @extends('layout.master')
 
-@section('title', 'วิธีชำระเงิน')
+@section('title', __('content.payment_methods.title'))
 
 @section('content')
 @php
     $selectedPlan = $order['plan'] ?? null;
     $coverageAmount = $order['coverage_amount'] ?? config('coverage_plans.rows.0.amounts.0');
-    $coverageAmountLabel = number_format((int) str_replace(',', '', $selectedPlan['death_coverage'])) . ' บาท';
-    $premiumAmountLabel = '888 บาท';
+    $isEnglish = app()->getLocale() === 'en';
+    $currencyLabel = __('content.payment_methods.currency');
+    $coverageAmountLabel = number_format((int) str_replace(',', '', $selectedPlan['death_coverage'])) . ' ' . $currencyLabel;
+    $premiumAmountLabel = '888 ' . $currencyLabel;
 
     $paymentMethods = [
         [
             'value' => 'card',
-            'title' => 'บัตรเครดิต / บัตรเดบิต',
-            'description' => 'ชำระเงินอย่างปลอดภัยด้วยบัตร Mastercard, Visa หรือ JCB',
+            'title' => __('content.payment_methods.card_title'),
+            'description' => __('content.payment_methods.card_description'),
             'image' => 'assets/images/master.png',
-            'image_alt' => 'โลโก้ Mastercard',
+            'image_alt' => __('content.payment_methods.card_image_alt'),
         ],
         [
             'value' => 'qr',
-            'title' => 'ชำระเงินด้วย Thai QR',
-            'description' => 'สแกน QR Code ผ่านแอปพลิเคชันธนาคารบนมือถือ',
-            'image' => 'assets/images/qr.png',
-            'image_alt' => 'โลโก้ Thai QR',
+            'title' => __('content.payment_methods.qr_title'),
+            'description' => __('content.payment_methods.qr_description'),
+            'image' => 'assets/images/thai_qr.png',
+            'image_alt' => __('content.payment_methods.qr_image_alt'),
         ],
         [
             'value' => 'link',
-            'title' => 'ลิงก์ชำระเงิน KBank',
-            'description' => 'รับลิงก์ชำระเงินและดำเนินการชำระผ่าน KBank',
+            'title' => __('content.payment_methods.kbank_title'),
+            'description' => __('content.payment_methods.kbank_description'),
             'image' => 'assets/images/kbank.png',
-            'image_alt' => 'โลโก้ KBank',
+            'image_alt' => __('content.payment_methods.kbank_image_alt'),
         ],
     ];
 @endphp
@@ -46,20 +48,20 @@
             <div class="col-lg-10">
                 <form action="{{ route('request-payment') }}" method="post" class="check-premium-card payment-methods-card">
                     @csrf
-                    <h1>วิธีชำระเงิน</h1>
-                    <p class="payment-methods-subtitle">เลือกวิธีชำระเงินหนึ่งรายการเพื่อดำเนินการต่อ</p>
+                    <h1>{{ __('content.payment_methods.title') }}</h1>
+                    <p class="payment-methods-subtitle">{{ __('content.payment_methods.subtitle') }}</p>
 
                     <div class="payment-summary-box">
                         <div>
-                            <span>แผนประกัน</span>
-                            <strong>{{ $selectedPlan['name_th'] ?? '-' }}</strong>
+                            <span>{{ __('content.payment_methods.plan') }}</span>
+                            <strong>{{ $selectedPlan[$isEnglish ? 'name_en' : 'name_th'] ?? '-' }}</strong>
                         </div>
                         <div>
-                            <span>จำนวนเงินความคุ้มครอง</span>
+                            <span>{{ __('content.payment_methods.coverage_amount') }}</span>
                             <strong>{{ $coverageAmountLabel }}</strong>
                         </div>
                         <div>
-                            <span>จำนวนเบี้ยประกัน</span>
+                            <span>{{ __('content.payment_methods.premium_amount') }}</span>
                             <strong>{{ $premiumAmountLabel }}</strong>
                         </div>
                     </div>
@@ -87,8 +89,8 @@
                     </div>
 
                     <div class="health-question-actions">
-                        <a href="{{ route('show-review-information') }}" class="otp-btn otp-btn-outline">ย้อนกลับ</a>
-                        <button type="submit" class="check-premium-submit">ดำเนินการชำระเงิน</button>
+                        <a href="{{ route('show-review-information') }}" class="otp-btn otp-btn-outline">{{ __('content.payment_methods.back') }}</a>
+                        <button type="submit" class="check-premium-submit">{{ __('content.payment_methods.submit') }}</button>
                     </div>
                 </form>
             </div>

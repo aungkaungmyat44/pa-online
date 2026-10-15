@@ -1,6 +1,6 @@
 @extends('layout.master')
 
-@section('title', 'ดำเนินการชำระเงิน')
+@section('title', __('content.checkout.title'))
 
 @section('content')
 @php
@@ -9,7 +9,10 @@
     $orderId = $order->id;
     $orderIdValue = $order->order_unique_code;
     $productId = $orderInfo['plan']['id'];
-    $productName = $orderInfo['plan']['name_th'];
+    $isEnglish = app()->getLocale() === 'en';
+    $productName = $isEnglish
+        ? ($orderInfo['plan']['name_en'] ?? $orderInfo['plan']['name_th'])
+        : $orderInfo['plan']['name_th'];
     $totalAmount = $order->total_amount;
     $paymentMethod = $order->payment_method;
     
@@ -20,7 +23,9 @@
     $isLinkPayment = $paymentMethod === 'link';
     $isQrPayment = in_array($paymentMethod, ['qr', 'qr'], true);
     $isCardPayment = $paymentMethod === 'card';
-    $orderCreatedAtLabel = date('d M Y, H:i', strtotime($order->created_at));
+    $orderCreatedAtLabel = \Illuminate\Support\Carbon::parse($order->created_at)
+        ->locale(app()->getLocale())
+        ->translatedFormat('d M Y, H:i');
 @endphp
 
 <section class="payment-inquiry-shell py-5 d-flex align-items-center justify-content-center" style="background: radial-gradient(circle at top, rgba(56,76,149,.1), transparent 60%);">
@@ -39,19 +44,19 @@
             </div>
 
             <p class="fw-semibold mb-0" style="font-size: var(--font-size-p); color: #2f3c63;">
-                กรุณาชำระเงินภายใน <span class="text-danger fw-bold">3 นาที</span> ระบบจะอัปเดตสถานะการชำระเงินโดยอัตโนมัติครับ
+                {{ __('content.checkout.pay_within_prefix') }} <span class="text-danger fw-bold">{{ __('content.checkout.pay_within_minutes', ['minutes' => 3]) }}</span> {{ __('content.checkout.pay_within_suffix') }}
             </p>
 
             <div class="text-start w-100" style="font-size: var(--font-size-p);">
                 <div class="d-flex justify-content-between small text-muted mb-1">
-                    <span>สินค้า</span>
+                    <span>{{ __('content.checkout.product') }}</span>
                     <span class="text-dark fw-semibold text-truncate" style="max-width: 140px; display: inline-block; text-align: right;">
                         {{ $productName }}
                     </span>
                 </div>
                 @if ($orderIdValue !== '')
                     <div class="d-flex justify-content-between small text-muted mb-1">
-                        <span>เลขที่อ้างอิงคำสั่งซื้อ</span>
+                        <span>{{ __('content.checkout.order_reference') }}</span>
                         <span class="text-dark fw-semibold text-break" style="max-width: 200px; text-align: right;">
                             # {{ $orderIdValue }}
                         </span>
@@ -59,7 +64,7 @@
                 @endif
                 @if ($orderCreatedAtLabel !== '')
                     <div class="d-flex justify-content-between small text-muted">
-                        <span>วันที่ทำรายการ</span>
+                        <span>{{ __('content.checkout.transaction_date') }}</span>
                         <span class="text-dark fw-semibold" style="text-align: right;">
                             {{ $orderCreatedAtLabel }}
                         </span>
@@ -115,7 +120,7 @@
                     <div class="mt-3">
                         <img
                             src="{{ $linkQrCode }}"
-                            alt="Payment QR Code"
+                            alt="{{ __('content.checkout.payment_qr_alt') }}"
                             style="width: 220px; max-width: 100%; height: auto; border-radius: 18px; border: 1px solid rgba(56, 76, 149, 0.16); background: #fff; padding: 0.65rem; box-shadow: 0 10px 24px rgba(26, 38, 91, 0.08);"
                         >
                     </div>
@@ -131,7 +136,7 @@
                                 target="_blank"
                                 rel="noopener"
                             >
-                                <i class="bi bi-credit-card me-1"></i>Open payment link
+                                <i class="bi bi-credit-card me-1"></i>{{ __('content.checkout.open_payment_link') }}
                             </a>
                             <button
                                 type="button"
@@ -139,11 +144,11 @@
                                 class="defaultBtn secondaryBtn btn w-100 mt-2"
                                 data-link-url="{{ $linkUrl }}"
                             >
-                                <i class="bi bi-copy me-1"></i>Copy payment link
+                                <i class="bi bi-copy me-1"></i>{{ __('content.checkout.copy_payment_link') }}
                             </button>
                         @else
                             <button type="button" class="defaultBtn successBtn btn w-100" disabled>
-                                <i class="bi bi-credit-card me-1"></i>Payment link unavailable
+                                <i class="bi bi-credit-card me-1"></i>{{ __('content.checkout.payment_link_unavailable') }}
                             </button>
                         @endif
                     </div>
@@ -177,7 +182,9 @@
     const PAYMENT_POLL_INTERVAL_MS = 60000;
     const PAYMENT_REDIRECT_DELAY_MS = 300000;
 
-    const GENERIC_PAYMENT_ERROR = "Please try again later.";
+    const GENERIC_PAYMENT_ERROR = @json(__('content.checkout.generic_payment_error'));
+    const PAYMENT_LINK_COPIED = @json(__('content.checkout.payment_link_copied'));
+    const PAYMENT_LINK_COPY_FAILED = @json(__('content.checkout.payment_link_copy_failed'));
     const AUTO_START_FORM_IDS = [];
     const AUTO_START_LINK_IDS = [];
     let paymentPollTimer = null;
@@ -324,9 +331,9 @@
 
                 try {
                     await copyText(linkUrl);
-                    copyLinkBtn.innerHTML = '<i class="bi bi-check2 me-1"></i>Copied';
+                    copyLinkBtn.innerHTML = '<i class="bi bi-check2 me-1"></i>' + PAYMENT_LINK_COPIED;
                 } catch (error) {
-                    copyLinkBtn.innerHTML = '<i class="bi bi-x-circle me-1"></i>Copy failed';
+                    copyLinkBtn.innerHTML = '<i class="bi bi-x-circle me-1"></i>' + PAYMENT_LINK_COPY_FAILED;
                 }
 
                 setTimeout(function () {
