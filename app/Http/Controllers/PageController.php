@@ -44,8 +44,9 @@ class PageController extends Controller
 
     public function checkPremium()
     {
+        $occupationColumn = app()->getLocale() === 'en' ? 'occupation_en' : 'occupation_th';
         $occupations = PlanOccupation::orderBy('id', 'asc')
-                                    ->pluck('occupation_th', 'occupation_slug')
+                                    ->pluck($occupationColumn, 'occupation_slug')
                                     ->toArray();
 
         return view('check', [
