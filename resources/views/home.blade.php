@@ -1,13 +1,13 @@
 @extends('layout.master')
 
-@section('title', 'Personal Accident Insurance')
+@section('title', __('content.title'))
 
 @section('content')
 <section id="banner-section">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <div class="mi-hero-banner" style="background-image:url('{{ asset('assets/images/banner_th.png') }}');"></div>
+                <div class="mi-hero-banner" style="background-image:url('{{ asset('assets/images/'.__('content.banner')) }}');"></div>
             </div>
         </div>
     </div>
@@ -17,19 +17,10 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="explain-card">
-                    <h2>ประกันภัยอุบัติเหตุส่วนบุคคลคืออะไร ?</h2>
-                    <p>
-                        อุบัติเหตุสามารถเกิดขึ้นได้ทุกเวลา ไม่ว่าจะเป็นระหว่างขับรถ เดินทาง ทำงาน ออกกำลังกาย หรือใช้ชีวิตประจำวัน
-                        ประกันภัยอุบัติเหตุส่วนบุคคล (PA) ช่วยคุ้มครองทางการเงินเมื่อเกิดอุบัติเหตุที่ไม่คาดคิดจนทำให้บาดเจ็บ ทุพพลภาพ หรือเสียชีวิต
-                    </p>
-                    <p>
-                        ความคุ้มครองและผลประโยชน์จะขึ้นอยู่กับแผนประกันภัยที่เลือก เช่น ค่ารักษาพยาบาลจากอุบัติเหตุ การทุพพลภาพถาวร
-                        การสูญเสียอวัยวะหรือสมรรถภาพของร่างกายบางส่วน และการเสียชีวิตจากอุบัติเหตุ
-                    </p>
-                    <p>
-                        แตกต่างจากประกันสุขภาพทั่วไปที่เน้นคุ้มครองการเจ็บป่วยและโรคต่าง ๆ ประกันภัยอุบัติเหตุส่วนบุคคลจะเน้นคุ้มครอง
-                        การบาดเจ็บและความสูญเสียที่เกิดจากอุบัติเหตุโดยเฉพาะ
-                    </p>
+                    <h2>{{ __('content.explanation_heading') }}</h2>
+                    @foreach (__('content.explanation_paragraphs') as $paragraph)
+                        <p>{{ $paragraph }}</p>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -40,57 +31,26 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="coverage-heading">
-                    <h2>จุดเด่นความคุ้มครอง</h2>
+                    <h2>{{ __('content.coverage_highlights_heading') }}</h2>
                 </div>
                 <div class="row g-4">
-                    <div class="col-md-6 col-lg-4">
-                        <div class="coverage-card">
-                            <div class="coverage-icon">
-                                <i class="bi bi-people-fill"></i>
+                    @foreach ([
+                        'family' => 'people-fill',
+                        'medical' => 'cash-coin',
+                        'hospital' => 'hospital',
+                        'travel' => 'geo-alt-fill',
+                        'network' => 'building-fill-check',
+                        'experience' => 'award-fill',
+                    ] as $key => $icon)
+                        <div class="col-md-6 col-lg-4">
+                            <div class="coverage-card">
+                                <div class="coverage-icon">
+                                    <i class="bi bi-{{ $icon }}"></i>
+                                </div>
+                                <p>{{ __('content.coverage_highlights.'.$key) }}</p>
                             </div>
-                            <p>คุ้มครองครอบคลุมสำหรับทั้งครอบครัว</p>
                         </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="coverage-card">
-                            <div class="coverage-icon">
-                                <i class="bi bi-cash-coin"></i>
-                            </div>
-                            <p>ค่ารักษาพยาบาลสูงสุด 30,000 บาทต่ออุบัติเหตุ</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="coverage-card">
-                            <div class="coverage-icon">
-                                <i class="bi bi-hospital"></i>
-                            </div>
-                            <p>เงินชดเชยกรณีนอนโรงพยาบาลและห้อง ICU</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="coverage-card">
-                            <div class="coverage-icon">
-                                <i class="bi bi-geo-alt-fill"></i>
-                            </div>
-                            <p>คุ้มครองทุกที่ที่คุณเดินทาง</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="coverage-card">
-                            <div class="coverage-icon">
-                                <i class="bi bi-building-fill-check"></i>
-                            </div>
-                            <p>เครือข่ายโรงพยาบาลคู่สัญญาครอบคลุม</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="coverage-card">
-                            <div class="coverage-icon">
-                                <i class="bi bi-award-fill"></i>
-                            </div>
-                            <p>ประสบการณ์กว่า 76 ปีที่คุณไว้วางใจได้</p>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -103,11 +63,11 @@
                 <div class="premium-action">
                     <a href="{{ route('check-premium') }}" class="check-premium-btn">
                         <i class="bi bi-calculator"></i>
-                        <span>เช็คเบี้ย</span>
+                        <span>{{ __('content.check_premium') }}</span>
                     </a>
                     <a href="{{ asset('assets/files/policy.pdf') }}" class="check-premium-btn policy-download-btn" download>
                         <i class="bi bi-download"></i>
-                        <span>ข้อตกลงคุ้มครอง</span>
+                        <span>{{ __('content.policy_terms') }}</span>
                     </a>
                 </div>
             </div>
@@ -115,13 +75,8 @@
         <div class="row mt-4">
             <div class="col-lg-12">
                 <div class="faq-item objectives-card">
-                    <h6>วัตถุประสงค์แจ้งการขายประกันอุบัติเหตุส่วนบุคคล</h6>
-                    <p>
-                        กรมธรรม์อุบัติเหตุส่วนบุคคลนี้ให้คุ้มครองความเสี่ยงจากอุบัติเหตุ รวมถึงค่ารักษาพยาบาล
-                        และค่าเบี้ยประกันภัยไม่แพงเมื่อเทียบกับวงเงินคุ้มครอง เหมาะสำหรับบุคคลปกติทั่วไป
-                        ที่มีอายุตั้งแต่ 16 – 60 ปี ทั้งนี้ เป็นการลดภาระทางการเงิน โดยเฉพาะผู้ที่เดินทางบ่อย
-                        ทำงานที่มีความเสี่ยง หรือเป็นผู้หารายได้หลักของครอบครัว
-                    </p>
+                    <h6>{{ __('content.sales_objective_heading') }}</h6>
+                    <p>{{ __('content.sales_objective') }}</p>
                 </div>
             </div>
         </div>
@@ -129,14 +84,14 @@
             <div class="col-md-12">
                 <div class="plan-table-block">
                     <div class="section-heading">
-                        <h2>แผนความคุ้มครอง</h2>
+                        <h2>{{ __('content.coverage_table_heading') }}</h2>
                     </div>
                     <div class="plan-table-wrap">
                         <table class="plan-table">
                             <thead>
                                 <tr>
                                     <th>
-                                        <p>ความคุ้มครอง</p>
+                                        <p>{{ __('content.coverage_column_heading') }}</p>
                                     </th>
                                     @foreach ($coveragePlans as $plan)
                                         <th>
@@ -158,14 +113,12 @@
                         </table>
                     </div>
                     <ol class="insurance-conditions mt-3">
-                        <li>เงื่อนไขของการประกันภัย</li>
-                        <li>ข้าพเจ้ายอมรับเงื่อนไขการประกันภัย</li>
-                        <li>ข้าพเจ้ามีความประสงค์ขอเอาประกันภัยกับบริษัทตามเงื่อนไขของกรมธรรม์ประกันภัยที่บริษัทได้ใช้สำหรับการประกันภัยนี้และข้าพเจ้ารับรองว่า รายละเอียดต่างๆที่ข้าพเจ้าแถลงข้างต้นนี้มีความถูกต้องและสมบูรณ์</li>
-                        <li>ข้าพเจ้าตกลงที่จะให้คำขอเอาประกันภัยนี้เป็นมูลฐานสัญญาประกันภัยระหว่างข้าพเจ้าและบริษัทหากรายละเอียดของข้าพเจ้าเป็นเท็จหรือปกปิดไม่แจ้งความจริง ข้าพเจ้ายินยอมให้บริษัทฯ บอกเลิกสัญญาประกันภัยได้</li>
-                        <li>ข้าพเจ้ายินยอมให้บริษัทฯ จัดเก็บ ใช้ และเปิดเผย ข้อเท็จจริงเกี่ยวกับสุขภาพและข้อมูลของข้าพเจ้าต่อสำนักงานคณะกรรมการกำกับและส่งเสริมการประกอบธุรกิจประกันภัย เพื่อประโยชน์ในการกำกับดูแลธุรกิจประกันภัย</li>
+                        @foreach (__('content.insurance_conditions') as $condition)
+                            <li>{{ $condition }}</li>
+                        @endforeach
                     </ol>
                     <div class="alert alert-danger" role="alert">
-                        คำเตือนของสำนักงานคณะกรรมการกำกับและส่งเสริมการประกอบธุรกิจประกันภัย (คปภ.) การปกปิดข้อเท็จจริงใดๆหรือการแถลงข้อความอันเป็นเท็จจะมีผลให้สัญญาประกันภัยนี้ต้องเป็นโมฆียะอาจจะเป็นเหตุให้บริษัทผู้รับประกันภัย ปฏิเสธความรับผิดตามสัญญาประกันภัยหรือบอกล้างสัญญาประกันภัยได้ ตามประมวลกฎหมายแพ่งและพาณิชย์มาตรา 865
+                        {{ __('content.regulatory_warning') }}
                     </div>
                 </div>
             </div>
@@ -177,42 +130,16 @@
         <div class="row justify-content-center">
             <div class="col-lg-12">
                 <div class="faq-heading">
-                    <h2>คำถามที่พบบ่อย</h2>
+                    <h2>{{ __('content.faq_heading') }}</h2>
                 </div>
 
                 <div class="faq-list">
-                    <div class="faq-item">
-                        <h6>ประกันภัยอุบัติเหตุส่วนบุคคลคืออะไร?</h6>
-                        <p>เป็นประกันภัยที่ช่วยคุ้มครองทางการเงิน หากอุบัติเหตุทำให้เกิดการบาดเจ็บ ทุพพลภาพ หรือเสียชีวิต</p>
-                    </div>
-                    <div class="faq-item">
-                        <h6>ใครสามารถสมัครได้บ้าง?</h6>
-                        <p>ผู้สมัครที่มีคุณสมบัติตามเงื่อนไขและมีอายุตั้งแต่ 1 ถึง 60 ปี สามารถสมัครได้ ทั้งนี้ขึ้นอยู่กับเงื่อนไขการพิจารณารับประกันภัย</p>
-                    </div>
-                    <div class="faq-item">
-                        <h6>คุ้มครองค่ารักษาพยาบาลหรือไม่?</h6>
-                        <p>คุ้มครองค่ารักษาพยาบาลตามแผนประกันภัยที่เลือกและเงื่อนไขของกรมธรรม์</p>
-                    </div>
-                    <div class="faq-item">
-                        <h6>คุ้มครองการขับขี่หรือโดยสารรถจักรยานยนต์หรือไม่?</h6>
-                        <p>ความคุ้มครองเกี่ยวกับรถจักรยานยนต์ขึ้นอยู่กับแผนประกันภัยที่เลือกและเงื่อนไขความคุ้มครองเพิ่มเติม</p>
-                    </div>
-                    <div class="faq-item">
-                        <h6>สามารถซื้อได้มากกว่าหนึ่งกรมธรรม์หรือไม่?</h6>
-                        <p>ผู้เอาประกันภัยแต่ละรายสามารถถือกรมธรรม์ภายใต้โครงการนี้ได้สูงสุดหนึ่งกรมธรรม์</p>
-                    </div>
-                    <div class="faq-item">
-                        <h6>ระยะเวลาคุ้มครองนานเท่าไร?</h6>
-                        <p>กรมธรรม์ประกันภัยอุบัติเหตุส่วนบุคคลนี้มีระยะเวลาคุ้มครอง 1 ปี</p>
-                    </div>
-                    <div class="faq-item">
-                        <h6>จะได้รับกรมธรรม์อย่างไร?</h6>
-                        <p>สามารถรับกรมธรรม์ทางอีเมล หรือเลือกให้จัดส่งทางไปรษณีย์ภายใน 15 วัน</p>
-                    </div>
-                    <div class="faq-item">
-                        <h6>สามารถตรวจสอบกรมธรรม์ได้อย่างไร?</h6>
-                        <p>ใช้เมนูเช็คกรมธรรม์ แล้วกรอกเลขที่กรมธรรม์พร้อมเลขบัตรประชาชน 6 หลักสุดท้าย</p>
-                    </div>
+                    @foreach (__('content.faqs') as $faq)
+                        <div class="faq-item">
+                            <h6>{{ $faq['question'] }}</h6>
+                            <p>{{ $faq['answer'] }}</p>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>

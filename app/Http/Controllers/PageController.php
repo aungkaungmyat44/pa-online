@@ -29,15 +29,12 @@ class PageController extends Controller
 
         $plans = Plan::orderBy('id', 'asc')->get();
         $coverageFields = config('coverage_plans.coverage_fields', []);
-
         return view('home', [
             'coveragePlans' => $plans->map(fn ($plan) => [
-                'title' => $plan->name_th,
-                'subtitle' => $plan->name_en,
-                'value' => $plan->name_th,
+                'title' => app()->getLocale() === 'en' ? $plan->name_en : $plan->name_th,
             ]),
             'coverageRows' => collect($coverageFields)->map(fn ($row) => [
-                'label' => $row['label'],
+                'label' => __('content.coverage_fields.'.$row['field']),
                 'amounts' => $plans->map(
                     fn ($plan) => number_format((float) $plan->{$row['field']})
                 ),
@@ -237,8 +234,10 @@ class PageController extends Controller
             $amount = data_get($plan, $row['field']);
 
             return [
-                'label' => $row['label'],
-                'amount' => $amount !== null ? number_format((float) $amount) . ' บาท' : '-',
+                'label' => __('content.coverage_fields.'.$row['field']),
+                'amount' => $amount !== null
+                    ? number_format((float) $amount).' '.__('content.currency_unit')
+                    : '-',
             ];
         });
         
