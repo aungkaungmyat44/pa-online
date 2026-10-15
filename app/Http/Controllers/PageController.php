@@ -279,14 +279,14 @@ class PageController extends Controller
         ]);
     }
 
-    public function showInformationForm()
+    public function showInformationForm(Request $request)
     {
         $customer = session('customer');
         
         return view('information-form', [
             'customer' => $customer,
             'cardTypes' => config('card_types.types', []),
-            'nameTitles' => $this->getNameTitles(),
+            'nameTitles' => $this->getNameTitles($request),
             'countries' => $this->getCountries(),
             'provinces' => $this->getProvinces(),
         ]);
@@ -615,36 +615,46 @@ class PageController extends Controller
     }
 
     // Json Helpers
-    public function getNameTitles()
+    public function getNameTitles(Request $request)
     {
-        return DB::connection('helperDB')
+        $titleNameColumn = $request->query('language', app()->getLocale()) === 'en' ? 'name_s_en' : 'name_s';
+
+        return DB::connection('helperDB2')
             ->table('title')
-            ->select('title', 'name_s', 'titletype')
-            ->whereNotNull('title')
+            ->select(
+                'id', 
+                "$titleNameColumn as display_name",
+                'name_s', 
+                'titletype'
+            )
+            ->whereNotNull('id')
             ->whereNotNull('name_s')
-            ->whereRaw("TRIM(title) != ''")
+            ->whereRaw("TRIM(id) != ''")
             ->whereRaw("TRIM(name_s) != ''")
-            ->orderBy('title')
+            ->orderBy('id')
             ->get();
     }
     
     public function getCountries()
     {
-        return DB::connection('helperDB')
+        $countries = DB::connection('helperDB2')
             ->table('country')
             ->select('ct_code', 'ct_nameth', 'ct_nameeng')
             ->where('sts', '<>', '0')
             ->orderBy('position')
             ->get();
+
+        return $countries;
     }
 
     public function getProvinces()
     {
-        return DB::connection('helperDB')
+        return DB::connection('helperDB2')
             ->table('ref_province')
             ->select([
                 'Prov_code as province_code',
                 'Prov_name as province_name',
+                'Prov_name_en as province_name_en',
                 'Prov_num as province_number',
             ])
             ->where('Prov_num', '<>', 99)
@@ -657,13 +667,16 @@ class PageController extends Controller
     public function districts(Request $request)
     {
         $provinceCode = trim((string) $request->query('province_code', ''));
+        $districtNameColumn = $request->query('language') === 'en' ? 'amphurname_en' : 'amphurname';
 
-        $query = DB::connection('helperDB')
+        $query = DB::connection('helperDB2')
             ->table('ref_amphur')
             ->select([
                 'amphurid as district_code',
-                'amphurname as district_name',
+                "$districtNameColumn as district_name",
             ])
+            ->where("$districtNameColumn", '!=', null)
+            ->where("$districtNameColumn", '!=', 'null')
             ->orderBy('amphurid');
 
         if ($provinceCode !== '') {
@@ -679,6 +692,7 @@ class PageController extends Controller
     {
         $provinceCode = trim((string) $request->query('province_code', ''));
         $districtCode = trim((string) $request->query('district_code', ''));
+        $subdistrictNameColumn = $request->query('language') === 'en' ? 'tumbolname_en' : 'tumbolname';
 
         if ($provinceCode === '' or $districtCode === '') {
             return response()->json([
@@ -687,11 +701,11 @@ class PageController extends Controller
             ], 400);
         }
 
-        $subdistricts = DB::connection('helperDB')
+        $subdistricts = DB::connection('helperDB2')
             ->table('ref_tumbol')
             ->select([
                 'tumbol_id as subdistrict_code',
-                'tumbolname as subdistrict_name',
+                "$subdistrictNameColumn as subdistrict_name",
                 'zipcode',
             ])
             ->where('Prov_code', $provinceCode)
