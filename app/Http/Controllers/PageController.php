@@ -387,24 +387,58 @@ class PageController extends Controller
 
         $occupation = PlanOccupation::where('occupation_slug', $customer['occupation'])->first();
 
-        $namePrefix = $customer['information']['title_name'];
-        $title = DB::connection('helperDB')
-                ->table('title')
-                ->where('name_s', $namePrefix)
-                ->first();
+        $information = $customer['information'];
+        $isEnglish = app()->getLocale() === 'en';
+        $titleNameColumn = $isEnglish ? 'name_s_en' : 'name_s';
+        $provinceNameColumn = $isEnglish ? 'Prov_name_en' : 'Prov_name';
+        $districtNameColumn = $isEnglish ? 'amphurname_en' : 'amphurname';
+        $subdistrictNameColumn = $isEnglish ? 'tumbolname_en' : 'tumbolname';
+
+        $titleName = $information['title_name'];
+        $title = DB::connection('helperDB2')
+            ->table('title')
+            ->select("$titleNameColumn as display_name")
+            ->where('name_s', $titleName)
+            ->first();
+
+        $province = DB::connection('helperDB2')
+            ->table('ref_province')
+            ->select("$provinceNameColumn as display_name")
+            ->where('Prov_code', $information['province'])
+            ->first();
+
+        $districtCode = $information['district'];
+        $district = DB::connection('helperDB2')
+            ->table('ref_amphur')
+            ->select("$districtNameColumn as display_name")
+            ->where('Prov_code', $information['province'])
+            ->where('amphurid', $districtCode)
+            ->first();
+
+        $subdistrictCode = $information['subdistrict'];
+        $subdistrict = DB::connection('helperDB2')
+            ->table('ref_tumbol')
+            ->select("$subdistrictNameColumn as display_name")
+            ->where('Prov_code', $information['province'])
+            ->where('amphur_id', $districtCode)
+            ->where('tumbol_id', $subdistrictCode)
+            ->first();
         
         $countryCode = $customer['information']['nationality'];
         $country = DB::connection('helperDB')
-            ->table('country')
-            ->select('ct_code', 'ct_nameth', 'ct_nameeng')
-            ->where('ct_code', $countryCode)
-            ->first();
+                    ->table('country')
+                    ->select('ct_code', 'ct_nameth', 'ct_nameeng')
+                    ->where('ct_code', $countryCode)
+                    ->first();
         
         return view('review-information', [
             'customer' => $customer,
             'occupation' => $occupation,
             'title' => $title,
-            'country' => $country
+            'country' => $country,
+            'province' => $province,
+            'district' => $district,
+            'subdistrict' => $subdistrict,
         ])->with(['success' => __('content.payment_issue.choose_payment_method', [])]); // Original: Choose any payment method
     }
 

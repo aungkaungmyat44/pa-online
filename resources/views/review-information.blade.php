@@ -1,19 +1,27 @@
 @extends('layout.master')
 
-@section('title', 'ตรวจสอบข้อมูล')
+@section('title', __('content.review_information.title'))
 
 @section('content')
 @php
     $review = $customer ?? [];
     $healthQuestions = $review['health_questions'] ?? [];
-    $cardTypeLabels = config('card_types.labels', []);
-    $healthQuestionLabels = [
-        'other_insurance' => 'ท่านมีหรือได้ขอเอาประกันภัยอุบัติเหตุส่วนบุคคล หรือประกันชีวิตไว้กับบริษัทประกันภัยอื่นหรือไม่',
-        'insurance_declined' => 'ท่านเคยถูกบริษัทประกันภัยปฏิเสธการรับประกันภัย ยกเลิกประกันภัย หรือเรียกเก็บเบี้ยประกันภัยเพิ่มสำหรับการประกันภัยดังกล่าวหรือไม่',
-        'accident_hospitalized' => 'ในระยะเวลา 2 ปีที่ผ่านมา ท่านเคยได้รับบาดเจ็บจากอุบัติเหตุจนต้องเข้ารับการรักษาในโรงพยาบาลในฐานะผู้ป่วยในหรือไม่',
-        'impairment_or_drug_history' => 'ท่านเคยมีหรือมีความผิดปกติของสายตา การได้ยิน หรือระบบประสาท เคยมีอวัยวะส่วนหนึ่งส่วนใดพิการ หรือเคยเสพสารเสพติดให้โทษร้ายแรง หรือเคยต้องโทษในคดีเกี่ยวกับยาเสพติดหรือไม่',
-        'medical_condition_history' => 'ท่านเคยเป็น เคยได้รับการตรวจหรือรักษา กำลังรักษา หรือมีอาการหรือความผิดปกติที่เกี่ยวข้องกับโรคลมชัก โรคหัวใจ โรคความดันโลหิตสูง โรคเบาหวาน โรคกระดูกและ/หรือกล้ามเนื้อ โรคมะเร็ง โรคเอดส์ หรือมีเชื้อไวรัส HIV โรคหลอดเลือดสมอง หรือโรคพิษสุราเรื้อรังหรือไม่',
+    $isEnglish = app()->getLocale() === 'en';
+    $cardTypeLabels = __('content.information.document_types');
+    $healthQuestionItems = __('content.health_questions.items');
+    $healthAnswerValues = [
+        'no' => ['ไม่มี', 'ไม่เคย'],
+        'yes' => ['มี', 'เคย'],
     ];
+    $translateHealthAnswer = function ($question, $answer) use ($healthQuestionItems, $healthAnswerValues) {
+        foreach (data_get($healthQuestionItems, "$question.options", []) as $option => $label) {
+            if (in_array($answer, $healthAnswerValues[$option] ?? [], true)) {
+                return $label;
+            }
+        }
+
+        return $answer;
+    };
     $formatValue = function ($value) {
         if (is_array($value)) {
             return implode(', ', $value);
@@ -34,107 +42,107 @@
         <div class="row">
             <div class="col-lg-10 mx-auto">
                 <div class="check-premium-card review-information-card">
-                    <h1>ตรวจสอบข้อมูล</h1>
+                    <h1>{{ __('content.review_information.title') }}</h1>
 
                     <div class="review-section">
-                        <h2>แผนที่เลือก</h2>
+                        <h2>{{ __('content.review_information.selected_plan') }}</h2>
                         <div class="review-grid">
                             <div>
-                                <span>แผนประกัน</span>
-                                <strong>{{ $formatValue($review['plan']['name_th'] ?? null) }}</strong>
+                                <span>{{ __('content.review_information.plan') }}</span>
+                                <strong>{{ $formatValue($isEnglish ? ($review['plan']['name_en'] ?? $review['plan']['name_th'] ?? null) : ($review['plan']['name_th'] ?? null)) }}</strong>
                             </div>
                             <div>
-                                <span>อาชีพ</span>
-                                <strong>{{ $formatValue($occupation['occupation_th']) }}</strong>
+                                <span>{{ __('content.review_information.occupation') }}</span>
+                                <strong>{{ $formatValue($isEnglish ? ($occupation->occupation_en ?? $occupation->occupation_th ?? null) : ($occupation->occupation_th ?? null)) }}</strong>
                             </div>
                         </div>
                     </div>
 
                     <div class="review-section">
-                        <h2>ข้อมูลส่วนตัว</h2>
+                        <h2>{{ __('content.information.personal_details') }}</h2>
                         <div class="review-grid">
                             <div>
-                                <span>คำนำหน้า</span>
-                                <strong>{{ $formatValue($title->name_full) }}</strong>
+                                <span>{{ __('content.information.fields.prefix') }}</span>
+                                <strong>{{ $formatValue($title->display_name ?? $review['information']['title_name'] ?? null) }}</strong>
                             </div>
                             <div>
-                                <span>ชื่อ</span>
+                                <span>{{ __('content.information.fields.first_name') }}</span>
                                 <strong>{{ $formatValue($review['information']['first_name'] ?? null) }}</strong>
                             </div>
                             <div>
-                                <span>นามสกุล</span>
+                                <span>{{ __('content.information.fields.last_name') }}</span>
                                 <strong>{{ $formatValue($review['information']['last_name'] ?? null) }}</strong>
                             </div>
                             <div>
-                                <span>สัญชาติ</span>
-                                <strong>{{ $formatValue($country->ct_nameth) }}</strong>
+                                <span>{{ __('content.information.fields.nationality') }}</span>
+                                <strong>{{ $formatValue($isEnglish ? ($country->ct_nameeng ?? $country->ct_nameth ?? null) : ($country->ct_nameth ?? null)) }}</strong>
                             </div>
                             <div>
-                                <span>ประเภทเอกสารยืนยันตัวตน</span>
+                                <span>{{ __('content.information.fields.identity_type') }}</span>
                                 <strong>{{ $formatValue($cardTypeLabels[$review['information']['identity_type'] ?? ''] ?? ($review['information']['identity_type'] ?? null)) }}</strong>
                             </div>
                             <div>
-                                <span>เลขที่เอกสารยืนยันตัวตน</span>
+                                <span>{{ __('content.information.fields.identity_number') }}</span>
                                 <strong>{{ $formatValue($review['information']['identity_number'] ?? null) }}</strong>
                             </div>
                             <div>
-                                <span>วันเกิด</span>
+                                <span>{{ __('content.information.fields.date_of_birth') }}</span>
                                 <strong>{{ $formatValue($review['information']['date_of_birth'] ?? null) }}</strong>
                             </div>
                         </div>
                     </div>
 
                     <div class="review-section">
-                        <h2>ข้อมูลติดต่อ</h2>
+                        <h2>{{ __('content.information.contact_details') }}</h2>
                         <div class="review-grid">
                             <div>
-                                <span>อีเมล</span>
+                                <span>{{ __('content.information.fields.email') }}</span>
                                 <strong>{{ $formatValue($review['email'] ?? null) }}</strong>
                             </div>
                             <div>
-                                <span>หมายเลขโทรศัพท์</span>
+                                <span>{{ __('content.information.fields.phone_number') }}</span>
                                 <strong>{{ $formatValue($review['information']['phone_number'] ?? null) }}</strong>
                             </div>
                         </div>
                     </div>
 
                     <div class="review-section">
-                        <h2>ข้อมูลที่อยู่</h2>
+                        <h2>{{ __('content.information.address_details') }}</h2>
                         <div class="review-grid">
                             <div class="review-wide">
-                                <span>ที่อยู่</span>
+                                <span>{{ __('content.information.fields.full_address') }}</span>
                                 <strong>{{ $formatValue($review['information']['full_address'] ?? null) }}</strong>
                             </div>
                             <div>
-                                <span>จังหวัด</span>
-                                <strong>{{ $formatValue($review['information']['province_name'] ?? null) }}</strong>
+                                <span>{{ __('content.information.fields.province') }}</span>
+                                <strong>{{ $formatValue($province->display_name ?? $review['information']['province_name'] ?? null) }}</strong>
                             </div>
                             <div>
-                                <span>อำเภอ/เขต</span>
-                                <strong>{{ $formatValue($review['information']['district_name'] ?? null) }}</strong>
+                                <span>{{ __('content.information.fields.district') }}</span>
+                                <strong>{{ $formatValue($district->display_name ?? $review['information']['district_name'] ?? null) }}</strong>
                             </div>
                             <div>
-                                <span>ตำบล/แขวง</span>
-                                <strong>{{ $formatValue($review['information']['subdistrict_name'] ?? null) }}</strong>
+                                <span>{{ __('content.information.fields.subdistrict') }}</span>
+                                <strong>{{ $formatValue($subdistrict->display_name ?? $review['information']['subdistrict_name'] ?? null) }}</strong>
                             </div>
                             <div>
-                                <span>รหัสไปรษณีย์</span>
+                                <span>{{ __('content.information.fields.zipcode') }}</span>
                                 <strong>{{ $formatValue($review['information']['zipcode'] ?? null) }}</strong>
                             </div>
                         </div>
                     </div>
 
                     <div class="review-section">
-                        <h2>แบบสอบถามสุขภาพ</h2>
+                        <h2>{{ __('content.health_questions.heading') }}</h2>
                         <div class="review-grid">
                             @forelse ($healthQuestions as $question => $answer)
                                 <div>
-                                    <span>{{ $healthQuestionLabels[$question] ?? ucwords(str_replace('_', ' ', $question)) }}</span>
-                                    <strong>{{ $answer }}</strong>
+                                    <span>{{ data_get($healthQuestionItems, "$question.text", ucwords(str_replace('_', ' ', $question))) }}</span>
+                                    <strong>{{ $translateHealthAnswer($question, $answer) }}</strong>
                                 </div>
                             @empty
                                 <div>
-                                    <span>คำตอบแบบสอบถามสุขภาพ</span>
+                                    <span>{{ __('content.review_information.health_answers') }}</span>
                                     <strong>-</strong>
                                 </div>
                             @endforelse
@@ -142,23 +150,23 @@
                     </div>
 
                     <div class="review-section">
-                        <h2>ผู้รับผลประโยชน์และความยินยอม</h2>
+                        <h2>{{ __('content.review_information.beneficiary_and_consent') }}</h2>
                         <div class="review-grid">
                             <div>
-                                <span>ผู้รับผลประโยชน์</span>
-                                <strong>{{ $formatValue($review['information']['beneficiary'] ?? "Legal Hair") }}</strong>
+                                <span>{{ __('content.information.fields.beneficiary') }}</span>
+                                <strong>{{ $formatValue($review['information']['beneficiary'] ?? __('content.review_information.legal_heir')) }}</strong>
                             </div>
                             <div>
-                                <span>การเก็บรวบรวมข้อมูลส่วนบุคคล</span>
-                                <strong>{{ isset($review['information']['personal_data_collection']) ? 'ยอมรับ' : '-' }}</strong>
+                                <span>{{ __('content.information.fields.personal_data_collection') }}</span>
+                                <strong>{{ isset($review['information']['personal_data_collection']) ? __('content.review_information.accepted') : '-' }}</strong>
                             </div>
                             <div>
-                                <span>ข้อมูลส่วนบุคคลที่มีความอ่อนไหว</span>
-                                <strong>{{ isset($review['information']['sensitive_personal_data']) ? 'ยอมรับ' : '-' }}</strong>
+                                <span>{{ __('content.information.fields.sensitive_personal_data') }}</span>
+                                <strong>{{ isset($review['information']['sensitive_personal_data']) ? __('content.review_information.accepted') : '-' }}</strong>
                             </div>
                             <div>
-                                <span>ความยินยอมด้านการตลาด</span>
-                                <strong>{{ isset($review['information']['marketing_consent']) ? 'ยอมรับ' : 'ไม่ยอมรับ' }}</strong>
+                                <span>{{ __('content.information.fields.marketing_consent') }}</span>
+                                <strong>{{ isset($review['information']['marketing_consent']) ? __('content.review_information.accepted') : __('content.review_information.declined') }}</strong>
                             </div>
                         </div>
                     </div>
@@ -166,22 +174,22 @@
                     <form action="{{ route('proceed-payment') }}" method="post" class="review-confirm-form" id="reviewConfirmForm">
                         @csrf
                         <div class="review-section policy-document-section">
-                            <h2>ท่านต้องการรับเอกสารกรมธรรม์อย่างไร</h2>
+                            <h2>{{ __('content.review_information.policy_delivery_heading') }}</h2>
                             <div class="policy-document-options">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="policy_delivery[]" id="policy_delivery_email" value="รับกรมธรรม์ทางอีเมล" checked aria-readonly="true" onclick="return false;" onkeydown="return false;">
-                                    <label class="form-check-label" for="policy_delivery_email">รับกรมธรรม์ทางอีเมล</label>
+                                    <label class="form-check-label" for="policy_delivery_email">{{ __('content.review_information.policy_delivery_email') }}</label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="policy_delivery[]" id="policy_delivery_mail" value="รับกรมธรรม์ทางไปรษณีย์ภายใน 15 วัน">
-                                    <label class="form-check-label" for="policy_delivery_mail">รับกรมธรรม์ทางไปรษณีย์ภายใน 15 วัน</label>
+                                    <label class="form-check-label" for="policy_delivery_mail">{{ __('content.review_information.policy_delivery_mail') }}</label>
                                 </div>
                             </div>
                         </div>
 
                         <div class="health-question-actions">
-                            <a href="{{ route('show-information-form') }}" class="otp-btn otp-btn-outline">ย้อนกลับ</a>
-                            <button type="submit" class="check-premium-submit">ยืนยัน</button>
+                            <a href="{{ route('show-information-form') }}" class="otp-btn otp-btn-outline">{{ __('content.otp.back') }}</a>
+                            <button type="submit" class="check-premium-submit">{{ __('content.review_information.confirm') }}</button>
                         </div>
                     </form>
                 </div>
