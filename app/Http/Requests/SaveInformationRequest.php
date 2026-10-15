@@ -49,6 +49,24 @@ class SaveInformationRequest extends FormRequest
         ];
     }
 
+    public function messages(): array
+    {
+        return [
+            'required' => __('content.information.validation.required'),
+            'string' => __('content.information.validation.string'),
+            'max.string' => __('content.information.validation.max'),
+            'date' => __('content.information.validation.date'),
+            'email' => __('content.information.validation.email'),
+            'accepted' => __('content.information.validation.accepted'),
+            'boolean' => __('content.information.validation.boolean'),
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return __('content.information.fields');
+    }
+
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator) {
@@ -62,7 +80,7 @@ class SaveInformationRequest extends FormRequest
             if ($age < 16  or $age > 60) {
                 $validator->errors()->add(
                     'date_of_birth',
-                    'Age must be between 16 and 60 years.'
+                    __('content.information.validation.date_of_birth_age')
                 );
             }
         });

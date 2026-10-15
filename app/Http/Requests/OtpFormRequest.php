@@ -31,6 +31,17 @@ class OtpFormRequest extends FormRequest
         ];
     }
 
+    public function messages(): array
+    {
+        return [
+            'occupation.required' => __('content.otp.validation.occupation_required'),
+            'date_of_birth.required' => __('content.otp.validation.date_of_birth_required'),
+            'date_of_birth.date_format' => __('content.otp.validation.date_of_birth_format'),
+            'email.required' => __('content.otp.validation.email_required'),
+            'email.email' => __('content.otp.validation.email_format'),
+        ];
+    }
+
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator) {
@@ -44,7 +55,7 @@ class OtpFormRequest extends FormRequest
             if ($age < 16  or $age > 60) {
                 $validator->errors()->add(
                     'date_of_birth',
-                    'Age must be between 16 and 60 years.'
+                    __('content.otp.validation.date_of_birth_age')
                 );
             }
         });

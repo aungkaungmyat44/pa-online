@@ -90,7 +90,7 @@ class PageController extends Controller
                 return $this->redirectRoute(
                     'check-premium',
                     errors: [
-                        'email' => 'Failed to send OTP email. Please try again later.',
+                        'email' => __('content.otp.email_send_failed', []), // Original: Failed to send OTP email. Please try again later.
                     ],
                     input: $request->only('occupation', 'email', 'date_of_birth'),
                 );
@@ -119,7 +119,7 @@ class PageController extends Controller
 
         if (empty($customer['email'])) {
             return $this->redirectRoute('check-premium', errors: [
-                'email' => 'Please request an OTP first.',
+                'email' => __('content.otp.request_first', []), // Original: Please request an OTP first.
             ]);
         }
 
@@ -134,7 +134,7 @@ class PageController extends Controller
 
         if (empty($sessionCustomer['email'])) {
             return $this->redirectRoute('check-premium', errors: [
-                'email' => 'Your session has expired. Please request an OTP again.',
+                'email' => __('content.otp.session_expired', []), // Original: Your session has expired. Please request an OTP again.
             ]);
         }
 
@@ -153,25 +153,25 @@ class PageController extends Controller
         if (!$customer) {
             $request->session()->forget('customer');
             return $this->redirectRoute('check-premium', errors: [
-                'email' => 'Customer not found. Please request an OTP again.',
+                'email' => __('content.otp.customer_not_found', []), // Original: Customer not found. Please request an OTP again.
             ]);
         }
 
         if (!$customer->is_otp_sent or blank($customer->otp_code)) {
             return $this->redirectRoute('otp-form', errors: [
-                'otp_code' => 'No active OTP code. Please request a new one.',
+                'otp_code' => __('content.otp.no_active_code', []), // Original: No active OTP code. Please request a new one.
             ]);
         }
 
         if (!$customer->otp_expires_at or now()->greaterThanOrEqualTo($customer->otp_expires_at)) {
             return $this->redirectRoute('otp-form', errors: [
-                'otp_code' => 'OTP code has expired. Please request a new one.',
+                'otp_code' => __('content.otp.code_expired', []), // Original: OTP code has expired. Please request a new one.
             ]);
         }
 
         if ($otpCode !== (string) $customer->otp_code) {
             return $this->redirectRoute('otp-form', errors: [
-                'otp_code' => 'Invalid OTP code.',
+                'otp_code' => __('content.otp.invalid_code', []), // Original: Invalid OTP code.
             ]);
         }
 
@@ -181,7 +181,7 @@ class PageController extends Controller
 
         if (!$plan) {
             return $this->redirectRoute('check-premium', errors: [
-                'occupation' => 'No plan was found for your occupation. Please select again.',
+                'occupation' => __('content.otp.plan_not_found', []), // Original: No plan was found for your occupation. Please select again.
             ]);
         }
 
@@ -202,7 +202,7 @@ class PageController extends Controller
         ]));
 
         return $this->redirectRoute('show-health-questions', flash: [
-            'success' => 'OTP verified successfully.',
+            'success' => __('content.otp.verified_successfully', []), // Original: OTP verified successfully.
         ]);
     }
 
@@ -212,19 +212,19 @@ class PageController extends Controller
 
         if (empty($customer['email'])) {
             return $this->redirectRoute('check-premium', errors: [
-                'email' => 'Please request an OTP first.',
+                'email' => __('content.otp.request_first', []), // Original: Please request an OTP first.
             ]);
         }
 
         if (empty($customer['otp_verified_at'])) {
             return $this->redirectRoute('otp-form', errors: [
-                'otp_code' => 'Please verify your OTP first.',
+                'otp_code' => __('content.otp.verify_first', []), // Original: Please verify your OTP first.
             ]);
         }
 
         if (empty($customer['plan'])) {
             return $this->redirectRoute('check-premium', errors: [
-                'occupation' => 'Please select your occupation again.',
+                'occupation' => __('content.otp.select_occupation_again', []), // Original: Please select your occupation again.
             ]);
         }
 
@@ -236,9 +236,7 @@ class PageController extends Controller
 
             return [
                 'label' => __('content.coverage_fields.'.$row['field']),
-                'amount' => $amount !== null
-                    ? number_format((float) $amount).' '.__('content.currency_unit')
-                    : '-',
+                'amount' => $amount !== null ? number_format((float) $amount).' '.__('content.currency_unit') : '-',
             ];
         });
         
@@ -257,19 +255,19 @@ class PageController extends Controller
         
         if (empty($customer['email'])) {
             return $this->redirectRoute('check-premium', errors: [
-                'email' => 'Please request an OTP first.',
+                'email' => __('content.otp.request_first', []), // Original: Please request an OTP first.
             ]);
         }
 
         if (empty($customer['otp_verified_at'])) {
             return $this->redirectRoute('otp-form', errors: [
-                'otp_code' => 'Please verify your OTP first.',
+                'otp_code' => __('content.otp.verify_first', []), // Original: Please verify your OTP first.
             ]);
         }
 
         if (empty($customer['plan'])) {
             return $this->redirectRoute('check-premium', errors: [
-                'occupation' => 'Please select your occupation again.',
+                'occupation' => __('content.otp.select_occupation_again', []), // Original: Please select your occupation again.
             ]);
         }
 
@@ -277,7 +275,7 @@ class PageController extends Controller
         $request->session()->put('customer.health_terms', $data['terms']);
 
         return $this->redirectRoute('show-information-form', flash: [
-            'success' => 'Health questions submitted successfully.',
+            'success' => __('content.health_questions.submitted_successfully', []), // Original: Health questions submitted successfully.
         ]);
     }
 
@@ -302,19 +300,19 @@ class PageController extends Controller
 
         if (empty($customer['email'])) {
             return $this->redirectRoute('check-premium', errors: [
-                'email' => 'Please request an OTP first.',
+                'email' => __('content.otp.request_first', []), // Original: Please request an OTP first.
             ]);
         }
 
         if (empty($customer['otp_verified_at'])) {
             return $this->redirectRoute('otp-form', errors: [
-                'otp_code' => 'Please verify your OTP first.',
+                'otp_code' => __('content.otp.verify_first', []), // Original: Please verify your OTP first.
             ]);
         }
 
         if (empty($customer['plan'])) {
             return $this->redirectRoute('check-premium', errors: [
-                'occupation' => 'Please select your occupation again.',
+                'occupation' => __('content.otp.select_occupation_again', []), // Original: Please select your occupation again.
             ]);
         }
 
@@ -348,7 +346,7 @@ class PageController extends Controller
         
         if (!$cardCheckResult) {
             return $this->redirectRoute('show-information-form', errors: [
-                'identity_type' => 'Customer card type is not valid.',
+                'identity_type' => __('content.information.invalid_card_type', []), // Original: Customer card type is not valid.
             ], input: $data);
         }
         
@@ -356,12 +354,12 @@ class PageController extends Controller
         
         if (!$resultStatus['status']) {
             return $this->redirectRoute('show-information-form', errors: [
-                'identity_number' => 'Customer card type is not compatible with the ID number.',
+                'identity_number' => __('content.information.card_type_id_mismatch', []), // Original: Customer card type is not compatible with the ID number.
             ], input: $data);
         }
 
         return $this->redirectRoute('show-review-information',flash: [
-            'success' => 'Personal information submitted successfully.',
+            'success' => __('content.information.submitted_successfully', []), // Original: Personal information submitted successfully.
         ]);
     }
 
@@ -371,19 +369,19 @@ class PageController extends Controller
         
         if (empty($customer['email'])) {
             return $this->redirectRoute('check-premium', errors: [
-                'email' => 'Please request an OTP first.',
+                'email' => __('content.otp.request_first', []), // Original: Please request an OTP first.
             ]);
         }
 
         if (empty($customer['otp_verified_at'])) {
             return $this->redirectRoute('otp-form', errors: [
-                'otp_code' => 'Please verify your OTP first.',
+                'otp_code' => __('content.otp.verify_first', []), // Original: Please verify your OTP first.
             ]);
         }
 
         if (empty($customer['plan'])) {
             return $this->redirectRoute('check-premium', errors: [
-                'occupation' => 'Please select your occupation again.',
+                'occupation' => __('content.otp.select_occupation_again', []), // Original: Please select your occupation again.
             ]);
         }
 
@@ -407,7 +405,7 @@ class PageController extends Controller
             'occupation' => $occupation,
             'title' => $title,
             'country' => $country
-        ])->with(['success' => 'Choose any payment method']);
+        ])->with(['success' => __('content.payment_issue.choose_payment_method', [])]); // Original: Choose any payment method
     }
 
     public function proceedPayment(Request $request)
@@ -456,7 +454,7 @@ class PageController extends Controller
         } else {
             if ($oldOrder->status === 'delivered' and !empty(($oldOrder->policy_no))) {
                 return $this->redirectRoute('show-review-information', errors: [
-                    'order' => 'Customer has already purchased an active personal insurance policy.',
+                    'order' => __('content.payment_issue.active_policy_exists', []), // Original: Customer has already purchased an active personal insurance policy.
                 ]);
             }
 
@@ -477,7 +475,7 @@ class PageController extends Controller
         
         if (empty($orderId)) {
             return $this->redirectRoute('check-premium', errors: [
-                'order' => 'Order session timeout. Please start again.',
+                'order' => __('content.payment_issue.order_session_timeout', []), // Original: Order session timeout. Please start again.
             ]);
         }
 
@@ -485,7 +483,7 @@ class PageController extends Controller
         
         if (empty($order)) {
             return $this->redirectRoute('check-premium', errors: [
-                'order' => 'Order session timeout. Please start again.',
+                'order' => __('content.payment_issue.order_session_timeout', []), // Original: Order session timeout. Please start again.
             ]);
         }
 
@@ -500,7 +498,7 @@ class PageController extends Controller
         $isPaid = (bool)$request->is_paid;
         if ($isPaid) {
             return $this->redirectRoute('show-checkout', flash: [
-                'success' => 'Please perform payment via pay button.',
+                'success' => __('content.payment_issue.pay_button_prompt'),
             ]);
         }
 
@@ -508,14 +506,14 @@ class PageController extends Controller
         $orderId = data_get($sessionOrder, 'id');
         if (empty($orderId)) {
             return $this->redirectRoute('check-premium', errors: [
-                'order' => 'Order session timeout. Please start again.',
+                'order' => __('content.payment_issue.order_session_timeout', []), // Original: Order session timeout. Please start again.
             ]);
         }
 
         $order = Order::find($orderId);
         if (empty($order)) {
             return $this->redirectRoute('check-premium', errors: [
-                'order' => 'Order session timeout. Please start again.',
+                'order' => __('content.payment_issue.order_session_timeout', []), // Original: Order session timeout. Please start again.
             ]);
         }
 
@@ -527,7 +525,7 @@ class PageController extends Controller
         $request->session()->put('check_out_data', $checkoutData);
         
         return $this->redirectRoute('show-checkout', flash: [
-            'success' => 'Please perform payment via pay button.',
+            'success' => __('content.payment_issue.pay_button_prompt'),
         ]);
     }
 
@@ -538,14 +536,14 @@ class PageController extends Controller
         $orderId = data_get($sessionOrder, 'id');
         if (empty($orderId)) {
             return $this->redirectRoute('check-premium', errors: [
-                'order' => 'Order session timeout. Please start again.',
+                'order' => __('content.payment_issue.order_session_timeout', []), // Original: Order session timeout. Please start again.
             ]);
         }
 
         $order = Order::find($orderId);
         if (empty($order)) {
             return $this->redirectRoute('check-premium', errors: [
-                'order' => 'Order session timeout. Please start again.',
+                'order' => __('content.payment_issue.order_session_timeout', []), // Original: Order session timeout. Please start again.
             ]);
         }
 
@@ -745,14 +743,8 @@ class PageController extends Controller
         // Remove spaces and hyphens before validation
         $idNo = strtoupper(preg_replace('/[\s-]+/', '', trim($idNo)));
 
-        $messages = [
-            "1" => 'Invalid Thai ID card number. It must contain 13 digits and have a valid checksum.',
-            "2" => 'Invalid passport number. It should contain 6-9 English letters or numbers.',
-            "3" => 'Invalid alien ID card number. It must contain 13 digits and have a valid checksum.',
-            "4" => 'Invalid company/store ID. It must contain 13 digits and have a valid checksum.',
-            "5" => 'Invalid other ID. It should contain 5-20 letters, numbers, hyphens, or slashes.'
-        ];
-        $message = $messages[$cardType] ?? t('invalid_card_type'); //'Invalid card type.'
+        $messages = __('content.information.validation.identity_number');
+        $message = $messages[$cardType] ?? __('content.information.invalid_card_type');
 
         if (in_array($cardType, ["1", "3", "4"], true)) {
             $status = $this->validateThai13DigitId($idNo);
