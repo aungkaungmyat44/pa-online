@@ -47,7 +47,7 @@ return [
         ],
         [
             'question' => 'Who can apply?',
-            'answer' => 'Applicants who meet the eligibility requirements and are between 1 and 60 years old may apply, subject to underwriting conditions.',
+            'answer' => 'Applicants who meet the eligibility requirements and are between 1 and 75 years old may apply, subject to underwriting conditions.',
         ],
         [
             'question' => 'Are medical expenses covered?',
@@ -93,7 +93,7 @@ return [
         'underwriting_conditions_heading' => 'Underwriting Conditions',
         'underwriting_conditions' => [
             'Each insured person may hold a maximum of one policy under this program.',
-            'Applicants aged 16 to 60 years old are eligible. Age is determined on the policy effective date.',
+            'Applicants aged 1 to 75 years old are eligible. Age is determined on the policy effective date.',
             'Coverage begins two days after successful premium payment.',
             'Only applicants in occupation classes 1 and 2, as classified by the Company, are eligible.',
             'The insured must not have a permanent disability before the policy effective date.',
@@ -122,7 +122,7 @@ return [
             'Injury or illness that existed before applying for insurance.',
         ],
         'excluded_occupations_heading' => 'Occupations Not Covered',
-        'excluded_occupations' => 'General laborers; explosives handlers; fishermen; window cleaners, including high-rise cleaners; motorcycle racers; high-voltage electricians; firefighters; stunt performers; race car drivers; boxers; divers; extreme and professional athletes; mountain climbers; offshore drilling or production platform workers; oil-rig workers; underground and quarry miners; boat operators; rescue officers and volunteers; antenna and billboard installers; professional combat or martial arts athletes; military personnel; police officers; pilots and flight crew; nurses; physicians; dentists; ophthalmologists; surgeons; politicians; freelancers; self-employed workers; business owners; traders; X-ray staff; hospital staff; physical therapy staff; nursing assistants; unemployed persons; medical technologists; radiologic technologists; explosives workers; demolition workers; high-rise construction workers; tower crane operators; heavy machinery or crane operators; high-voltage line workers; high-voltage electrical system workers; workers in high-risk chemical plants; hazardous waste disposal workers; pesticide sprayers; pest-control workers; circus performers; acrobats; parachutists; paragliders; glider pilots; professional rock climbers; underground tunnel construction workers; roofers working at height; scaffold installers and dismantlers; and shipyard workers.',
+        'excluded_occupations' => 'Motorcycle taxi drivers, general laborers, construction workers, automotive mechanics, mine workers, fishermen and commercial fishing workers, window cleaners, including high-rise window cleaners, electricians, high-voltage electricians, surveyors, industrial machinery mechanics, security guards, firefighters, stunt performers, passenger transport drivers, taxi, public transport, and truck drivers, professional racing drivers, professional boxers, professional divers, extreme sports athletes, professional athletes, mountaineers, mine drilling and operations workers, oil or natural gas rig workers, boat operators, rescue officers, volunteer rescue workers, antenna or billboard installers, technical or vocational students, couriers and document delivery workers, collection or delivery workers, industrial factory or gas production workers, laborers or other occupations with an equivalent risk level, police officers or military personnel, pilots and flight crew.',
     ],
     'progress_steps' => [
         'aria_label' => 'Premium calculation steps',
@@ -151,6 +151,46 @@ return [
             'body' => 'This code expires in 2 minutes. Do not share this code with anyone.',
             'footer' => 'Ignore this email if you did not request an OTP code.',
             'auto_reply' => 'Please do not reply to this email. This is an automated message.',
+        ],
+    ],
+    'health_questions' => [
+        'title' => 'Health Questionnaire',
+        'heading' => 'Health Questionnaire',
+        'auto_selected' => 'Automatically selected',
+        'terms_intro' => 'I understand and accept the',
+        'validation' => [
+            'answers_required' => 'Please answer all health questions.',
+            'answer_required' => 'Please select an answer.',
+            'terms_required' => 'Please accept the terms to continue.',
+            'ineligible' => [
+                'other_insurance' => 'Sorry, we cannot offer this insurance if you have an active or ongoing policy.',
+                'insurance_declined' => 'Sorry, we cannot offer this insurance if you have previously been declined, cancelled, or charged an additional premium by an insurer.',
+                'accident_hospitalized' => 'Sorry, we cannot offer this insurance if you were hospitalized after an accident within the past 2 years.',
+                'impairment_or_drug_history' => 'Sorry, we cannot offer this insurance based on your impairment, nervous system, disability, or drug-related history.',
+                'medical_condition_history' => 'Sorry, we cannot offer this insurance based on the medical condition history listed above.',
+            ],
+        ],
+        'items' => [
+            'other_insurance' => [
+                'text' => 'Do you have, or have you applied for, personal accident or life insurance with any other insurance company?',
+                'options' => ['no' => 'No', 'yes' => 'Yes'],
+            ],
+            'insurance_declined' => [
+                'text' => 'Have you ever been declined for insurance, had an insurance policy cancelled, or been charged an additional premium by an insurance company?',
+                'options' => ['no' => 'No', 'yes' => 'Yes'],
+            ],
+            'accident_hospitalized' => [
+                'text' => 'In the past 2 years, have you been injured in an accident that required inpatient hospital treatment?',
+                'options' => ['no' => 'No', 'yes' => 'Yes'],
+            ],
+            'impairment_or_drug_history' => [
+                'text' => 'Have you ever had a vision, hearing, or nervous system disorder; a physical impairment; used serious narcotic drugs; or been convicted of a drug-related offense?',
+                'options' => ['no' => 'No', 'yes' => 'Yes'],
+            ],
+            'medical_condition_history' => [
+                'text' => 'Have you ever had, been examined or treated for, are currently being treated for, or experienced symptoms of epilepsy, heart disease, high blood pressure, diabetes, bone or muscle disorders, cancer, AIDS or HIV, stroke, or chronic alcoholism?',
+                'options' => ['no' => 'No', 'yes' => 'Yes'],
+            ],
         ],
     ],
 ];

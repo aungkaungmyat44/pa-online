@@ -35,6 +35,15 @@ class HealthQuestionRequest extends FormRequest
         ];
     }
 
+    public function messages(): array
+    {
+        return [
+            'health_questions.required' => __('content.health_questions.validation.answers_required'),
+            'health_questions.*.required' => __('content.health_questions.validation.answer_required'),
+            'terms.accepted' => __('content.health_questions.validation.terms_required'),
+        ];
+    }
+
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator) {
@@ -46,19 +55,14 @@ class HealthQuestionRequest extends FormRequest
                 'medical_condition_history' => 'ไม่เคย',
             ];
 
-            $messages = [
-                'other_insurance' => 'Sorry if you have an active or ongoing policy, we cannot sell this insurance.',
-                'insurance_declined' => 'Sorry if you have been declined, cancelled, or charged extra premium by an insurer, we cannot sell this insurance.',
-                'accident_hospitalized' => 'Sorry if you were hospitalized from an accident within the past 2 years, we cannot sell this insurance.',
-                'impairment_or_drug_history' => 'Sorry if you have impairment, nervous system history, disability, drug history, or drug-related conviction, we cannot sell this insurance.',
-                'medical_condition_history' => 'Sorry if you have the listed medical condition history, we cannot sell this insurance.',
-            ];
-
             foreach ($eligibleAnswers as $key => $eligibleAnswer) {
                 $answer = $this->input("health_questions.$key");
 
                 if ($answer !== null && $answer !== $eligibleAnswer) {
-                    $validator->errors()->add("health_questions.$key", $messages[$key]);
+                    $validator->errors()->add(
+                        "health_questions.$key",
+                        __("content.health_questions.validation.ineligible.$key"),
+                    );
                 }
             }
         });

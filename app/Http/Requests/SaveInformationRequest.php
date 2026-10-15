@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
+use Carbon\Carbon;
 
 class SaveInformationRequest extends FormRequest
 {
@@ -45,5 +47,24 @@ class SaveInformationRequest extends FormRequest
             'sensitive_personal_data' => 'accepted',
             'marketing_consent' => 'nullable|boolean',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator) {
+            if ($validator->errors()->has('date_of_birth')) {
+                return;
+            }
+
+            $dateOfBirth = Carbon::parse($this->input('date_of_birth'))->startOfDay();
+            $age = $dateOfBirth->age;
+
+            if ($age < 1 || $age > 75) {
+                $validator->errors()->add(
+                    'date_of_birth',
+                    'Age must be between 1 and 75 years.'
+                );
+            }
+        });
     }
 }
