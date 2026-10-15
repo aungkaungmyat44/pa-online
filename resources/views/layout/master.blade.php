@@ -62,6 +62,7 @@
 
 			return route($currentRoute->getName(), $parameters);
 		};
+		$cplUrl = config('services.company_website.cpl_url');
 	@endphp
 	<body class="d-flex flex-column min-vh-100">
 		<!-- Bootstrap 5.0.2 -->
@@ -261,7 +262,7 @@
                                         <a href="#" class="list-group-item list-group-item-action"><strong>{{ __('navigation.motor_insurance') }}</strong></a>
                                         <a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance?show=1" class="list-group-item list-group-item-action">{{ __('navigation.motor_insurance_types') }}</a>
                                         <a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance?show=2" class="list-group-item list-group-item-action">{{ __('navigation.compulsory_motor') }}</a>
-                                        <a href="http://192.6.1.94:8003/proc.php?action=products&lang={{ $lang }}" class="list-group-item list-group-item-action">{{ __('navigation.buy_compulsory_motor') }}</a>
+                                        <a href="{{ $cplUrl }}&lang={{ $lang }}" class="list-group-item list-group-item-action">{{ __('navigation.buy_compulsory_motor') }}</a>
                                         <a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance/van" class="list-group-item list-group-item-action">{{ __('navigation.super_van') }}</a>
                                         <a href="{{ $companyWebsiteUrl }}{{ $lang }}/motor_insurance/voluntary" class="list-group-item list-group-item-action">{{ __('navigation.voluntary_motor') }}</a>
                                     </div>

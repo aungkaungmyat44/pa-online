@@ -78,6 +78,7 @@ return [
     ],
 
     'company_website' => [
-        'url' => env('COMPANY_WEBSITE_URL'),
+        'url' => env('COMPANY_WEBSITE_URL', 'http://192.6.1.199:8000/'),
+        'cpl_url' => env('CPL_WEBSITE_URL', 'http://192.6.1.94:8003/proc.php?action=products'),
     ],
 ];
