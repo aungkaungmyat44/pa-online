@@ -31,9 +31,21 @@ class ValidatePaymentCallbackSignature
 
     private function callbackMiddleware(Request $request): bool
     {
-        $body = $request->all();
-        if (empty($body)) {
-            return false;
+        $input = $request->all();
+
+        $requiredFields = [
+            'charge_id',
+            'reference_order',
+            'status',
+            'transaction_state',
+            'amount',
+            'payment_create_info',
+        ];
+
+        foreach ($requiredFields as $field) {
+            if (! array_key_exists($field, $input)) {
+                return false;
+            }
         }
 
         $appId = $request->headers->get('X-APP-ID', '');
@@ -41,25 +53,45 @@ class ValidatePaymentCallbackSignature
         $signature = $request->headers->get('X-SIGNATURE', '');
 
         $apps = config('services.payment_callback.apps', []);
-        if (empty($apps[$appId])) {
+        $secret = $apps[$appId] ?? null;
+
+        if (! is_string($secret) or $secret === '') {
             return false;
         }
 
-        if ($timestamp === '' or $signature === '') {
+        if (! ctype_digit($timestamp) or $signature === '') {
             return false;
         }
 
-        $maxRequestAge = (int) config('services.payment_callback.max_request_age', 60 * 60);
+        $maxRequestAge = (int) config(
+            'services.payment_callback.max_request_age',
+            3600
+        );
+
         if (abs(time() - (int) $timestamp) > $maxRequestAge) {
             return false;
         }
 
-        $payload = json_encode($body);
-        if ($payload === false) {
+        // Same field order as the callback server.
+        $body = [
+            'charge_id' => $input['charge_id'],
+            'reference_order' => $input['reference_order'],
+            'status' => $input['status'],
+            'transaction_state' => $input['transaction_state'],
+            'amount' => $input['amount'],
+            'payment_create_info' => $input['payment_create_info'],
+        ];
+
+        try {
+            $payload = json_encode(
+                $body,
+                JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR
+            );
+        } catch (\JsonException $e) {
             return false;
         }
 
-        $expected = hash_hmac('sha256', $payload, $apps[$appId]);
+        $expected = hash_hmac('sha256', $payload, $secret);
 
         return hash_equals($expected, $signature);
     }
