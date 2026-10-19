@@ -91,6 +91,9 @@ class ValidatePaymentCallbackSignature
             return false;
         }
 
+
+        $expected = hash_hmac('sha256', $payload, $secret);
+        $rawPayload = $request->getContent();
         Log::debug('Callback signature debug', [
             'rebuilt_sha256' => hash('sha256', $payload),
             'rebuilt_length' => strlen($payload),
@@ -100,9 +103,7 @@ class ValidatePaymentCallbackSignature
             'expected_signature' => $expected,
             'received_signature' => $signature,
         ]);
-
-        $expected = hash_hmac('sha256', $payload, $secret);
-
+        
         return hash_equals($expected, $signature);
     }
 }
