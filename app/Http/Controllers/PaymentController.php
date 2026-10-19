@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\PaymentTransition;
 use App\Services\KbankPaymentService;
 use App\Services\HttpService;
+use Illuminate\Support\Str;
 
 class PaymentController extends Controller
 {
@@ -161,9 +162,18 @@ class PaymentController extends Controller
         }
 
         // Fetch old payment transition
-        $payment = PaymentTransition::where('charge_id', $data['charge_id'])->first();
-        if (empty($payment)) {
-            $payment = PaymentTransition::where('order_id', $order->id)->first();
+        if ($order->payment_method != 'link') {
+            $payment = PaymentTransition::where('charge_id', $data['charge_id'])->first();
+            if (empty($payment)) {
+                $payment = PaymentTransition::where('order_id', $order->id)->first();
+            }
+        } else {
+            $linkUrl = $data['link_url'] ?? '';
+            $linkId = Str::afterLast($linkUrl, '/');
+            $payment = PaymentTransition::where('link_ref', $linkId)->first();
+            if (empty($payment)) {
+                $payment = PaymentTransition::where('order_id', $order->id)->first();
+            }
         }
 
         // Fetch customer
