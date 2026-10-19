@@ -215,8 +215,8 @@ class PaymentController extends Controller
             // When payment is okay and order is only remaining
             if ($payment->status === 'success' and $order->payment_status !== 'paid' and $alreadyIssued) {
                 $order->update([
-                    'policy_no' => $existingIssueResult['PolicyNo'] ?? ($order->policy_no ?? ''),
-                    'policy_url' => $existingIssueResult['PolicyURL'] ?? ($order->policy_url ?? ''),
+                    'policy_no' => $existingIssueResult['PolicyNo'] ?? ($order->policy_no ?? null),
+                    'policy_url' => $existingIssueResult['PolicyURL'] ?? ($order->policy_url ?? null),
                     'status' => 'delivered',
                     'is_email_sent' => 1,
                     'is_policy_generated' => 1,
@@ -259,8 +259,8 @@ class PaymentController extends Controller
 
         if ($payment and $order->payment_status == 'unpaid') {
             $order->update([
-                'policy_no' => $issueApiResult['PolicyNo'] ?? "",
-                'policy_url' => $issueApiResult['PolicyURL'] ?? "",
+                'policy_no' => $issueApiResult['PolicyNo'] ?? null,
+                'policy_url' => $issueApiResult['PolicyURL'] ?? null,
                 'status' => 'delivered',
                 'is_email_sent' => 1,
                 'is_policy_generated' => 1,
