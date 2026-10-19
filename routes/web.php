@@ -4,11 +4,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
-$defaultLocale = in_array(config('app.locale'), ['th', 'en'], true)
-    ? config('app.locale')
-    : 'th';
-
-Route::get('/', fn () => redirect()->route('home', ['locale' => $defaultLocale]));
+Route::get('/', fn () => redirect()->route('home', ['locale' => 'th']));
 
 Route::pattern('locale', 'th|en');
 Route::prefix('{locale}')

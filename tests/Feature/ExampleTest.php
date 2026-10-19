@@ -10,13 +10,11 @@ class ExampleTest extends TestCase
     /**
      * A basic test example.
      */
-    public function test_the_root_redirects_to_the_default_language(): void
+    public function test_the_root_redirects_to_thai_even_when_the_app_locale_is_english(): void
     {
-        $locale = in_array(config('app.locale'), ['th', 'en'], true)
-            ? config('app.locale')
-            : 'th';
+        config(['app.locale' => 'en']);
 
         $this->get('/')
-            ->assertRedirect(route('home', ['locale' => $locale]));
+            ->assertRedirect(route('home', ['locale' => 'th']));
     }
 }
