@@ -83,10 +83,7 @@ class ValidatePaymentCallbackSignature
         ];
 
         try {
-            $payload = json_encode(
-                $body,
-                JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR
-            );
+            $payload = $request->getContent();
         } catch (\JsonException $e) {
             return false;
         }
