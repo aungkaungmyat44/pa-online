@@ -12,7 +12,7 @@ use App\Services\HttpService;
 
 class PaymentController extends Controller
 {
-    public function paymentIssue(Request $request, Order $order)
+    public function paymentIssue(Request $request, string $locale, Order $order)
     {
         $paymentTransition = PaymentTransition::where('order_id', $order->id)->first();
 
@@ -37,7 +37,7 @@ class PaymentController extends Controller
         ]);
     }
 
-    public function receipt(Order $order)
+    public function receipt(string $locale, Order $order)
     {
         $sessionOrder = session()->get('order');
         $orderId = data_get($sessionOrder, 'id');
@@ -57,7 +57,7 @@ class PaymentController extends Controller
         ]);
     }
 
-    public function kbankCheckout(Request $request, Order $order)
+    public function kbankCheckout(Request $request, string $locale, Order $order)
     {
         $data = $request->all();
         $token = $data['token'];
@@ -273,7 +273,7 @@ class PaymentController extends Controller
         return $this->jsonResponse(__('content.payment_issue.payment_transition_created', []), $payment); // Original: Successfully created payment transition
     }
 
-    public function inquiryKBankPaymentTransition(Request $request, Order $order)
+    public function inquiryKBankPaymentTransition(Request $request, string $locale, Order $order)
     {
         $existingPayment = PaymentTransition::where('order_id', $order->id)->first();
         $payment = [];

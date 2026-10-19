@@ -7,6 +7,7 @@
     $checkoutData = $checkoutData['data'];
     $orderInfo = $order['order_info'];
     $orderId = $order->id;
+    $paymentRouteParameters = ['locale' => app()->getLocale(), 'order' => $order];
     $orderIdValue = $order->order_unique_code;
     $productId = $orderInfo['plan']['id'];
     $isEnglish = app()->getLocale() === 'en';
@@ -75,7 +76,7 @@
             @if ($isCardPayment)
                 <div class="row mt-3 justify-content-center">
                     <div class="col-xl-12 col-md-12 col-sm-12">
-                        <form method="POST" action="{{ route('kbank-checkout', $order) }}" id="checkoutForm">
+                        <form method="POST" action="{{ route('kbank-checkout', $paymentRouteParameters) }}" id="checkoutForm">
                             @csrf
                             <input type="hidden" name="product_id" id="checkout_product_id" value="{{ $productId }}">
                             <input type="hidden" name="product_name" id="checkout_product_name" value="{{ $productName }}">
@@ -98,7 +99,7 @@
             @if ($isQrPayment and $qrOrderId !== '')
                 <div class="row mt-3 justify-content-center">
                     <div class="col-xl-12 col-md-12 col-sm-12">
-                        <form method="POST" action="{{ route('request-payment', ['is_paid' => 1]) }}" id="qrCheckoutForm">
+                        <form method="POST" action="{{ route('request-payment', ['locale' => app()->getLocale(), 'is_paid' => 1]) }}" id="qrCheckoutForm">
                             @csrf
                             <input type="hidden" name="order_id" value="{{ $orderIdValue }}">
                             <script type="text/javascript"
@@ -165,18 +166,13 @@
     const IS_QR_PAYMENT = @json($isQrPayment);
     const IS_LINK_PAYMENT = @json($isLinkPayment);
 
-    let RECEIPT_URL = "{{ route('receipt', $order) }}";
-    let PAYMENT_ISSUE_URL = "{{ route('payment-issue', $order) }}";
-    let INQUIRE_URL = "{{ route('kbank-payment-inquiry', $order) }}";
-    let HOME_PAGE_URL = "{{ route('home') }}";
+    const RECEIPT_URL = @json(route('receipt', $paymentRouteParameters));
+    const PAYMENT_ISSUE_URL = @json(route('payment-issue', $paymentRouteParameters));
+    const INQUIRE_URL = @json(route('kbank-payment-inquiry', $paymentRouteParameters));
+    const HOME_PAGE_URL = @json(route('home', ['locale' => app()->getLocale()]));
 
     async function getPayment() {
-        let fullUrl = INQUIRE_URL;
-        let data = {
-            'order_id': @json($orderIdValue)
-        };
-        console.log(data);
-        return await getData(fullUrl, data);
+        return await getData(INQUIRE_URL, {});
     };
 
     const PAYMENT_POLL_INTERVAL_MS = 60000;

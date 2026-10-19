@@ -16,6 +16,7 @@ class ValidatePaymentCallbackSignature
                 'app_id' => $request->headers->get('X-APP-ID', ''),
                 'timestamp' => $request->headers->get('X-TIMESTAMP', ''),
                 'path' => $request->path(),
+                'request_params' => $request->all(),
             ]);
 
             return response()->json([
@@ -44,7 +45,7 @@ class ValidatePaymentCallbackSignature
             return false;
         }
 
-        if ($timestamp === '' || $signature === '') {
+        if ($timestamp === '' or $signature === '') {
             return false;
         }
 
