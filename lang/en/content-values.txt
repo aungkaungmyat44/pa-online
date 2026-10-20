@@ -1,0 +1,335 @@
+Personal Accident Insurance
+banner_th.png
+What is Personal Accident Insurance?
+Accidents can happen at any time, whether you are driving, traveling, working, exercising, or going about your daily life. Personal Accident (PA) insurance helps protect you financially if an unexpected accident causes injury, disability, or death.
+Coverage and benefits depend on the plan you choose. They may include medical expenses resulting from an accident, permanent disability, loss of organs or bodily functions, and accidental death.
+Unlike general health insurance, which focuses on illness and disease, Personal Accident insurance specifically covers injuries and losses caused by accidents.
+Key Coverage Benefits
+Comprehensive protection for the whole family
+Medical expenses of up to THB 30,000 per accident
+Hospitalization and ICU cash benefits
+Coverage wherever you travel
+Extensive network of partner hospitals
+More than 76 years of trusted experience
+Check Premium
+Policy Terms
+Purpose of Personal Accident Insurance
+This Personal Accident policy covers accident-related risks, including medical expenses. It offers affordable premiums relative to the coverage provided and is suitable for individuals aged 16 to 60, subject to underwriting conditions. It can help reduce financial burdens, especially for frequent travelers, people in higher-risk occupations, and primary household earners.
+Coverage Plans
+Coverage
+THB
+Accidental Death
+Murder or Assault
+Riding or Traveling by Motorcycle
+Medical Expenses
+Insurance Conditions
+I accept the insurance conditions.
+I wish to apply for insurance with the Company under the terms of the policy issued for this insurance. I certify that all information stated above is true and complete.
+I agree that this insurance application will form the basis of the insurance contract between me and the Company. If any information is false or material facts are withheld, I agree that the Company may terminate the policy.
+I consent to the Company collecting, using, and disclosing my health information and personal data to the Office of Insurance Commission for insurance business supervision purposes.
+Warning from the Office of Insurance Commission (OIC): Concealing any facts or making any false statements may render this insurance contract void and may allow the insurer to deny liability or rescind the contract under Section 865 of the Civil and Commercial Code.
+Frequently Asked Questions
+What is Personal Accident insurance?
+It is insurance that provides financial protection if an accident causes injury, disability, or death.
+Who can apply?
+Applicants who meet the eligibility requirements and are between 1 and 75 years old may apply, subject to underwriting conditions.
+Are medical expenses covered?
+Medical expenses are covered according to the selected plan and the policy terms.
+Are motorcycle riders or passengers covered?
+Motorcycle-related coverage depends on the selected plan and any additional coverage terms.
+Can I buy more than one policy?
+Each insured person may hold a maximum of one policy under this program.
+How long does the coverage last?
+This Personal Accident insurance policy provides coverage for one year.
+How will I receive my policy?
+You can receive your policy by email or choose postal delivery within 15 days.
+How can I check my policy?
+Use the policy-check menu and enter your policy number and the last six digits of your national ID number.
+Calculate Premium
+Please enter the following information to continue
+Please fill in all required fields before continuing.
+Please check the highlighted fields again.
+This field is required.
+Occupation
+Select your occupation
+Date of Birth
+Select your date of birth
+Email
+Enter your email address
+Read the
+Terms and Conditions
+provided by Sahamongkhon Insurance
+Continue
+Underwriting Conditions
+Each insured person may hold a maximum of one policy under this program.
+Applicants aged 1 to 75 years old are eligible. Age is determined on the policy effective date.
+Coverage begins two days after successful premium payment.
+Only applicants in occupation classes 1 and 2, as classified by the Company, are eligible.
+The insured must not have a permanent disability before the policy effective date.
+This is an annual Personal Accident insurance policy.
+Medical expenses must be incurred within 52 weeks from the date of the accident.
+If the insured has government benefits, other benefits, or other insurance, the Company will cover only the shortfall.
+Inpatient room benefits do not include private nurse fees, braces, wheelchairs, external prostheses, alternative medicine, or acupuncture.
+Fracture benefits are limited to a maximum of 100% of the sum insured and must be confirmed by X-ray.
+An inpatient stay must last at least six consecutive hours, unless the insured dies during treatment.
+Two or more treatments for the same cause within the period specified by the Company will be considered one treatment.
+Policy Exclusions
+An act committed while under the influence of alcohol, intoxicating substances, or narcotic drugs.
+Suicide, attempted suicide, or intentional self-injury.
+Infection, disease, parasites, or treatment unrelated to a covered accident.
+Miscarriage, food poisoning, and dental treatment, except when treatment is required as a result of an accident.
+Back pain caused by disease or degeneration of the spine.
+War, riot, terrorism, nuclear radiation, or radioactivity.
+Car racing, hazardous sports, boxing, parachuting, bungee jumping, and scuba diving with an air tank.
+Riding or traveling by motorcycle unless the coverage has been extended.
+Travel on an aircraft not registered to carry passengers or not operated by a commercial airline.
+Fighting, committing a crime, being arrested, or evading arrest.
+Military, police, or volunteer duties during war or suppression operations.
+Osteoporosis, pathological fractures, or fractures caused by a congenital disease.
+Injury or illness that existed before applying for insurance.
+Occupations Not Covered
+Motorcycle taxi drivers, general laborers, construction workers, automotive mechanics, mine workers, fishermen and commercial fishing workers, window cleaners, including high-rise window cleaners, electricians, high-voltage electricians, surveyors, industrial machinery mechanics, security guards, firefighters, stunt performers, passenger transport drivers, taxi, public transport, and truck drivers, professional racing drivers, professional boxers, professional divers, extreme sports athletes, professional athletes, mountaineers, mine drilling and operations workers, oil or natural gas rig workers, boat operators, rescue officers, volunteer rescue workers, antenna or billboard installers, technical or vocational students, couriers and document delivery workers, collection or delivery workers, industrial factory or gas production workers, laborers or other occupations with an equivalent risk level, police officers or military personnel, pilots and flight crew.
+Premium calculation steps
+Personal Details
+Verify OTP
+Questionnaire
+Information
+Review
+Payment
+We received your payment, but the policy could not be issued automatically.
+Order session timeout. Please start again.
+Please select a plan first!
+Failed to checkout with KBank
+KBank redirect URL is missing
+The specified order could not be found.
+Invalid payment checksum.
+Successfully created payment transition
+Fail to Issue policy
+Success to fetch K-Bank payment information
+Fail to fetch K-Bank payment information
+Choose any payment method
+Please perform payment via pay button.
+Customer has already purchased an active personal insurance policy.
+Payment Issue
+Payment received, policy pending
+Your payment has been recorded, but the policy could not be issued automatically.
+Order reference
+Payment reference
+Payment status
+Payment method
+Amount
+Last updated
+We apologize for the inconvenience. Your payment has been received, but the policy issuance is still being verified by our system. Our team will review this transaction and complete the policy process as soon as possible.
+Please contact Sahamongkhon Insurance for assistance and provide the order reference above. Tel: %s or email %s.
+Back to home
+Pending
+Successful
+Failed
+Failed
+Credit / Debit Card
+Thai QR
+KBank Payment Link
+Policy Receipt
+Thank you for purchasing insurance
+Your policy has been issued
+Policy number:
+The policy has been sent to your email:
+You can check your policy using the button below.
+Home
+Check Policy
+Check Your Policy
+Please enter your details.
+Policy number
+National ID number
+(last 6 digits)
+Find Policy
+Your policy will be retrieved as a PDF file that you can download.
+Check Policy
+Saha Mongkol Insurance Public Company Limited
+Saha Mongkol Insurance
+Personal Accident Insurance
+Electronic Policy (E-Policy)
+Policy number
+Reference number
+Insured
+Product
+Coverage period
+Loading policy...
+For assistance, please contact Customer Service at
+or email
+Home
+Download Policy
+The policy file could not be displayed.
+Open policy PDF
+Payment Method
+Choose one payment method to continue.
+Insurance plan
+Coverage amount
+Premium
+baht
+Credit / Debit Card
+Pay securely with Mastercard, Visa, or JCB.
+Mastercard logo
+Pay with Thai QR
+Scan the QR code with your mobile banking app.
+Thai QR logo
+KBank Payment Link
+Get a payment link and complete your payment through KBank.
+KBank logo
+Back
+Proceed to payment
+Complete Payment
+Please complete payment within
+:minutes minutes.
+The payment status will update automatically.
+Product
+Order reference
+Transaction date
+Payment QR code
+Open payment link
+Copy payment link
+Payment link unavailable
+Please try again later.
+Copied
+Copy failed
+Personal Information
+Personal Details
+Contact Details
+Address Details
+Consent
+Please fill in all required fields before continuing.
+Please recheck the highlighted fields.
+*If left blank, the beneficiary will be your legal heir.*
+Personal information submitted successfully.
+Customer card type is not valid.
+Customer card type is not compatible with the ID number.
+National ID card
+Passport
+Alien ID card
+Government / state enterprise / company / partnership / shop
+Other
+Select a title
+Enter your first name
+Enter your last name
+Select your nationality
+Select an identity document type
+Enter your identity document number
+Enter your phone number
+Enter your address
+Select a province
+Select a district
+Select a subdistrict
+Postal code
+Enter the beneficiary name
+Personal data collection (I accept the insurance terms and wish to apply for insurance with the Company under the applicable policy terms. I certify that all information provided above is true, accurate, and complete.)
+Sensitive personal data (I agree that this application forms the basis of the insurance contract between me and the Company. If any information is false or facts are withheld, I agree that the Company may terminate the policy.)
+Marketing consent (I consent to the Company collecting, using, and disclosing my health information and personal data to the Office of Insurance Commission (OIC) for insurance business supervision.)
+Title
+First name
+Last name
+Nationality
+Identity document type
+Identity document number
+Date of birth
+Email address
+Phone number
+Address
+Province
+province
+District
+district
+Subdistrict
+subdistrict
+Postal code
+Beneficiary
+personal data consent
+sensitive personal data consent
+marketing consent
+The :attribute field is required.
+The :attribute must be text.
+The :attribute may not be greater than :max characters.
+The :attribute must be a valid date.
+The :attribute must be a valid email address.
+You must accept the :attribute.
+The :attribute must be true or false.
+Age must be between 16 and 60 years.
+This field is required.
+Invalid Thai ID card number. It must contain 13 digits and have a valid checksum.
+Invalid passport number. It should contain 6-9 English letters or numbers.
+Invalid alien ID card number. It must contain 13 digits and have a valid checksum.
+Invalid company/store ID. It must contain 13 digits and have a valid checksum.
+Invalid other ID. It should contain 5-20 letters, numbers, hyphens, or slashes.
+Review Information
+Selected Plan
+Insurance Plan
+Occupation
+Health questionnaire answers
+Beneficiary and Consent
+Legal heir
+Accepted
+Not accepted
+How would you like to receive your policy documents?
+Receive the policy by email
+Receive the policy by mail within 15 days
+Confirm
+Verify OTP
+Verify OTP
+Enter the 6-digit OTP sent to your email to continue.
+OTP digit :number
+Verify OTP
+Resend OTP
+Back
+If you did not receive the OTP, please check your Spam or Junk folder.
+Failed to send OTP email. Please try again later.
+Please request an OTP first.
+Your session has expired. Please request an OTP again.
+Customer not found. Please request an OTP again.
+No active OTP code. Please request a new one.
+OTP code has expired. Please request a new one.
+Invalid OTP code.
+No plan was found for your occupation. Please select again.
+OTP verified successfully.
+Please verify your OTP first.
+Please select your occupation again.
+Please select your occupation.
+Please enter your date of birth.
+Please enter a valid date of birth.
+Age must be between 16 and 60 years.
+Please enter your email address.
+Please enter a valid email address.
+PA Direct - Sending OTP Code
+Sending OTP Code
+Customer
+Please use the OTP code below to verify your account.
+OTP Code
+This code expires in 2 minutes. Do not share this code with anyone.
+Ignore this email if you did not request an OTP code.
+Please do not reply to this email. This is an automated message.
+Health Questionnaire
+Health Questionnaire
+Automatically selected
+I understand and accept the
+Health questions submitted successfully.
+Please answer all health questions.
+Please select an answer.
+Please accept the terms to continue.
+Sorry, we cannot offer this insurance if you have an active or ongoing policy.
+Sorry, we cannot offer this insurance if you have previously been declined, cancelled, or charged an additional premium by an insurer.
+Sorry, we cannot offer this insurance if you were hospitalized after an accident within the past 2 years.
+Sorry, we cannot offer this insurance based on your impairment, nervous system, disability, or drug-related history.
+Sorry, we cannot offer this insurance based on the medical condition history listed above.
+Do you have, or have you applied for, personal accident or life insurance with any other insurance company?
+No
+Yes
+Have you ever been declined for insurance, had an insurance policy cancelled, or been charged an additional premium by an insurance company?
+No
+Yes
+In the past 2 years, have you been injured in an accident that required inpatient hospital treatment?
+No
+Yes
+Have you ever had a vision, hearing, or nervous system disorder; a physical impairment; used serious narcotic drugs; or been convicted of a drug-related offense?
+No
+Yes
+Have you ever had, been examined or treated for, are currently being treated for, or experienced symptoms of epilepsy, heart disease, high blood pressure, diabetes, bone or muscle disorders, cancer, AIDS or HIV, stroke, or chronic alcoholism?
+No
+Yes
