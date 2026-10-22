@@ -65,7 +65,7 @@
                         <i class="bi bi-calculator"></i>
                         <span>{{ __('content.check_premium') }}</span>
                     </a>
-                    <a href="{{ asset('assets/files/policy.pdf') }}" class="check-premium-btn policy-download-btn" download>
+                    <a href="{{ asset('assets/files/policy_2.pdf') }}" class="check-premium-btn policy-download-btn" download>
                         <i class="bi bi-download"></i>
                         <span>{{ __('content.policy_terms') }}</span>
                     </a>
